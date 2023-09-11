@@ -1,12 +1,17 @@
-import numpy as np
+import perturbopy.postproc as ppy
+
+si_ephmat = ppy.Ephmat.from_yaml('si_ephmat.yml')
+
 import matplotlib.pyplot as plt
 
-x = np.loadtxt('si.ephmat')
+plt.rcParams.update(ppy.plot_tools.plotparams)
+si_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
 
-plt.scatter(x[:,3],x[:,-2])
-
+fig, ax  = plt.subplots()
+si_ephmat.plot_ephmat(ax)
 plt.show()
-plt.savefig('band.jpg',dpi=400)
+
+plt.savefig('ephmat.jpg',dpi=400)
 
 
 
