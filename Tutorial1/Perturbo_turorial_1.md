@@ -441,8 +441,19 @@ user@f34442ffeba6:/run/epr_gen/silicon/perturbo/band$ ln -sf ../../qe2pert/si_ep
 ```
 perturbo.x -i pert.in 
 ```
-
+Plot with our python post-processing library `perturbopy`. It's user-friendly and you should try it.
 ```
+user@6f981831eccc:~/run/epr_gen/silicon/perturbo/band$ cat plot.py
+import perturbopy.postproc as ppy
+import matplotlib.pyplot as plt
+
+fig, ax  = plt.subplots()
+plt.rcParams.update(ppy.plot_tools.plotparams)
+si_bands = ppy.Bands.from_yaml('si_bands.yml')
+si_bands.kpt.add_labels(ppy.lattice.points_fcc)
+
+si_bands.plot_bands(ax)
+plt.savefig('band.jpg')
 user@de401a4c683a:/run/epr_gen/silicon/perturbo/band$ python plot.py
 ```
 The bandstucture is shown in `band.jpg`. 
@@ -477,10 +488,29 @@ perturbo.x -i pert.in
 ```
 
 ```
+user@6f981831eccc:~/run/epr_gen/silicon/perturbo/phonon$ cat plot.py
+import perturbopy.postproc as ppy
+import matplotlib.pyplot as plt
+
+si_phdisp = ppy.Phdisp.from_yaml('si_phdisp.yml')
+# Create a figure and axis for plotting
+fig, ax  = plt.subplots()
+
+# Optional, used to format the plot
+plt.rcParams.update(ppy.plot_tools.plotparams)
+
+# Optional, used to label the q-points with labels for the FCC crystal structure.
+# For example, [0.5, 0.5, 0.5] is the 'L' point in the FCC Brillouin zone.
+si_phdisp.qpt.add_labels(ppy.lattice.points_fcc)
+
+si_phdisp.plot_phdisp(ax)
+plt.show()
+
+plt.savefig('phdisp.jpg',dpi=400)
 user@de401a4c683a:/run/epr_gen/silicon/perturbo/phonon$ python plot.py
 ```
-The phonon dispersion is shown in `band.jpg`. 
-![band structure](./phonon/band.jpg)
+The phonon dispersion is shown in `phdisp.jpg`. 
+![band structure](./phonon/phdisp.jpg)
 ### E-ph
 Let's see the input files. 
 ```
@@ -514,10 +544,25 @@ Interpolate e-ph matrix.
 ```
 perturbo.x -i pert.in 
 ```
-Plot. 
+Plot with perturbopy. 
 ```
+user@6f981831eccc:~/run/epr_gen/silicon/perturbo/ephmat$ cat plot.py
+import perturbopy.postproc as ppy
+
+si_ephmat = ppy.Ephmat.from_yaml('si_ephmat.yml')
+
+import matplotlib.pyplot as plt
+
+plt.rcParams.update(ppy.plot_tools.plotparams)
+si_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
+
+fig, ax  = plt.subplots()
+si_ephmat.plot_ephmat(ax)
+plt.show()
+
+plt.savefig('ephmat.jpg',dpi=400)
 user@de401a4c683a:/run/epr_gen/silicon/perturbo/ephmat$ python plot.py
 ```
-The e-ph coupling strength along high symmetry points is shown in `band.jpg`. 
+The e-ph coupling strength along high symmetry points is shown in `ephmat.jpg`. 
 
-![band structure](./ephmat/band.jpg)
+![band structure](./ephmat/ephmat.jpg)
