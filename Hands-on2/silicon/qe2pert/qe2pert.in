@@ -1,0 +1,12 @@
+&qe2pert
+  prefix='si'
+  outdir='./tmp'
+  phdir='../pw-ph-wann/phonon/save'
+  nk1=4, nk2=4, nk3=4
+  dft_band_min = 1
+  dft_band_max = 16
+  num_wann = 8
+  lwannier=.true.
+  load_ephmat = .false.
+  system_2d = .false.
+/

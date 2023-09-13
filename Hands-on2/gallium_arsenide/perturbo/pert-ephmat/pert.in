@@ -1,0 +1,9 @@
+&perturbo 
+ prefix = 'gaas'
+ calc_mode = 'ephmat'
+ fklist = 'gaas_band.kpt'
+ fqlist = 'gaas_band.qpt'
+
+ band_min = 5
+ band_max = 5 
+/

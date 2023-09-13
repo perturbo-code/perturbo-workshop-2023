@@ -1,0 +1,11 @@
+&perturbo
+  prefix = 'si'
+  calc_mode = 'ephmat'
+  fklist = 'eph.kpt'
+  fqlist = 'eph.qpt'
+
+  band_min = 2
+  band_max = 4
+
+  phfreq_cutoff = 1   !meV
+ /

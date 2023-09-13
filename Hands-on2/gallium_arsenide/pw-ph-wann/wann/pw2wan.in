@@ -1,0 +1,9 @@
+&inputpp
+ outdir='./tmp/'
+  prefix = 'gaas'
+  seedname = 'gaas'
+  spin_component = 'none'
+  write_mmn = .true.
+  write_amn = .true.
+  write_unk = .false. 
+/
