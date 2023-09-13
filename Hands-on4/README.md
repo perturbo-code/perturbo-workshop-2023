@@ -8,7 +8,9 @@ The equation for the drift velocity is
 
 ![Equation for drift velocity](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/drift_velocity_eq.png)
 
-In a recent paper, the velocity-field curve was calculated for Si, GaAs and graphene both in low and high fields. In this tutorial we will attempt to replicate the curve for GaAs with smaller sampling and less convergence due to time constraints. 
+In a recent paper[1](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.104.L100303), the velocity-field curve was calculated for Si, GaAs and graphene both in low and high fields. In this tutorial we will attempt to replicate the curve for GaAs with smaller sampling and less convergence due to time constraints. 
+
+![Drift velocity curves from paper](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/velocity_field_curve.png)
 
 ## 0. Setup
 
