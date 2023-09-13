@@ -16,5 +16,5 @@ plt.rcParams.update(ppy.plot_tools.plotparams)
 si_phdisp.qpt.add_labels(ppy.lattice.points_fcc)
 
 si_phdisp.plot_phdisp(ax)
-plt.show()
-#plt.savefig('phdisp.png')
+#plt.show()
+plt.savefig('si_phdisp.png')
