@@ -6,7 +6,7 @@
  boltz_kdim(2) = 40 
  boltz_kdim(3) = 40
  
- load_scatter_eph = .true.
+ !load_scatter_eph = .true.
  boltz_emin = 6.4
  boltz_emax = 6.9
  band_min = 5
