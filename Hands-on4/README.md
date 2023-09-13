@@ -157,7 +157,7 @@ The next step is to run the time stepping of the Boltzmann transport equation (B
 
 This is done by starting with zero applied field and letting the calculation run to convergence. We then need to increase the electric field strength in steps, each time restarting the calculation from the previous, converged distribution and letting it run to convergence. This procedure is shown in the schematic below
 
-![Schematic showing how the distribution is extracted at each electric field strength](https://myoctocat.com/assets/images/)
+![Schematic showing how the distribution is extracted at each electric field strength](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/computation_schematic.png)
 
 The distribution used for calculating the drift velocity is the final value of f<sub>nk (t) upon convergence. 
 
