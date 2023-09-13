@@ -2,8 +2,8 @@
 program: perturbo
 
 start date and time:
-   date: 12 September 2023
-   time: " 6: 1:33"
+   date: 13 September 2023
+   time: "19:39:23"
 
 parallelization:
    type: OpenMP
@@ -33,7 +33,7 @@ input parameters:
       ftemper:          si.temper
       full_ite:          False
       hole:          False
-      load_scatter_eph:          True 
+      load_scatter_eph:          False
       nsamples:              100000
       output_nstep:                   1
       phfreq_cutoff:           7.3498617648950546E-05
@@ -1242,22 +1242,32 @@ timings:
    time units: s
 
    PERTURBO:
-      cpu:        95.49482700
-      wall:       24.65623188
+      cpu:      1041.17721100
+      wall:      268.26409388
       calls:         1
 
    scat_setup:
-      cpu:         1.42952300
-      wall:        0.97203612
+      cpu:       946.70497200
+      wall:      244.34188199
       calls:         1
 
    set_kq_pair:
-      cpu:         1.16087900
-      wall:        0.32555103
+      cpu:         1.16570500
+      wall:        0.32244205
+      calls:         1
+
+   init_eph_wan:
+      cpu:         0.29648900
+      wall:        2.73149109
+      calls:         1
+
+   compute_g2:
+      cpu:       944.96490400
+      wall:      240.68024683
       calls:         1
 
    load_eph_g2:
-      cpu:         0.23974800
-      wall:        0.50302291
+      cpu:         0.24971100
+      wall:        0.39274907
       calls:         1
 ...
