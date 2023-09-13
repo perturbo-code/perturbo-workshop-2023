@@ -4,6 +4,10 @@ In this tutorial we will learn about the ultrafast dynamics calculations in Pert
 
 Velocity-field curves describe the mean drift velocity of the charge carriers in a material with an applied electric field. The drift velocity typically increases linearly at low fields, with a slope equal to the carrier mobility, and then saturates at high fields. Detailed knowledge of the mechanisms governing the mobility and the saturation velocity is important to advance electronic devices. 
 
+The equation for the drift velocity is 
+
+![Equation for drift velocity](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/computation_schematic.png)
+
 In a recent paper, the velocity-field curve was calculated for Si, GaAs and graphene both in low and high fields. In this tutorial we will attempt to replicate the curve for GaAs with smaller sampling and less convergence due to time constraints. 
 
 ## 0. Setup
@@ -26,7 +30,7 @@ NB!!!!!! GET gaas\_epr.h5 FILE
 for ifort version:
 
 ```
-docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 --user 500 -it --name perturbo-workshop perturbo/perturbo:ifort_mpi
+docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 --user 500 -it --name perturbo-workshop perturbo/perturbo:ifort
 ```
 
 for gcc version:
@@ -79,7 +83,7 @@ ln -sf ../../qe2pert/gaas_epr.h5
 Run perturbo.x
 
 ```
-mpirun -n 1 perturbo.x -npools 1 -i pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 
 ### Output
@@ -89,14 +93,24 @@ mpirun -n 1 perturbo.x -npools 1 -i pert.in > pert.out
 
 ### Plotting bands
 
-We can now plot the bands using perturbopy
+We can now plot the bands using perturbopy outside the docker
 
-TODO: Need to plot 
+```
+python plot_bands.py
+```
+
+This will create two files:
+- gaas_bands.png: Displays band structure of GaAs
+- gaas_bands_zoom.png: Displays zoomed in version of band structure of GaAs
 
 
 ## 2. Setup Calculation
 
-Before we can run the dynamics calculations, we need to run *calc_mode=setup*. 
+Before we can run the dynamics calculations, we need to run *calc_mode=setup*. Move into the setup directory
+
+```
+cd ../setup
+```
 
 ### Input files
 
@@ -143,7 +157,7 @@ ln -sf ../../qe2pert/gaas_epr.h5
 We can then run the calculation with the following command
 
 ```
-mpirun -n 1 perturbo.x -npools 1 -i pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 
 ### Output
@@ -153,13 +167,18 @@ The output file we're interested in for ultrafast dynamics is the gaas\_tet.h5 f
 
 ## 3. Dynamics-run
 
-The next step is to run the time stepping of the Boltzmann transport equation (BTE) which will provide us with the electron distribution, f<sub>nk (t), that we'll need to determine the drift velocities. We need to find these for different electric field strengths and we need to let the calculation run to convergence in order to get at the steady state values of the drift velocity. 
+The next step is to run the time stepping of the Boltzmann transport equation (BTE) which will provide us with the electron distribution, f<sub>nk</sub> (t), that we'll need to determine the drift velocities. We need to find these for different electric field strengths and we need to let the calculation run to convergence in order to get at the steady state values of the drift velocity. 
 
 This is done by starting with zero applied field and letting the calculation run to convergence. We then need to increase the electric field strength in steps, each time restarting the calculation from the previous, converged distribution and letting it run to convergence. This procedure is shown in the schematic below
 
 ![Schematic showing how the distribution is extracted at each electric field strength](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/computation_schematic.png)
 
-The distribution used for calculating the drift velocity is the final value of f<sub>nk (t) upon convergence. 
+The distribution used for calculating the drift velocity is the final value of f<sub>nk</sub> (t) upon convergence. 
+
+First we must change to the dynamics-run directory
+```
+cd ../dynamics-run
+```
 
 ### Input
 
@@ -219,9 +238,9 @@ do
    # copy prefix.temper
    cp ../../setup/${PREFIX}.temper .
 
-   # mpirun
+   # run perturbo.x
    export OMP_NUM_THREADS=${OMP_THREADS}
-   mpirun -n ${NODES} perturbo.x -npools ${NPOOLS} -i pert.in > pert.out
+   perturbo.x -i pert.in > pert.out
 
    echo Done $efield
 
@@ -277,20 +296,8 @@ The parameters that are commented out lets the calculation come to an end when i
 
 ### Running perturbo.x
 
-First we must link all the necessary files
+We run the bash script which also takes care of linking the epr and tet files, as well as copying the temper file
 
-```
-ln -sf ../../qe2pert/gaas_epr.h5
-ln -sf ../setup/gaas_tet.h5
-```
-
-and copy across the ftemper file
-
-```
-cp ../setup/gaas.temper .
-```
-
-Finally we run the bash script
 ```
 chmod +x run.sh
 ./run.sh
@@ -300,9 +307,15 @@ chmod +x run.sh
 
 Each of the *efield-{efield value}* folders will contain a *gaas\_cdyna.h5* file with contains the distribution at all band and k point combinations for each time step. 
 
-## 5. dynamics-pp
+## 4. dynamics-pp
 
 The final Perturbo calculation that must be run is *calc_mode=dynamics-pp*. This will give the average distribution as a function of energy and time. 
+
+Move to the dynamics-pp folder
+
+```
+cd ../dynamics-pp
+```
 
 ### Input files
 
@@ -316,13 +329,11 @@ PREFIX='gaas'
 # EFIELDS=(0 100 200 300 500 1000 2000 3000 4000 6000 8000) 
 EFIELDS=(0 100)
  
-# MPI and OpenMP variables
-NODES=1
-NPOOLS=1
+# OpenMP variables
 OMP_THREADS=4
 
-OS='MACOS'
-# OS='LINUX'
+# OS='MACOS'
+OS='LINUX'
 
 for efield in ${EFIELDS[@]}
 do
@@ -337,7 +348,7 @@ do
    cp ../pert-ref.in  ./pert.in
    if [ "$OS" == "MACOS" ]; then
       sed -i '' "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
-   elif ["$OS" == "LINUX" ]; then
+   elif [ "$OS" == "LINUX" ]; then
       sed -i "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
    else
       echo OS not supported
@@ -353,7 +364,7 @@ do
 
    # mpirun
    export OMP_NUM_THREADS=$OMP_THREADS 
-   mpirun -n $NODES perturbo.x -npools $NPOOLS -i pert.in > pert.out
+   perturbo.x -i pert.in > pert.out
 
    echo Done $efield
 
@@ -387,3 +398,10 @@ pert-ref.in
  ftemper              = 'gaas.temper'
 /
 ```
+
+### Output
+
+
+## 5. Plot Velocity-Field Curves 
+
+
