@@ -22,12 +22,25 @@ cd perturbo-workshop-2023
 git pull
 ```
 
+### Download and install perturbopy
+
+```
+git clone https://github.com/perturbo-code/perturbopy.git
+pip install .
+```
+
+For more information about perturbopy, click here [perturbopy](https://perturbopy.readthedocs.io/en/latest/index.html)
+
 ### Get epr file
 
 NB!!!!!! GET gaas\_epr.h5 FILE
 
 
 ### Create docker
+
+Click here, [docker for Perturbo](https://perturbo-code.github.io/mydoc_docker.html) for more information on how to download and install docker, and how to pull the docker image you require
+
+Run the docker by using one of the following commands
 
 for ifort version:
 

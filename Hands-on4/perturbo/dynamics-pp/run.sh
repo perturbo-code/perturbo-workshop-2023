@@ -2,16 +2,16 @@
 
 PREFIX='gaas'
 
-# EFIELDS=(0 100 200 300 500 1000 2000 3000 4000 6000 8000) 
-EFIELDS=(0 100)
+# Test with two values first, then run full selection
+# EFIELDS=($(seq 200 200 400))
+# EFIELDS=($(seq 200 200 3000))
+# EFIELDS=(0)
+EFIELDS=($(seq 0 200 3000))
  
-# MPI and OpenMP variables
-NODES=1
-NPOOLS=1
+# OpenMP variables
 OMP_THREADS=4
 
-OS='MACOS'
-# OS='LINUX'
+OS='LINUX'
 
 for efield in ${EFIELDS[@]}
 do
@@ -23,11 +23,12 @@ do
    cd $DIR
 
    #change pert.in
-   cp ../pert-ref.in  ./pert.in
+   cp ../../dynamics-run/efield-${efield}/pert.in  ./pert.in
+
    if [ "$OS" == "MACOS" ]; then
-      sed -i '' "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
-   elif ["$OS" == "LINUX" ]; then
-      sed -i "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
+      sed -i '' "s|.*calc_mode.*|  calc_mode            = 'dynamics-pp'|g"   pert.in
+   elif [ "$OS" == "LINUX" ]; then
+      sed -i "s|.*calc_mode.*|  calc_mode            = 'dynamics-pp'|g"   pert.in
    else
       echo OS not supported
    fi
@@ -35,14 +36,13 @@ do
    # link prefix_epr.h5 and prefix_tet.h5
       ln -sf ../../../qe2pert/${PREFIX}_epr.h5
       ln -sf ../../setup/${PREFIX}_tet.h5
-      ln -sf ../../dynamics-run/${PREFIX}_cdyna.h5
+      ln -sf ../../dynamics-run/efield-0/${PREFIX}_cdyna.h5
 
    # copy prefix.temper
    cp ../../setup/${PREFIX}.temper .
 
-   # # mpirun
-   # export OMP_NUM_THREADS=$OMP_THREADS 
-   # mpirun -n $NODES perturbo.x -npools $NPOOLS -i pert.in > pert.out
+   # run perturbo.x
+   perturbo.x -i pert.in > pert.out 
 
    echo Done $efield
 
