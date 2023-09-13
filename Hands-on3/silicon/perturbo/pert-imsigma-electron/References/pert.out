@@ -1,0 +1,42 @@
+
+   Program PERTURBO starts on 12Sep2023 at  5:28: 3 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'imsigma'
+     --------------------------------------------------
+     The si_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     band_min:    5  band_max:    6
+     Reading list from file: si_tet.kpt
+     total number of k-points:         99
+     total number of q-points:      64000
+    |--------------------------------------------------|
+     Im[Sigma]:                          
+           5.00%
+          10.00%
+          15.00%
+          20.00%
+          25.00%
+          30.00%
+          35.00%
+          40.00%
+          45.00%
+          50.00%
+          55.00%
+          60.00%
+          65.00%
+          70.00%
+          75.00%
+          80.00%
+          85.00%
+          90.00%
+          95.00%
+         100.00%
+     >Im[Sigma] done.
+
+     PERTURBO     :   6m36.28s CPU   1m43.06s WALL
+
+     init_eph_wan :      0.28s CPU      3.06s WALL (       1 calls)
+     calc_selfel  :    395.97s CPU     99.78s WALL (       1 calls)
+
+   Program was terminated on:   5:29:47  12Sep2023             

@@ -1,0 +1,31 @@
+
+   Program PERTURBO starts on 12Sep2023 at 22:22:45 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'trans-rta'
+     --------------------------------------------------
+     The si_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     band_min:    5  band_max:    6
+     >loading kpt, tetra from si_tet.h5
+
+     number of  tetrahedra selected:      11856
+     number of   reducible k-points:       2919
+     number of irreducible k-points:         99
+
+     >finish init grid.
+      - Read scattering rate from file: si.imsigma
+     >finish init rates
+     >start transport
+     >progress: (current T / total T)
+        1 /   5
+        2 /   5
+        3 /   5
+        4 /   5
+        5 /   5
+     >finish transport.
+
+     PERTURBO     :     17.50s CPU      4.61s WALL
+
+
+   Program was terminated on:  22:22:50  12Sep2023             

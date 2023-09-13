@@ -1,0 +1,23 @@
+
+   Program PERTURBO starts on 12Sep2023 at  4:40: 8 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'setup'
+     --------------------------------------------------
+     The si_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     band_min:    5  band_max:    6
+     >generating grid ...
+
+     number of  tetrahedra selected:      11856
+     number of   reducible k-points:       2919
+     number of irreducible k-points:         99
+
+     Energy window (eV):     6.633612     6.900000
+
+
+     PERTURBO     :      0.74s CPU      0.24s WALL
+
+     Grid_gen     :      0.07s CPU      0.03s WALL (       1 calls)
+
+   Program was terminated on:   4:40: 9  12Sep2023             

@@ -1,0 +1,16 @@
+&perturbo
+  prefix      = 'si'
+  calc_mode   = 'imsigma'
+  
+  fklist   = 'si_tet.kpt'  !kpt file from setup calculation
+  ftemper  = 'si.temper'
+  
+  band_min = 5
+  band_max = 6
+
+  phfreq_cutoff = 0.625 ! meV !Phonon frequency cutoff
+  delta_smear = 10 ! meV      !Smearing value
+
+  sampling = 'uniform'	!Type of q-point sampling
+  nsamples = 64000	!Number of q-points
+ /

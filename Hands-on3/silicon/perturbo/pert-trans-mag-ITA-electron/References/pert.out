@@ -1,0 +1,38 @@
+
+   Program PERTURBO starts on 12Sep2023 at  6: 1:33 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'trans-mag-ita'
+     --------------------------------------------------
+     The si_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     band_min:    5  band_max:    6
+     >loading kpt, tetra from si_tet.h5
+
+     number of  tetrahedra selected:      11856
+     number of   reducible k-points:       2919
+     number of irreducible k-points:         99
+
+     >finish init grid.
+     >start scatter_setup
+     No. of q-points and (k,q) pairs on each processor:
+     Proc.   1:  #.q     19123 |  #.(k,q)     2247693
+     >scatter_setup done.
+      - Compute scattering rates on the fly.
+     >finish init rates
+     >start transport
+     >progress: (current T / total T)
+        1 /   5
+        2 /   5
+        3 /   5
+        4 /   5
+        5 /   5
+     >finish transport.
+
+     PERTURBO     :   1m35.49s CPU     24.66s WALL
+
+     scat_setup   :      1.43s CPU      0.97s WALL (       1 calls)
+     set_kq_pair  :      1.16s CPU      0.33s WALL (       1 calls)
+     load_eph_g2  :      0.24s CPU      0.50s WALL (       1 calls)
+
+   Program was terminated on:   6: 1:58  12Sep2023             

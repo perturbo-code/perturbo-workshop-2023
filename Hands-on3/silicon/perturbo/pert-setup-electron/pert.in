@@ -1,0 +1,15 @@
+&perturbo
+ prefix      = 'si'
+ calc_mode   = 'setup'
+
+ boltz_kdim(1) = 40   !kgrid along three crystal axes 
+ boltz_kdim(2) = 40 
+ boltz_kdim(3) = 40
+
+ boltz_emin = 6.4  !Energy window
+ boltz_emax = 6.9  !Energy window
+ band_min = 5	   !Band index
+ band_max = 6
+ 
+ ftemper  = 'si.temper' !Name of .temper file
+/
