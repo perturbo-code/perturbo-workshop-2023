@@ -5,7 +5,7 @@
 
 This hands-on session covers electron-phonon scattering and transport calculations. We will be running calculation modes **setup**(grid setup), **imsigma** (scattering rates), **trans-rta** (RTA transport), **trans-mag-rta** (RTA magnetotransport), **trans-ita** (full BTE transport), and **trans-mag-ita** (full BTE magnetotransport) on silicon. 
 
-Please download all the relevant files from this [github repository](https://github.com/perturbo-code/perturbo-workshop-2023/tree/main), and run docker on your local machine.
+Please download all the relevant files from this [github repository](https://github.com/perturbo-code/perturbo-workshop-2023/tree/main), and run docker on your local machine.  The References folder inside each of the directories contains outputs from previous runs. 
 
 ```
 docker run -v <path-to_your_work_folder>:/home/user/run/<name_of_your_work_folder_in_container> --user 500 -it --rm --name perturbo perturbo/perturbo:<tag>
@@ -254,7 +254,7 @@ The input file pert.in
  boltz_kdim(2) = 40
  boltz_kdim(3) = 40
 
- load_scatter_eph = .true.
+ !load_scatter_eph = .true.
  boltz_emin = 6.4
  boltz_emax = 6.9
  band_min = 5
@@ -270,9 +270,9 @@ The input file pert.in
 /
 ```
 
-<span style="color:red"> Note:</span> The flag ``load_scatter_eph`` is set to true in this calculation. It reads the electron-phonon matrix elements from the stored hdf5 file  **tmp/si_eph_g2_p1.h5** that was generated using a previous transport run, so as to reuse the same matrix elements. 
+<span style="color:red"> Note:</span> The flag ``load_scatter_eph`` is set commented out in this calculation. It reads the electron-phonon matrix elements from the stored hdf5 file  **tmp/si_eph_g2_p1.h5** that was generated using a previous transport run, so as to reuse the same matrix elements without having to compute them again. 
 
-For now, feel free to use the pre-existing files to make your calculation faster, but for a full transport calculation, set the flag ``load_scatter_eph`` to false.
+If your computer is slow, please feel free to download the pre-existing tmp file, and uncomment this flag. 
 
 
 We are ready to run the ITA transport calculation:
@@ -328,7 +328,7 @@ This calculation is similar to the calc_mode 'trans-ita', except calculations ar
  boltz_kdim(2) = 40
  boltz_kdim(3) = 40
 
- load_scatter_eph = .true.
+ !load_scatter_eph = .true.
  boltz_emin = 6.4
  boltz_emax = 6.9
  band_min = 5
