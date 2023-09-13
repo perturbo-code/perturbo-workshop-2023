@@ -109,7 +109,7 @@ The calculation outputs 3 files - **si.imsigma**, **si.imsigma_mode** and **si_i
 
 Use the plotting script **plot.py** to plot the values of $\mathrm{Im}\Sigma$ vs energy.
 
-![](https://hackmd.io/_uploads/BkEDbvACn.png)
+![](./silicon/pert-imsigma-electron/References/si-imsigma.png)
 
 
 Note that this is not a completely converged calculation, as we have scaled down the parameters to reduce the computational cost. 
@@ -312,7 +312,7 @@ The calculation outputs 5 files - **si.cond**, **si.trans_coef**,**si.tdf**, **s
 
 Use the plotting script plot.py to plot the mobility as a function of temperature.
 
-![](https://hackmd.io/_uploads/S1DHwDRA3.png)
+![](./silicon/pert-trans-ITA-electron/References/si-trans-ita.png)
 
 
 ## calc_mode = 'trans-mag-ita'
@@ -360,7 +360,7 @@ The output files generated are same as in the above calculation (calc_mode 'tran
 We can plot the Hall conductivity as a function of magnetic field using the script plot.py
 
 
-![](https://hackmd.io/_uploads/SyG5iwRCh.png)
+![](./silicon/pert-trans-mag-ITA-electron/References/si-trans-mag-ita.png)
 
 <span style="color:red"> Note:</span> This calculation is not completely converged as we downscaled the grid size to make the calculation affordable.
 
