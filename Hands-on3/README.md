@@ -37,6 +37,8 @@ The input file pert.in has several parameters
  ftemper  = 'si.temper' !Name of .temper file
 /
 ```
+The parameters such as energy window (**boltz_emin** and **boltz_emax**) and band indices (**band_min** and **band_max**) can be better appreciated by looking at the bandstructure of silicon.
+![][./silicon/si_bands.png]
 
 The si.temper file contains information about temperature, chemical potential, carrier concentration and magnetic field
 ```
