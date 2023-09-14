@@ -28,7 +28,7 @@ for i, efield in enumerate(efields):
         vel_i = 0.0
     else:
         idx = i * nsnaps_per_run + (nsnaps_per_run - 1)
-        vel_i = vels_efield[idx]
+        vel_i = (-1.0) * vels_efield[idx]
 
     drift_vels.append(vel_i)
 
