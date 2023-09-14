@@ -38,6 +38,6 @@ drift_vels = np.asarray(drift_vels) / 1e6
 fig, ax = plt.subplots()
 ax.plot((efields / 1000), drift_vels, ls='', marker='o')
 ax.set_xlabel('E (kV/cm)')
-ax.set_ylabel('$v_d$ (cm/s)')
+ax.set_ylabel('$v_d$ ($10^6$ cm/s)')
 plt.savefig('velocity-field_curve.png')
 plt.show()
