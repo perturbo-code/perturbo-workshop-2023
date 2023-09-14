@@ -165,4 +165,8 @@ Hands-on4/perturbo/bands/references/*
 Hands-on4/perturbo/setup/references/*
 Hands-on4/perturbo/dynamics-run/references/*
 Hands-on4/perturbo/dynamics-pp/references/*
+.DS_Store
+Hands-on4/.DS_Store
+Hands-on4/*/.DS_Store
+Hands-on4/*/*/.DS_Store
 
