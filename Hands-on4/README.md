@@ -151,9 +151,9 @@ This will create two files:
 - gaas_bands.png: Displays band structure of GaAs
 - gaas_bands_zoom.png: Displays zoomed in version of band structure of GaAs
 
-![gaas_band](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/computation_schematic.png)
+![gaas_band](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/gaas_bands.png)
 
-![gaas_band_zoomed](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/computation_schematic.png)
+![gaas_band_zoomed](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/gaas_bands_zoom.png)
 
 ## 2. Setup Calculation
 
@@ -500,6 +500,6 @@ python plot_velocity_field_curve.py
 
 This should give the following curve
 
-![drift_velocity_curve](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/drift_velocity_eq.png)
+![drift_velocity_curve](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/output_velocity_field_curve.png)
 
 
