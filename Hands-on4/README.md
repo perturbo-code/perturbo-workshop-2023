@@ -17,6 +17,7 @@ In a recent paper[1](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.104.
 ### git pull
 
 Do a git pull to make sure the repo is up to date 
+
 ```
 cd perturbo-workshop-2023
 git pull
@@ -45,23 +46,27 @@ Run the docker by using one of the following commands
 for ifort version:
 
 ```
-docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 --user 500 -it --name perturbo-workshop perturbo/perturbo:ifort
+docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 --user 500 -it --rm --name perturbo-workshop perturbo/perturbo:ifort
 ```
 
 for gcc version:
 ```
-docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 --user 500 -it --name perturbo-workshop perturbo/perturbo:gcc
+docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 --user 500 -it --rm --name perturbo-workshop perturbo/perturbo:gcc
 ```
 
 ## 1. Bands
 
-Move into the bands directory
+First we want to calculate the band structure of GaAs. This will help us determine where to set the energy minimum and maximum for the dynamics calculations. 
+
+Start by moving into the bands directory
 
 ```
 cd perturbo-workshop-2023/Hands-on4/perturbo/bands/
 ```
 
 ### Input files
+
+The input files for *calc_mode=bands* are
 
 pert.in:
 
@@ -85,17 +90,17 @@ gaas\_band.kpt:
   0.000 0.000 0.000  1  !G
 ```
 
-This file gives the list of high-symmetry k points to plot the bands along. The first line specifies how many lines there are below the first line. Columns 1-3 give, respectively, the x, y, and z coordinates of a crystal momentum in crystal coordinates. The last column is the number of points from the current crystal momentum to the next crystal momentum.
+The kpt file gives the list of high-symmetry k points to plot the bands along. The first line specifies how many lines there are below the first line. Columns 1-3 give, respectively, the x, y, and z coordinates of a crystal momentum in crystal coordinates. The last column is the number of points from the current crystal momentum to the next crystal momentum.
 
 ### Running perturbo.x
 
-Link epr file to current directory
+We will now run Perturbo. In order to do so we must first link the epr file to the current directory
 
 ```
 ln -sf ../../qe2pert/gaas_epr.h5
 ```
 
-Run perturbo.x
+We can then run perturbo.x
 
 ```
 perturbo.x -i pert.in > pert.out
@@ -103,12 +108,40 @@ perturbo.x -i pert.in > pert.out
 
 ### Output
 
+*calc_mode=bands* gives the following output files
 - YAML file, called pert\_output.yml, containing the inputs and outputs of the bands calculation.
-- gaas.bands  contains the information unique to the bands calculation, including the interpolated band structure. 
+- gaas.bands contains the information unique to the bands calculation, including the interpolated band structure. 
 
 ### Plotting bands
 
-We can now plot the bands using perturbopy outside the docker
+We can now plot the bands using perturbopy outside the docker using the python file plot\_bands.py
+
+```
+import perturbopy.postproc as ppy
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots()
+plt.rcParams.update(ppy.plot_tools.plotparams)
+
+gaas_bands = ppy.Bands.from_yaml('gaas_bands.yml')
+gaas_bands.kpt.add_labels(ppy.lattice.points_fcc)
+
+# Plot band diagram
+gaas_bands.plot_bands(ax)
+
+plt.savefig('gaas_bands.png')
+# plt.show()
+
+# Plot zoomed in band diagram
+fig, ax2 = plt.subplots()
+
+gaas_bands.plot_bands(ax2, energy_window=[5, 7])
+
+plt.savefig('gaas_bands_zoom.png')
+# plt.show()
+```
+
+This simple script uses perturbopy. It is run by the simple command below
 
 ```
 python plot_bands.py
@@ -118,6 +151,9 @@ This will create two files:
 - gaas_bands.png: Displays band structure of GaAs
 - gaas_bands_zoom.png: Displays zoomed in version of band structure of GaAs
 
+![gaas_band](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/computation_schematic.png)
+
+![gaas_band_zoomed](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/computation_schematic.png)
 
 ## 2. Setup Calculation
 
@@ -128,6 +164,8 @@ cd ../setup
 ```
 
 ### Input files
+
+The input files for *calc_mode=setup* are
 
 pert.in:
 
@@ -140,7 +178,7 @@ pert.in:
   boltz_kdim(2)       = 60
   boltz_kdim(3)       = 60
   boltz_emin          = 5.665  !CBM=6.065
-  boltz_emax          = 6.365  !CBM+200meV
+  boltz_emax          = 6.365  
   band_min            = 5
   band_max            = 5
   ftemper             = 'gaas.temper'
@@ -190,7 +228,7 @@ This is done by starting with zero applied field and letting the calculation run
 
 The distribution used for calculating the drift velocity is the final value of f<sub>nk</sub> (t) upon convergence. 
 
-First we must change to the dynamics-run directory
+We will now go about performing the calculation of f<sub>nk<\sub> by running *calc_mode=dynamics-run*. First we must change to the dynamics-run directory
 ```
 cd ../dynamics-run
 ```
@@ -206,15 +244,18 @@ run.sh
 
 PREFIX='gaas'
 
-EFIELDS=(0 100 200 300 500 1000 2000 3000 4000 6000 8000) 
+# Test with two values first, then run full selection
+# EFIELDS=($(seq 200 200 400))
+# EFIELDS=($(seq 200 200 3000))
+# EFIELDS=(0)
+EFIELDS=($(seq 0 200 3000))
 
-# MPI and OpenMP variables
-NODES=1
-NPOOLS=1
+# OpenMP variables
 OMP_THREADS=4
 
-OS='MACOS'
-# OS='LINUX'
+# Commands change slightly based on OS
+# OS='MACOS'
+OS='LINUX'
 
 for efield in ${EFIELDS[@]}
 do
@@ -229,18 +270,16 @@ do
    cp ../pert-ref.in  ./pert.in
    if [ "$OS" == "MACOS" ]; then
       sed -i '' "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
-      if [$efield == 0]; then
-         sed -i '' "s|.*boltz_init_dist.*| boltz_init_dist      = 'fermi'|g"   pert.in
-      else
+      if [ $efield != 0 ]; then
          sed -i '' "s|.*boltz_init_dist.*| boltz_init_dist      = 'restart'|g"   pert.in
+         sed -i '' "s|.*load_scatter_eph.*| load_scatter_eph      = .true.|g"   pert.in
       fi
-   elif ["$OS" == "LINUX" ]; then
+   elif [ "$OS" == "LINUX" ]; then
       sed -i "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
 
-      if [$efield == 0]; then
-         sed -i "s|.*boltz_init_dist.*| boltz_init_dist      = 'fermi'|g"   pert.in
-      else
+      if [ $efield != 0 ]; then
          sed -i "s|.*boltz_init_dist.*| boltz_init_dist      = 'restart'|g"   pert.in
+         sed -i "s|.*load_scatter_eph.*| load_scatter_eph      = .true.|g"   pert.in
       fi
    else
       echo OS not supported
@@ -253,7 +292,15 @@ do
    # copy prefix.temper
    cp ../../setup/${PREFIX}.temper .
 
-   # run perturbo.x
+   # If restarting, need to link cdyna file
+   # and tmp directory
+   if [ $efield != 0 ]; then
+      echo Linking cdyna and tmp
+      ln -sf ../efield-0/${PREFIX}_cdyna.h5
+      ln -sf ../efield-0/tmp
+   fi
+
+   # run pertubo.x
    export OMP_NUM_THREADS=${OMP_THREADS}
    perturbo.x -i pert.in > pert.out
 
@@ -262,14 +309,16 @@ do
    # wait for a short period of time.  
    #done, return to upper directory.   
    cd ..
- 
+
    sleep 1
 done
 ```
 
 This will create a efield-{efield value} folder for each electric field strength. 
 
+We also have the pert-ref.in file which will become the pert.in file for each electric field strength.  
 pert-ref.in
+
 ```
 &perturbo
  prefix               = 'gaas'
@@ -277,19 +326,19 @@ pert-ref.in
  boltz_kdim(1)        = 60
  boltz_kdim(2)        = 60
  boltz_kdim(3)        = 60
- boltz_qdim(1)        = 60
- boltz_qdim(2)        = 60
- boltz_qdim(3)        = 60
+ boltz_qdim(1)        = 10
+ boltz_qdim(2)        = 10
+ boltz_qdim(3)        = 10
  boltz_efield(1)      = 0.0
  boltz_efield(2)      = 0.0
  boltz_efield(3)      = 0.0
  boltz_emin           = 5.665
- boltz_emax           = 6.365
+ boltz_emax           = 6.465
  band_min             = 5
  band_max             = 5
  hole                 = .false.
  ftemper              = 'gaas.temper'
- time_step            = 10.0
+ time_step            = 20.0
  boltz_nstep          = 100
  output_nstep         = 5
  boltz_init_dist      = 'fermi'
@@ -297,13 +346,9 @@ pert-ref.in
  boltz_init_e0        = 6.0344
  load_scatter_eph     = .false.
  tmp_dir              = './tmp'
- ! correct_meff         = .false.
  boltz_norm_dist      = .true.
- ! boltz_stop_when_converged = .true.
- ! boltz_nstep_min      = 1000
- ! boltz_v_eval_nstep   = 2
- ! a_threshold          = 0.001
  solver               = 'euler'
+ ! boltz_acc_thr        = 1.0
 /
 ```
 
@@ -320,11 +365,11 @@ chmod +x run.sh
 
 ### Output
 
-Each of the *efield-{efield value}* folders will contain a *gaas\_cdyna.h5* file with contains the distribution at all band and k point combinations for each time step. 
+The two output files from the *dynamics-run* calculation are *gaas\_cdyna.h5* and *gaas_dynamics-run.yml*. However, all calculations will use the same cdyna file so the actual cdyna file is contained in *efield-0* folder and has a number of runs equal to the number of electric field strengths we calculate for. 
 
 ## 4. dynamics-pp
 
-The final Perturbo calculation that must be run is *calc_mode=dynamics-pp*. This will give the average distribution as a function of energy and time. 
+The final Perturbo calculation that must be run is *calc_mode=dynamics-pp*. This will give the average distribution as a function of energy and time, as well as the drift velocity. 
 
 Move to the dynamics-pp folder
 
@@ -341,13 +386,14 @@ run.sh
 
 PREFIX='gaas'
 
-# EFIELDS=(0 100 200 300 500 1000 2000 3000 4000 6000 8000) 
-EFIELDS=(0 100)
+# Test with two values first, then run full selection
+# EFIELDS=($(seq 200 200 3000))
+EFIELDS=(0)
+# EFIELDS=($(seq 0 200 3000))
  
 # OpenMP variables
 OMP_THREADS=4
 
-# OS='MACOS'
 OS='LINUX'
 
 for efield in ${EFIELDS[@]}
@@ -360,11 +406,12 @@ do
    cd $DIR
 
    #change pert.in
-   cp ../pert-ref.in  ./pert.in
+   cp ../../dynamics-run/efield-${efield}/pert.in  ./pert.in
+
    if [ "$OS" == "MACOS" ]; then
-      sed -i '' "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
+      sed -i '' "s|.*calc_mode.*|  calc_mode            = 'dynamics-pp'|g"   pert.in
    elif [ "$OS" == "LINUX" ]; then
-      sed -i "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
+      sed -i "s|.*calc_mode.*|  calc_mode            = 'dynamics-pp'|g"   pert.in
    else
       echo OS not supported
    fi
@@ -372,14 +419,13 @@ do
    # link prefix_epr.h5 and prefix_tet.h5
       ln -sf ../../../qe2pert/${PREFIX}_epr.h5
       ln -sf ../../setup/${PREFIX}_tet.h5
-      ln -sf ../../dynamics-run/${PREFIX}_cdyna.h5
+      ln -sf ../../dynamics-run/efield-0/${PREFIX}_cdyna.h5
 
    # copy prefix.temper
    cp ../../setup/${PREFIX}.temper .
 
-   # mpirun
-   export OMP_NUM_THREADS=$OMP_THREADS 
-   perturbo.x -i pert.in > pert.out
+   # run perturbo.x
+   perturbo.x -i pert.in > pert.out 
 
    echo Done $efield
 
@@ -391,32 +437,69 @@ do
 done
 ```
 
-pert-ref.in
-```
-&perturbo
- prefix               = 'gaas'
- calc_mode            = 'dynamics-pp'
- boltz_kdim(1)        = 60
- boltz_kdim(2)        = 60
- boltz_kdim(3)        = 60
- boltz_qdim(1)        = 60
- boltz_qdim(2)        = 60
- boltz_qdim(3)        = 60
- boltz_efield(1)      = 0.0
- boltz_efield(2)      = 0.0
- boltz_efield(3)      = 0.0
- boltz_emin           = 5.665
- boltz_emax           = 6.365
- band_min             = 5
- band_max             = 5
- hole                 = .false.
- ftemper              = 'gaas.temper'
-/
-```
-
 ### Output
+
+The output of the *dynamics-pp* calculation is the *gaas\_popu.h5* file which contains the average distribution as a function of energy and time. It will also output *gaas\_dynamics-pp.yml* which contains the drift velocities for the different time steps and electric field strengths. 
 
 
 ## 5. Plot Velocity-Field Curves 
+
+Now that we have obtained the drift velocities, we need to extract this using the following python script which plots the velocity-field curve
+
+```
+import yaml
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+prefix = 'gaas'
+efields = np.arange(0, 3000, 200)
+nsnaps_per_run = 20
+
+drift_vels = []
+
+# yml file
+yml_file = f'efield-3000/{prefix}_dynamics-pp.yml'
+
+# Opening yml file
+with open(yml_file, 'r') as stream:
+    try:
+        # Converts yaml document to python object
+        dct = yaml.safe_load(stream)
+
+    except yaml.YAMLError as e:
+        print(e)
+
+vels_efield = dct['dynamics-pp']['velocity']
+
+for i, efield in enumerate(efields):
+    if i == 0:
+        vel_i = 0.0
+    else:
+        idx = i * nsnaps_per_run + (nsnaps_per_run - 1)
+        vel_i = (-1.0) * vels_efield[idx]
+
+    drift_vels.append(vel_i)
+
+drift_vels = np.asarray(drift_vels) / 1e6
+
+# Plot velocity-field curve
+fig, ax = plt.subplots()
+ax.plot((efields / 1000), drift_vels, ls='', marker='o')
+ax.set_xlabel('E (kV/cm)')
+ax.set_ylabel('$v_d$ (cm/s)')
+plt.savefig('velocity-field_curve.png')
+plt.show()
+```
+
+Again we run this with the simple python command
+
+```
+python plot_velocity_field_curve.py
+```
+
+This should give the following curve
+
+![drift_velocity_curve](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/drift_velocity_eq.png)
 
 
