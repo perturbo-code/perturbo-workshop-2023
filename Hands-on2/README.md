@@ -57,6 +57,9 @@ First of all, we need to perform the self-consistent calculation of electron den
 * input file: scf.in
 * execute command 
 ```bash=
+>> cd workshop_perturbo_2023
+>> cd silicon
+>> cd pw_ph_wan
 >> cd scf
 #mpi: 
 >> mpirun -np [number_of_process] pw.x -npools [number of pools] < scf.in > scf.out
@@ -101,7 +104,7 @@ ATOMIC_POSITIONS crystal
 Si  0.00000000  0.00000000  0.00000000
 Si -0.25000000  0.75000000 -0.25000000
 K_POINTS (automatic)
- 20 20 20 0 0 0
+ 8 8 8 0 0 0
 ```
 
 
@@ -139,7 +142,7 @@ The input file is attached. For fast running, you can use q grid by 2*2*2 in per
   outdir='./tmp'
   fildyn  = 'si.dyn.xml'
   fildvscf = 'dvscf'
-  nq1=8, nq2=8, nq3=8,
+  nq1=2, nq2=2, nq3=2,
 /
 ```
 
@@ -162,7 +165,7 @@ For constructing good maximum localized wannier functions, it needs a ground sta
 
 truncated nscf.in is attached
 ```
-#nscf.in
+#truncated nscf.in
 &CONTROL
   calculation = 'nscf'
 /
@@ -183,7 +186,7 @@ Maximum localized wannier function is constructed to represent e-ph matrix in re
 # generate a list of the require overlops
 >> wannier90.x -pp si
 >> pw2wannier90.x < pw2wan.in > pw2wan.out
->> wannier90.x si  # this a serial code
+>> wannier90.x si
 ```
 * job check: "JOB DONE" in the end of pw2wan.out for pw2wannier90.x; and "All done: wannier90 exiting" in si.wout
 * output: si_u.mat, si_u_dis.mat, and si_centres.xyz for qe2pert
@@ -220,7 +223,7 @@ begin projections
  dis_froz_min = -100.000
  dis_froz_max  = 9.000
  num_iter  =   10000
- mp_grid : 8 8 8
+ mp_grid : 4 4 4
  
  begin unit_cell_cart
  bohr
@@ -277,7 +280,7 @@ After finishing nscf, phonon and mlwf, we can perform qe2pert to integrate them 
 # serial
 >>  qe2pert.x -i qe2pert.in > qe2pert.out
 ```
-* job check: "Program was terminated on:  11:54:22  10Sep2023" in qe2pert.out
+* job check: "Program was terminated on:" in qe2pert.out
 * output: **epr.h5**
 
 
@@ -287,8 +290,8 @@ After finishing nscf, phonon and mlwf, we can perform qe2pert to integrate them 
 &qe2pert
   prefix='si'
   outdir='./tmp'
-  phdir='../pw-ph-wann/phonon_lessQ/save'
-  nk1=8, nk2=8, nk3=8
+  phdir='../pw-ph-wann/phonon/save'
+  nk1=4, nk2=4, nk3=4
   dft_band_min = 1
   dft_band_max = 16
   num_wann = 8
@@ -417,7 +420,7 @@ Here we will use perturbo.x to performs electronic structure interpolation and p
 # serial
 >> perturbo.x -i pert.in  > pert.out
 ```
-* job check: "Program was terminated on:  11:54:22  10Sep2023" in pert.out
+* job check: "Program was terminated on:" in pert.out
 * output: si.bands, si_bands.yml
 * the pert.in is attached
 ```
@@ -447,8 +450,10 @@ si_bands.plot_bands(ax)
 #plt.show()
 plt.savefig('si_band.png')
 ```
-see it in your finder:
+open the finder or directly open it with preview (Mac):
 ```bash
+>> open si_band.png 
+#or 
 >> open -a Finder .
 ```
 ![](./pic/si_band.png)
@@ -467,7 +472,7 @@ see it in your finder:
 # serial
 >> perturbo.x -i pert.in  > pert.out
 ```
-* job check: "Program was terminated on:  11:54:22  10Sep2023" in pert.out
+* job check: "Program was terminated on:" in pert.out
 * output: si.phdisp, si_phdisp.yml
 * the pert.in is attached
 ```
@@ -502,8 +507,10 @@ si_phdisp.plot_phdisp(ax)
 #plt.show()
 plt.savefig('si_phdisp.png')
 ```
-see it in your finder:
+open the finder or directly open it with preview (Mac):
 ```bash
+>> open si_phdisp.png 
+#or 
 >> open -a Finder .
 ```
 ![](./pic/si_phdisp.png)
@@ -521,7 +528,7 @@ see it in your finder:
 # serial
 >> perturbo.x -i pert.in  > pert.out
 ```
-* job check: "Program was terminated on:  11:54:22  10Sep2023" in pert.out
+* job check: "Program was terminated on:" in pert.out
 * output: si.ephmat, si_ephmat.yml 
 * the pert.in is attached
 ```
@@ -556,8 +563,10 @@ si_ephmat.plot_ephmat(ax)
 #plt.show()
 plt.savefig('si_ephmat.png')
 ```
-see it in your finder:
+open the finder or directly open it with preview (Mac):
 ```bash
+>> open si_ephmat.png 
+#or 
 >> open -a Finder .
 ```
 ![](./pic/si_ephmat.png)
@@ -579,8 +588,10 @@ si_ephmat.plot_defpot(ax)
 #plt.show()
 plt.savefig('si_defpot.png')
 ```
-see it in your finder:
+open the finder or directly open it with preview (Mac):
 ```bash
+>> open si_defpot.png 
+#or 
 >> open -a Finder .
 ```
 ![](./pic/si_defpot.png)
@@ -601,8 +612,10 @@ si_ephmat.plot_phdisp(ax)
 #plt.show()
 plt.savefig('si_ephmat_phdisp.png')
 ```
-see it in your finder:
+open the finder or directly open it with preview (Mac):
 ```bash
+>> open si_ephmat_phdisp.png
+#or 
 >> open -a Finder .
 ```
 ![](./pic/si_ephmat_phdisp.png)
