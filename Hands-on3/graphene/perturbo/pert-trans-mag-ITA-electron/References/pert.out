@@ -1,0 +1,80 @@
+
+   Program PERTURBO starts on 15Sep2023 at 18: 3:30 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'trans-mag-ita'
+     --------------------------------------------------
+     The graphene_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     N.B.: current system is 2D.
+     band_min:    2  band_max:    2
+     >loading kpt, tetra from graphene_tet.h5
+
+     number of  tetrahedra selected:      40668
+     number of   reducible k-points:       7042
+     number of irreducible k-points:        624
+
+     >finish init grid.
+     >start scatter_setup
+     No. of q-points and (k,q) pairs on each processor:
+     Proc.   1:  #.q      4857 |  #.(k,q)     2275658
+    |--------------------------------------------------|
+     Computing EPhMatrix:                
+           2.00%
+           6.01%
+          10.01%
+          14.00%
+          18.01%
+          22.01%
+          26.00%
+          30.01%
+          34.01%
+          38.00%
+          42.01%
+          46.01%
+          50.00%
+          54.00%
+          58.01%
+          62.01%
+          66.00%
+          70.01%
+          74.01%
+          78.00%
+          82.01%
+          86.01%
+          90.00%
+          94.01%
+          98.01%
+         100.00%
+    |--------------------------------------------------|
+     >scatter_setup done.
+      - Compute scattering rates on the fly.
+     >finish init rates
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+     >start transport
+     >progress: (current T / total T)
+        1 /   3
+        2 /   3
+        3 /   3
+     >finish transport.
+
+     PERTURBO     :   3m34.33s CPU     58.49s WALL
+
+     scat_setup   :    179.82s CPU     49.71s WALL (       1 calls)
+     set_kq_pair  :      1.04s CPU      0.36s WALL (       1 calls)
+     init_eph_wan :      0.04s CPU      0.16s WALL (       1 calls)
+     compute_g2   :    178.34s CPU     48.62s WALL (       1 calls)
+     load_eph_g2  :      0.38s CPU      0.49s WALL (       1 calls)
+
+   Program was terminated on:  18: 4:28  15Sep2023             

@@ -1,0 +1,32 @@
+
+   Program PERTURBO starts on 15Sep2023 at 17:46:19 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'trans-rta'
+     --------------------------------------------------
+     The graphene_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     N.B.: current system is 2D.
+     band_min:    2  band_max:    2
+     >loading kpt, tetra from graphene_tet.h5
+
+     number of  tetrahedra selected:      40668
+     number of   reducible k-points:       7042
+     number of irreducible k-points:        624
+
+     >finish init grid.
+      - Read scattering rate from file: graphene.imsigma
+     >finish init rates
+     >start transport
+     >progress: (current T / total T)
+        1 /   5
+        2 /   5
+        3 /   5
+        4 /   5
+        5 /   5
+     >finish transport.
+
+     PERTURBO     :     11.12s CPU      2.88s WALL
+
+
+   Program was terminated on:  17:46:22  15Sep2023             

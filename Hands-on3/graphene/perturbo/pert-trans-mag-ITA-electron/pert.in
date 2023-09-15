@@ -1,0 +1,26 @@
+&perturbo
+ prefix      = 'graphene'
+ calc_mode   = 'trans-mag-ita'
+
+ boltz_kdim(1) = 1200 
+ boltz_kdim(2) = 1200 
+ boltz_kdim(3) = 1
+
+ boltz_qdim(1) = 600
+ boltz_qdim(2) = 600
+ boltz_qdim(3) = 1
+
+ boltz_emin = -4.93 ! Dirac cone = -4.53
+ boltz_emax = -4.13 ! Dirac cone + 400 meV
+ band_min = 2
+ band_max = 2
+ 
+ ftemper  = 'graphene.temper'  !optional
+ tmp_dir = './tmp'
+
+ boltz_nstep = 50  !max number of iterations
+ trans_thr = 0.001
+
+ phfreq_cutoff = 0.625  !meV
+ delta_smear = 5        !meV
+/

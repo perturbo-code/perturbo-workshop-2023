@@ -1,0 +1,42 @@
+
+   Program PERTURBO starts on 15Sep2023 at 17:54:38 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'trans-mag-rta'
+     --------------------------------------------------
+     The graphene_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     N.B.: current system is 2D.
+     band_min:    2  band_max:    2
+     >loading kpt, tetra from graphene_tet.h5
+
+     number of  tetrahedra selected:      40668
+     number of   reducible k-points:       7042
+     number of irreducible k-points:        624
+
+     >finish init grid.
+      - Read scattering rate from file: graphene.imsigma
+     >finish init rates
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+ | SVD found small singular value, Rejecting this shell and trying the next   |
+     >start transport
+     >progress: (current T / total T)
+        1 /   3
+        2 /   3
+        3 /   3
+     >finish transport.
+
+     PERTURBO     :     26.06s CPU      6.66s WALL
+
+
+   Program was terminated on:  17:54:45  15Sep2023             
