@@ -171,10 +171,10 @@ If you want to use builded images on your computer, you will need to follow thes
 
 3. Run the following command:
 	```bash
-	docker run -v name_of_your_work_folder:/home/user/run/name_of_your_work_folder_in_container -h perturbocker --rm --name perturbo perturbo/perturbo:tag
+	docker run -v name_of_your_work_folder:/home/user/run/workshop -h perturbocker --rm --name perturbo perturbo/perturbo:tag
 	```
 This command has the following meaning:
-1. `-v` - V for ~~Vendetta~~ Volumes, which we talked about earlier. To connect a folder on your primary OS to a folder inside the container, specify the name of the folder on your computer, and after the colon, what the same volume inside the container will be called. In this case, the changes that will happen to the volume inside the container will be reflected in your OS and vice versa. This allows you to not only transfer input files to the container, but also to save all output-files after the container is finished and the container itself is deleted; 
+1. `-v` - V for ~~Vendetta~~ Volumes, which we talked about earlier. To connect a folder on your primary OS to a folder inside the container, specify the name of the folder on your computer, and after the colon, what the same volume inside the container will be called. In this case, the changes that will happen to the volume inside the container will be reflected in your OS and vice versa. This allows you to not only transfer input files to the container, but also to save all output-files after the container is finished and the container itself is deleted. Below we take a look at how this works; 
 
 2. `-h perturbocker` - is the hostname of the container. By default, it is the same as the container ID, which may not be particularly informative or readable. So we give it a specific name;
 3. `--rm` - deletes the container after its use is finished. Made to save memory. If it is important for you to save the container itself (for example, if you have installed any packages there), this option should be removed, and the container should be started using [`docker start`](https://docs.docker.com/engine/reference/commandline/start/) in the future. 
@@ -182,7 +182,7 @@ This command has the following meaning:
 
 You need to change two parameters:
 
-1. The names of your volume and folder in the container;
+1. The names of your volume;
 2. The name of the image itself - instead of `tag` specify the tag of the image you want to use as a basis for creating the container.
 
 Full list of the command line options is provided on the [offical page](https://docs.docker.com/engine/reference/commandline/run/).
@@ -190,7 +190,7 @@ Full list of the command line options is provided on the [offical page](https://
 Now we can run the container aaand... nothing will happen. The point is that inside the container itself, it has a single action prescribed to it - to run bash. If we run it without interactive mode, it will run bash and that will be the end of it. That doesn't work for us - we're interested in running inside the container. That's why we need to run another parameter  `-it (means interactive):
 
 ```bash
-docker run -v name_of_your_work_folder:/home/user/run/name_of_your_work_folder_in_container -h perturbocker -it --rm --name perturbo perturbo/perturbo:tag
+docker run -v name_of_your_work_folder:/home/user/run/workshop -h perturbocker -it --rm --name perturbo perturbo/perturbo:tag
 ```
 
 
@@ -208,8 +208,25 @@ If you want to use perturbo, all you have to do is type in the terminal
 perturbo.x 
 ```
 
-And you will see the program start up.
+And you will see the program start up. Similarly with Quantum Espresso executables.
 
-Similarly with Quantum Espresso executables.
+Let's now go back to how volumes work. Create a test_volumes file in our folder on the Host OS:
+```bash
+touch test_volumes
+```
+Now let's check inside the container to see how our folder has changed:
+```bash
+cd workshop/
+ls
+
+Hands-on1  Hands-on2  Hands-on3  Hands-on4  README.md  Tutorial2  Tutorial3  Tutorial4  test_volumes
+
+```
+We see the created file. Now let's rename it in the container:
+```bash
+mv test_volume test_volume_2
+```
+
+We can check that in our Host OS the file has also been renamed. That is, we can change files inside the container and inside the Host OS at the same time.
 
 Now you are ready for the usage of Perturbo in the container form!
