@@ -325,6 +325,14 @@ Now you have an overall idea of the whole epr.h5 file.
 For further processing with HDFVIEW, please refer to the [user guide](https://www.hdfgroup.org/downloads/hdfview/)
 
 
+### h5ls
+just type the follow command in the terminal 
+```bash=
+h5ls si_epr.h5
+#or
+h5ls demo_si_epr.h5/basic_data/zstar
+```
+
 ### h5py
 h5py provides rich functions to get access and manipulate hdf5 file, which consists of groups (something like folders) and datasets (something like numpy.array). 
 
