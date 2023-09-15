@@ -1,5 +1,4 @@
 # Hands-on session 3  
-[TOC]
 
 ## Introduction
 
@@ -38,7 +37,8 @@ The input file pert.in has several parameters
 /
 ```
 The parameters such as energy window (**boltz_emin** and **boltz_emax**) and band indices (**band_min** and **band_max**) can be better appreciated by looking at the bandstructure of silicon.
-![](./silicon/si_bands.png)
+
+<img src="./silicon/si_bands.png" width="500" height="350">
 
 The si.temper file contains information about temperature, chemical potential, carrier concentration and magnetic field
 ```
@@ -52,7 +52,7 @@ ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 ```
 and run the calculation. 
 ``` bash
-perturbo.x < pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 
 The setup calculation takes the information about the grid, energy window, temperature and fermi level, and outputs 4 files - **si_tet.h5**, **si_tet.kpt**, **si.doping**, **si.dos** and **si_setup.yml**. 
@@ -99,7 +99,7 @@ Create a soft link to the **si_epr.h5** (as explained in the setup calculation),
 ``` bash
 ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 export OMP_NUM_THREADS=8
-perturbo.x < pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 
 **Note**: While PERTURBO supports both MPI and OpenMP parallelization, we are running a serial, multi-threaded version, and since you will be running your calculation on your local machine, it's best to set OpenMP threads to the maximum number of cores in your machine. 
@@ -111,8 +111,7 @@ The calculation outputs 3 files - **si.imsigma**, **si.imsigma_mode** and **si_i
 
 Use the plotting script **plot.py** to plot the values of $\mathrm{Im}\Sigma$ vs energy.
 
-![](./silicon/perturbo/pert-imsigma-electron/References/si-imsigma.png)
-
+<img src="./silicon/perturbo/pert-imsigma-electron/References/si-imsigma.png" width="700" height="400">
 
 Note that this is not a completely converged calculation, as we have scaled down the parameters to reduce the computational cost. 
 
@@ -171,7 +170,7 @@ We are ready to run the RTA transport calculation:
 ```bash
 ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 export OMP_NUM_THREADS=8
-perturbo.x < pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 
 The calculation outputs 5 files - **si.cond**, **si.trans_coef**,**si.tdf**, **si_tdf.h5** and **si_trans-rta.yml**.
@@ -224,7 +223,7 @@ Now, run the calculation
 ```bash
 ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 export OMP_NUM_THREADS=8
-perturbo.x < pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 
 The output files generated are same as in the above calculation, except for different magnetic fields - **si.cond**, **si.trans_coef**,**si.tdf**, **si_tdf.h5** and **si_trans-mag-rta.yml**.
@@ -281,7 +280,7 @@ We are ready to run the ITA transport calculation:
 ```bash
 ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 export OMP_NUM_THREADS=8
-perturbo.x < pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 
 The calculation outputs 5 files - **si.cond**, **si.trans_coef**,**si.tdf**, **si_tdf.h5** and **si_trans-ita.yml**. These files contain the same information as any other transport calculation, except **si.cond** file also prints out the conductivity tensor at each step in the iterative process.
@@ -353,7 +352,7 @@ The **si_tet.h5** and **si.temper** (same as ``calc_mode='trans-mag-rta'``) file
 ```bash
 ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 export OMP_NUM_THREADS=8
-perturbo.x < pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 
 
@@ -365,5 +364,3 @@ We can plot the Hall conductivity as a function of magnetic field using the scri
 ![](./silicon/perturbo/pert-trans-mag-ITA-electron/References/si-trans-mag-ita.png)
 
 <span style="color:red"> Note:</span> This calculation is not completely converged as we downscaled the grid size to make the calculation affordable.
-
-Time permitting, we can repeat the same calculations with the 2D material graphene. 
