@@ -52,7 +52,7 @@ ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 ```
 and run the calculation. 
 ``` bash
-perturbo.x -i pert.in > pert.out
+perturbo.x -i pert.in | tee pert.out
 ```
 
 The setup calculation takes the information about the grid, energy window, temperature and fermi level, and outputs 4 files - **si_tet.h5**, **si_tet.kpt**, **si.doping**, **si.dos** and **si_setup.yml**. 
@@ -99,7 +99,7 @@ Create a soft link to the **si_epr.h5** (as explained in the setup calculation),
 ``` bash
 ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 export OMP_NUM_THREADS=8
-perturbo.x -i pert.in > pert.out
+perturbo.x -i pert.in | tee pert.out
 ```
 
 **Note**: While PERTURBO supports both MPI and OpenMP parallelization, we are running a serial, multi-threaded version, and since you will be running your calculation on your local machine, it's best to set OpenMP threads to the maximum number of cores in your machine. 
@@ -170,7 +170,7 @@ We are ready to run the RTA transport calculation:
 ```bash
 ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 export OMP_NUM_THREADS=8
-perturbo.x -i pert.in > pert.out
+perturbo.x -i pert.in | tee pert.out
 ```
 
 The calculation outputs 5 files - **si.cond**, **si.trans_coef**,**si.tdf**, **si_tdf.h5** and **si_trans-rta.yml**.
@@ -223,7 +223,7 @@ Now, run the calculation
 ```bash
 ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 export OMP_NUM_THREADS=8
-perturbo.x -i pert.in > pert.out
+perturbo.x -i pert.in | tee pert.out
 ```
 
 The output files generated are same as in the above calculation, except for different magnetic fields - **si.cond**, **si.trans_coef**,**si.tdf**, **si_tdf.h5** and **si_trans-mag-rta.yml**.
@@ -280,7 +280,7 @@ We are ready to run the ITA transport calculation:
 ```bash
 ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 export OMP_NUM_THREADS=8
-perturbo.x -i pert.in > pert.out
+perturbo.x -i pert.in | tee pert.out
 ```
 
 The calculation outputs 5 files - **si.cond**, **si.trans_coef**,**si.tdf**, **si_tdf.h5** and **si_trans-ita.yml**. These files contain the same information as any other transport calculation, except **si.cond** file also prints out the conductivity tensor at each step in the iterative process.
@@ -352,7 +352,7 @@ The **si_tet.h5** and **si.temper** (same as ``calc_mode='trans-mag-rta'``) file
 ```bash
 ln -sf /home/user/run/perturbo-docker/silicon/qe2pert/si_epr.h5
 export OMP_NUM_THREADS=8
-perturbo.x -i pert.in > pert.out
+perturbo.x -i pert.in | tee pert.out
 ```
 
 
