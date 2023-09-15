@@ -10,7 +10,7 @@ It is possible to run perturbo faster and easier if you use soft called Docker. 
 Docker is a set of platform as a service (PaaS) products that use OS-level virtualization to deliver software in packages called containers. 
 
 So Docker is just the name of the software that allows you to use things called containers. Accordingly, we need to understand what containers are. 
-![Containers vs. virtual machine](images/docker_def)
+![Containers vs. virtual machine](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on1/images/docker_def.png)
 
 Let's consider a container versus a virtual machine. In the latter case, we have several separate operating systems running, managed by a hypervisor. In this case, each OS is independent and exists on its own, they are completely separated from each other.
 
@@ -24,7 +24,7 @@ For example, if we're talking about `perturbo/perturbo:gcc`, this image (more on
 3. the HDF5 and Quantum Espresso libraries
 4. Perturbo library
 
-![perturbo/perturbo:gcc](images/perturbo_gcc)
+![perturbo/perturbo:gcc](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on1/images/perturbo_gcc.png)
 
 Accordingly, by running a container of this image (more on this below) on any computer running [Docker](https://www.docker.com) or its analogs (such as [Podman](https://podman.io)), you will be able to perform calculations using `Perturbo`, avoiding compilation. That's the point of containerization - to create an image ready to use.
 
