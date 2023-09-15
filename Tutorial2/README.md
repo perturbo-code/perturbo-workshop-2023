@@ -473,7 +473,7 @@ user@de401a4c683a:/run/epr_gen/silicon/perturbo/band$ python plot.py
 ```
 The bandstucture is shown in `band.jpg`. 
 
-![band structure](./silicon/perturbo/band/band.jpg)
+![band structure](./perturbo/band/band.jpg)
 
 ### Phonon dispersion
 Go to `perturbo/phonon/` directory.
@@ -526,7 +526,7 @@ plt.savefig('phdisp.jpg',dpi=400)
 user@de401a4c683a:/run/epr_gen/silicon/perturbo/phonon$ python plot.py
 ```
 The phonon dispersion is shown in `phdisp.jpg`. 
-![band structure](./silicon/perturbo/phonon/phdisp.jpg)
+![band structure](./perturbo/phonon/phdisp.jpg)
 ### E-ph
 Go to `perturbo/ephmat/` directory.
 Let's see the input files. 
@@ -582,4 +582,4 @@ user@silicon/perturbo/ephmat$ python plot.py
 ```
 The e-ph coupling strength along high symmetry points is shown in `ephmat.jpg`. 
 
-![band structure](./silicon/perturbo/ephmat/ephmat.jpg)
+![band structure](./perturbo/ephmat/ephmat.jpg)
