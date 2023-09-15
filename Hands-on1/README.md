@@ -20,9 +20,9 @@ For example, if we're talking about `perturbo/perturbo:gcc`, this image (more on
 
 1. Ubuntu shell
 2. The built gcc compiler
-3. Some supplementary packages (`vim`, `unzip`, etc.)
-3. the HDF5 and Quantum Espresso libraries
-4. Perturbo library
+3. Some supplementary staff (`vim`, `unzip`, etc.)
+3. the HDF5 and Quantum Espresso packages
+4. Perturbo package
 
 ![perturbo/perturbo:gcc](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on1/images/perturbo_gcc.png)
 
@@ -66,15 +66,16 @@ This command has the following meaning:
 1. `-v` - V for ~~Vendetta~~ Volumes, which we talked about earlier. To connect a folder on your primary OS to a folder inside the container, specify the name of the folder on your computer, and after the colon, what the same volume inside the container will be called. In this case, the changes that will happen to the volume inside the container will be reflected in your OS and vice versa. This allows you to not only transfer input files to the container, but also to save all output-files after the container is finished and the container itself is deleted; 
 2. `-it` - interactive launch of the container, so that we can go inside and run some calculations there. Without this command, the container would start and close immediately, since no execution is defined in it;
 3. `-h perturbocker` - is the hostname of the container. By default, it is the same as the container ID, which may not be particularly informative or readable. So we give it a specific name;
-4. `--rm` - deletes the container after its use is finished. Made to save memory. If it is important for you to save the container itself (for example, if you have installed any packages there), this option should be removed, and the container should be started using `docker start` in the future. [Docs](https://docs.docker.com/engine/reference/commandline/start/);
+4. `--rm` - deletes the container after its use is finished. Made to save memory. If it is important for you to save the container itself (for example, if you have installed any packages there), this option should be removed, and the container should be started using [`docker start`](https://docs.docker.com/engine/reference/commandline/start/) in the future. 
 5. `--name` - the name that the container will receive. During run (and, if the container is not deleted, during storage) it can be referred to by this name. 
 
-Full list of the command line options is provided on the [offical page](https://docs.docker.com/engine/reference/commandline/run/)
+Full list of the command line options is provided on the [offical page](https://docs.docker.com/engine/reference/commandline/run/).
 
 You need to change two parameters:
 
-1. The names of your volumes and volume in the container
+1. The names of your volume and folder in the container;
 2. The name of the image itself - instead of `tag` specify the tag of the image you want to use as a basis for creating the container.
+
 Now you're inside the container, congratulations! If you want to use perturbo, all you have to do is type in the terminal
 
 ```bash 
