@@ -42,7 +42,118 @@ Visit https://docker-curriculum.com for more information.
 ### Run the Docker on your computer 
 If you want to use builded images on your computer, you will need to follow these steps:
 
-1. Install the [Docker](https://www.docker.com) application on your computer;
+1. Install the [Docker](https://www.docker.com) application on your computer. This program should always be running, it is the Docker daemons that allow containers to run. If you have everything installed and running correctly, invoke the `docker` command in the terminal. You should then get the following system response:
+   ```bash
+   docker
+
+   Usage:  docker [OPTIONS] COMMAND
+
+   A self-sufficient runtime for containers
+
+   Common Commands:
+     run         Create and run a new container from an image
+     exec        Execute a command in a running container
+     ps          List containers
+     build       Build an image from a Dockerfile
+     pull        Download an image from a registry
+     push        Upload an image to a registry
+     images      List images
+     login       Log in to a registry
+     logout      Log out from a registry
+     search      Search Docker Hub for images
+     version     Show the Docker version information
+     info        Display system-wide information
+
+   Management Commands:
+     builder     Manage builds
+     buildx*     Docker Buildx (Docker Inc., v0.11.2-desktop.4)
+     compose*    Docker Compose (Docker Inc., v2.21.0-desktop.1)
+     container   Manage containers
+     context     Manage contexts
+     dev*        Docker Dev Environments (Docker Inc., v0.1.0)
+     extension*  Manages Docker extensions (Docker Inc., v0.2.20)
+     image       Manage images
+     init*       Creates Docker-related starter files for your project (Docker Inc., v0.1.0-beta.7)
+     manifest    Manage Docker image manifests and manifest lists
+     network     Manage networks
+     plugin      Manage plugins
+     sbom*       View the packaged-based Software Bill Of Materials (SBOM) for an image (Anchore Inc., 0.6.0)
+     scan*       Docker Scan (Docker Inc., v0.26.0)
+     scout*      Command line tool for Docker Scout (Docker Inc., 0.24.1)
+     system      Manage Docker
+     trust       Manage trust on Docker images
+     volume      Manage volumes
+
+   Swarm Commands:
+     swarm       Manage Swarm
+
+   Commands:
+     attach      Attach local standard input, output, and error streams to a running container
+     commit      Create a new image from a container's changes
+     cp          Copy files/folders between a container and the local filesystem
+     create      Create a new container
+     diff        Inspect changes to files or directories on a container's filesystem
+     events      Get real time events from the server
+     export      Export a container's filesystem as a tar archive
+     history     Show the history of an image
+     import      Import the contents from a tarball to create a filesystem image
+     inspect     Return low-level information on Docker objects
+     kill        Kill one or more running containers
+     load        Load an image from a tar archive or STDIN
+     logs        Fetch the logs of a container
+     pause       Pause all processes within one or more containers
+     port        List port mappings or a specific mapping for the container
+     rename      Rename a container
+     restart     Restart one or more containers
+     rm          Remove one or more containers
+     rmi         Remove one or more images
+     save        Save one or more images to a tar archive (streamed to STDOUT by default)
+     start       Start one or more stopped containers
+     stats       Display a live stream of container(s) resource usage statistics
+     stop        Stop one or more running containers
+     tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+     top         Display the running processes of a container
+     unpause     Unpause all processes within one or more containers
+     update      Update configuration of one or more containers
+     wait        Block until one or more containers stop, then print their exit codes
+
+   Global Options:
+         --config string      Location of client config files (default
+                              "/Users/kliavinekss/.docker")
+     -c, --context string     Name of the context to use to connect to the
+                              daemon (overrides DOCKER_HOST env var and
+                              default context set with "docker context use")
+     -D, --debug              Enable debug mode
+     -H, --host list          Daemon socket to connect to
+     -l, --log-level string   Set the logging level ("debug", "info",
+                              "warn", "error", "fatal") (default "info")
+         --tls                Use TLS; implied by --tlsverify
+         --tlscacert string   Trust certs signed only by this CA (default
+                              "/Users/kliavinekss/.docker/ca.pem")
+         --tlscert string     Path to TLS certificate file (default
+                              "/Users/kliavinekss/.docker/cert.pem")
+         --tlskey string      Path to TLS key file (default
+                              "/Users/kliavinekss/.docker/key.pem")
+         --tlsverify          Use TLS and verify the remote
+     -v, --version            Print version information and quit
+
+   Run 'docker COMMAND --help' for more information on a command.
+
+   For more help on how to use Docker, head to https://docs.docker.com/go/guides/
+   ```
+   Also, you can check that images do you have on your computer right now:
+   ```bash
+   docker images
+   ```
+   It's expected to obtain something like that:
+   ```bash
+   REPOSITORY          TAG                IMAGE ID       CREATED        SIZE
+   ```
+   Now you don't have any images. If you want to check what containers do you have, you need to run the command `docker ps -a`, where `-a` means all containers. You'll see the following response:
+   ```bash
+   CONTAINER ID   IMAGE                           COMMAND       CREATED       STATUS                     PORTS    NAMES
+   ```
+   Now you don't have any containers.
 2. Clone the Image from the [Docker Hub of the Perturbo](https://hub.docker.com/repository/docker/perturbo/perturbo/general). You can find the command for pulling the images on the tab **Tags**. For example, for GCC case it would be:
 	```bash
 	docker pull perturbo/perturbo:gcc
@@ -60,30 +171,62 @@ If you want to use builded images on your computer, you will need to follow thes
 
 3. Run the following command:
 	```bash
-	docker run -v name_of_your_work_folder:/home/user/run/name_of_your_work_folder_in_container -it -h perturbocker --rm --name perturbo perturbo/perturbo:tag
+	docker run -v name_of_your_work_folder:/home/user/run/workshop -h perturbocker --rm --name perturbo perturbo/perturbo:tag
 	```
 This command has the following meaning:
-1. `-v` - V for ~~Vendetta~~ Volumes, which we talked about earlier. To connect a folder on your primary OS to a folder inside the container, specify the name of the folder on your computer, and after the colon, what the same volume inside the container will be called. In this case, the changes that will happen to the volume inside the container will be reflected in your OS and vice versa. This allows you to not only transfer input files to the container, but also to save all output-files after the container is finished and the container itself is deleted; 
-2. `-it` - interactive launch of the container, so that we can go inside and run some calculations there. Without this command, the container would start and close immediately, since no execution is defined in it;
-3. `-h perturbocker` - is the hostname of the container. By default, it is the same as the container ID, which may not be particularly informative or readable. So we give it a specific name;
-4. `--rm` - deletes the container after its use is finished. Made to save memory. If it is important for you to save the container itself (for example, if you have installed any packages there), this option should be removed, and the container should be started using [`docker start`](https://docs.docker.com/engine/reference/commandline/start/) in the future. 
-5. `--name` - the name that the container will receive. During run (and, if the container is not deleted, during storage) it can be referred to by this name. 
+1. `-v` - V for ~~Vendetta~~ Volumes, which we talked about earlier. To connect a folder on your primary OS to a folder inside the container, specify the name of the folder on your computer, and after the colon, what the same volume inside the container will be called. In this case, the changes that will happen to the volume inside the container will be reflected in your OS and vice versa. This allows you to not only transfer input files to the container, but also to save all output-files after the container is finished and the container itself is deleted. Below we take a look at how this works; 
 
-Full list of the command line options is provided on the [offical page](https://docs.docker.com/engine/reference/commandline/run/).
+2. `-h perturbocker` - is the hostname of the container. By default, it is the same as the container ID, which may not be particularly informative or readable. So we give it a specific name;
+3. `--rm` - deletes the container after its use is finished. Made to save memory. If it is important for you to save the container itself (for example, if you have installed any packages there), this option should be removed, and the container should be started using [`docker start`](https://docs.docker.com/engine/reference/commandline/start/) in the future. 
+4. `--name` - the name that the container will receive. During run (and, if the container is not deleted, during storage) it can be referred to by this name. 
 
 You need to change two parameters:
 
-1. The names of your volume and folder in the container;
+1. The names of your volume;
 2. The name of the image itself - instead of `tag` specify the tag of the image you want to use as a basis for creating the container.
 
-Now you're inside the container, congratulations! If you want to use perturbo, all you have to do is type in the terminal
+Full list of the command line options is provided on the [offical page](https://docs.docker.com/engine/reference/commandline/run/).
+
+Now we can run the container aaand... nothing will happen. The point is that inside the container itself, it has a single action prescribed to it - to run bash. If we run it without interactive mode, it will run bash and that will be the end of it. That doesn't work for us - we're interested in running inside the container. That's why we need to run another parameter  `-it (means interactive):
+
+```bash
+docker run -v name_of_your_work_folder:/home/user/run/workshop -h perturbocker -it --rm --name perturbo perturbo/perturbo:tag
+```
+
+
+Now you're inside the container, congratulations! 
+
+We can check, that we actually run the container. Call in the new Terminal window `docker ps -a`, and you'll obtain:
+```bash 
+CONTAINER ID   IMAGE                           COMMAND       CREATED         STATUS                     PORTS     NAMES
+58dfcc3ac8cc   perturbo/perturbo:gcc           "/bin/bash"   6 seconds ago   Up 3 seconds                         perturbo
+```
+
+If you want to use perturbo, all you have to do is type in the terminal
 
 ```bash 
 perturbo.x 
 ```
 
-And you will see the program start up.
+And you will see the program start up. Similarly with Quantum Espresso executables.
 
-Similarly with Quantum Espresso executables.
+Let's now go back to how volumes work. Create a test_volumes file in our folder on the Host OS:
+```bash
+touch test_volumes
+```
+Now let's check inside the container to see how our folder has changed:
+```bash
+cd workshop/
+ls
+
+Hands-on1  Hands-on2  Hands-on3  Hands-on4  README.md  Tutorial2  Tutorial3  Tutorial4  test_volumes
+
+```
+We see the created file. Now let's rename it in the container:
+```bash
+mv test_volume test_volume_2
+```
+
+We can check that in our Host OS the file has also been renamed. That is, we can change files inside the container and inside the Host OS at the same time.
 
 Now you are ready for the usage of Perturbo in the container form!
