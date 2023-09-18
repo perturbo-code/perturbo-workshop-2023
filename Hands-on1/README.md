@@ -1,6 +1,6 @@
 # Installation of Perturbo
 Installing Perturbo can be complicated due to the fact that it depends on other packages, such as Quantum Espresso, HDF5, LAPACK, etc.
-Therefore, there are 2 scenarios for installing our package - from scratch (which was covered on the first day in the first tutorial) and using containers. During the workshop you will use the second method, so now we will take a closer look at it.
+Therefore, there are 2 scenarios for installing our package - from scratch (which was covered on the first day in the first tutorial) and using containers. During the workshop you will use the second method, so now we will take a closer look at it, as well as discuss the testing procedure for Perturbo.
 
 ## Usage of containers
 
@@ -307,7 +307,7 @@ Once, the `config_machine.yml` is set up, navigate to the folder and run:
 ```
 This script will automatically load and run all the tests from the `perturbopy` package and show you all intermediate steps.
 
-By default, in the case of successful run of all tests one will see **<n> passed** as the final line of the output, where `<n>` is the number of tests. You will also see that some tests have been skipped. This is fine, because the tests for `qe2pert.x` are skipped if it's not specified.
+By default, in the case of successful run of all tests one will see **n passed** as the final line of the output, where **n** is the number of tests. You will also see that some tests have been skipped. This is fine, because the tests for `qe2pert.x` are skipped if it's not specified.
 
 If all tests are passed, the `PERT_SCRATCH/perturbo` directory will be empty after the `./run_tests.py` execution. In the case of a failure of one or more tests, the corresponding test folder(s) kept in the `PERT_SCRATH/perturbo` directory. 
 
@@ -317,7 +317,7 @@ If you would like to test both `qe2pert.x` and `perturbo.x` executables, which i
 the testsuite will consist of three parts:
 
 1. Test `perturbo.x` (similar to the section above).
-2. Perform preliminary *ab initio* calculations from scratch (DFT, DFPT, Wannier90, more on that `here <https://perturbo-code.github.io/mydoc_qe2pert.html>`_), and use `qe2pert.x` to generate new `prefix_epr.h5` files.
+2. Perform preliminary *ab initio* calculations from scratch (DFT, DFPT, Wannier90, more on that [here](https://perturbo-code.github.io/mydoc_qe2pert.html), and use `qe2pert.x` to generate new `prefix_epr.h5` files.
 3. Run part of the calculations from step 1 again, and compare the outputs of `perturbo.x` produced with the new `prefix_epr.h5` files. 
 
 The step 3 is necessary to test the `qe2pert.x` executable because one cannot compare the `prefix_epr.h5` files to the reference ones directly due to gauge freedom. Therefore, we need to use `perturbo.x`, whose correctness we confirmed in step 1, to use it to determine whether `qe2pert.x` worked correctly. Since there is no need to check all the `perturbo.x` tests to verify the work of `qe2pert.x`, at the third stage we run only three claculation modes of Perturbo for each `prefix_epr.h5` file: `phdisp`, `ephmat` and `bands`. If these three tests pass, it means that `qe2pert.x` works correctly.
@@ -326,7 +326,7 @@ By default, the `qe2pert.x` testing is disabled as it is very time consuming (ca
 To enable the tests of `qe2pert.x`, activate the `--run_qe2pert` option. Also we'll take only one `epr`-file out of six because of the time complexity:
 
 ```bash
-   (perturbopy) $ ./run_tests.py --run_qe2pert --epr epr4
+   ./run_tests.py --run_qe2pert --epr epr4
 ```
 
 Similarly to `perturbo.x`-only tests, the user needs to make a new the *config_machine/config_machine.yml* file, but this time the file should include more information. As a reference, you can take file  *config_machine_qe2pert.yaml*
