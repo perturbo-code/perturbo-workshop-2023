@@ -230,3 +230,169 @@ mv test_volume test_volume_2
 We can check that in our Host OS the file has also been renamed. That is, we can change files inside the container and inside the Host OS at the same time.
 
 Now you are ready for the usage of Perturbo in the container form!
+
+
+## Testsuite
+
+Even in case of using a container, there may be problems with using the code due to different architectures of image author's processors and yours, wrong compilation options from the beginning and so on. In the case of installing from a scratch, the problem becomes even more serious, since errors can occur at many stages. Accordingly, you need a powerful tool that allows you to perform full testing of the installed package. Such a tool is [Testsuite](https://perturbopy.readthedocs.io/en/latest/testsuite.html), distributed in the Perturbopy package.
+
+### General description
+
+As you discissed yesterday, Perturbo package provides two executables: 
+
+1. `qe2pert.x` to postprocess the preliminary DFT, DFPT, and Wannier90 calculations and to compute the electron-phonon matrix elements in the Wannier basis stored in the `prefix_epr.h5` file.
+
+2. `perturbo.x` - the core executable of Perturbo package performing transport calculations, ultrafast dynamics, etc. 
+
+For more details, please read this [Perturbo page](https://perturbo-code.github.io/mydoc_features.html>).
+
+To test this executables, we provide a testsuite within the `Perturbopy` package. We recommend to run the testsuite:
+
+* to verify that the code runs correctly after download and installation;
+* if some modifications to the source code have been made;
+* if you would like to contribute to the Perturbo public version (in this situation, new test cases are also required).
+
+### Running testsuite
+
+#### Basic run
+To run testsuite you need a folder with input files, reference files, configuration files, etc. You can find the example of this folder in the `/opt/q-e-qe-7.2/perturbo/tests` folder.  We will use these tests today, but in general you can (and in some cases even should) write your own tests.
+
+#### Testing `perturbo.x` only
+
+If you plan to use (or you did modifications only to) the `perturbo.x` executable, the testsuite will automatically run `perturbo.x` for several materials and calculation modes and check that the results obtained with the new executable are the same as the reference.
+
+To test the `perturbo.x` executable you need to make the configuration file. As an example, in the *tests/config_machine* folder, you can take the *config_machine_perturbo.yml* file. This file contains basic information about running tesuite for `perturbo.x`.
+
+1. Copy the template YAML file inside the */opt/q-e-qe-7.2/perturbo/tests/config_machine* folder:
+
+```bash
+   cd config_machine
+   cp config_machine_perturbo.yml config_machine.yml
+```
+By default, the file named *config_machine.yml* is the one called by the program. If you want to use a file with a different name, you can use one of the [command-line options](https://perturbopy.readthedocs.io/en/latest/testsuite.html#parameterization-of-testsuite).
+
+2. Make changes to the configuration file. By default, the *config_machine_perturbo.yml* file is as follows:
+
+```bash
+    PERT_SCRATCH: tmp
+    prel_coms:
+        - module load perturbo
+        - export OMP_NUM_THREADS=8
+    comp_info:
+        perturbo:
+            exec: srun -n 8 perturbo.x -npools 8
+```
+Below the meaning of each of the blocks:
+
+* `PERT_SCRATCH` is the address of the folder where the auxiliary files in the tests will be located. 
+* `prel_coms` is a set of commands to be executed **before** the `perturbo.x` run. This could be loading packages, specifying any environment variables, etc. Enter every command as a separate line preceded by a hyphen, respecting the file indentation. In our case, we need to save only second line of `prel_coms` in case of usage container with openmp, of we can delete this commands at all.
+* `comp_info` - this block contains information about the `perturbo.x` computation. It has the `exec` field that specifies the run command taking into account the parallelization and other machine specifics. In this example, `perturbo.x` will be ran with the SLURM srun command using 8 MPI tasks. 
+
+We will use containers without MPI, so our final *config_machine_perturbo.yml* file can looks in the following way:
+
+```bash
+    PERT_SCRATCH: tmp
+    prel_coms:
+        - export OMP_NUM_THREADS=8
+    comp_info:
+        perturbo:
+            exec: perturbo.x -npools 8
+```
+
+
+Once, the `config_machine.yml` is set up, navigate to the folder and run:
+
+```bash
+   ./run_tests.py -s
+```
+This script will automatically load and run all the tests from the `perturbopy` package and show you all intermediate steps.
+
+By default, in the case of successful run of all tests one will see **<n> passed** as the final line of the output, where `<n>` is the number of tests. You will also see that some tests have been skipped. This is fine, because the tests for `qe2pert.x` are skipped if it's not specified.
+
+If all tests are passed, the `PERT_SCRATCH/perturbo` directory will be empty after the `./run_tests.py` execution. In the case of a failure of one or more tests, the corresponding test folder(s) kept in the `PERT_SCRATH/perturbo` directory. 
+
+#### Testing `qe2pert.x` and `perturbo.x`
+
+If you would like to test both `qe2pert.x` and `perturbo.x` executables, which is recommended after a compilation of the code from scratch or if you have done modifications to `qe2pert.x`, 
+the testsuite will consist of three parts:
+
+1. Test `perturbo.x` (similar to the section above).
+2. Perform preliminary *ab initio* calculations from scratch (DFT, DFPT, Wannier90, more on that `here <https://perturbo-code.github.io/mydoc_qe2pert.html>`_), and use `qe2pert.x` to generate new `prefix_epr.h5` files.
+3. Run part of the calculations from step 1 again, and compare the outputs of `perturbo.x` produced with the new `prefix_epr.h5` files. 
+
+The step 3 is necessary to test the `qe2pert.x` executable because one cannot compare the `prefix_epr.h5` files to the reference ones directly due to gauge freedom. Therefore, we need to use `perturbo.x`, whose correctness we confirmed in step 1, to use it to determine whether `qe2pert.x` worked correctly. Since there is no need to check all the `perturbo.x` tests to verify the work of `qe2pert.x`, at the third stage we run only three claculation modes of Perturbo for each `prefix_epr.h5` file: `phdisp`, `ephmat` and `bands`. If these three tests pass, it means that `qe2pert.x` works correctly.
+
+By default, the `qe2pert.x` testing is disabled as it is very time consuming (can take several hours in comparison with several minutes in case of `perturbo.x`) and requires a user to specify the Quantum Espresso and Wannier90 executables.
+To enable the tests of `qe2pert.x`, activate the `--run_qe2pert` option. Also we'll take only one `epr`-file out of six because of the time complexity:
+
+```bash
+   (perturbopy) $ ./run_tests.py --run_qe2pert --epr epr4
+```
+
+Similarly to `perturbo.x`-only tests, the user needs to make a new the *config_machine/config_machine.yml* file, but this time the file should include more information. As a reference, you can take file  *config_machine_qe2pert.yaml*
+
+1. Make your copy of the template YAML file:
+
+```bash 
+    cd config_machine
+    cp config_machine_qe2pert.yml config_machine.yml
+```
+
+2. Update the *config_machine.yml*  file for your specific case. By default,  the file has the following structure:
+
+```bash 
+
+    PERT_SCRATCH: tmp
+    prel_coms:
+        - module load perturbo
+        - module load qe
+    comp_info:
+        scf: 
+            exec: srun -n 64 pw.x -npools 8
+        phonon:
+            exec: srun -n 64 ph.x -npools 8
+        nscf:
+            exec: srun -n 64 pw.x -npools 8
+        wannier90:
+            exec: srun -n 2 wannier90.x
+        pw2wannier90:
+            exec: srun -n 1 pw2wannier90.x
+        qe2pert:
+            prel_coms:
+                - export OMP_NUM_THREADS=8
+            exec: srun -n 8 qe2pert -npools 8
+        perturbo:
+            prel_coms:
+                - export OMP_NUM_THREADS=8
+            exec: srun -n 8 perturbo.x -npools 8
+```
+			
+where `PERT_SCRATCH` and `prel_coms` are similar to the `perturbo.x`-only testing. Please note that the `prel_coms` (the top one) will be executed before each of the stages. `comp_info` now includes the run commands for each of the stages. If there are preliminary commands to be run *only* before a specific stage, this can be specified by the `prel_coms` field within the stage (see examples for the `qe2pert` `perturbo` runs in the YAML file).
+
+For our case, we can define the *config_machine.yml* in the following way:
+
+```bash 
+
+    PERT_SCRATCH: tmp
+    comp_info:
+        scf: 
+            exec: pw.x
+        phonon:
+            exec: ph.x
+        nscf:
+            exec: pw.x
+        wannier90:
+            exec: wannier90.x
+        pw2wannier90:
+            exec: pw2wannier90.x
+        qe2pert:
+            prel_coms:
+                - export OMP_NUM_THREADS=8
+            exec: qe2pert -npools 8
+        perturbo:
+            prel_coms:
+                - export OMP_NUM_THREADS=8
+            exec: perturbo.x -npools 8
+```
+
+When the tests are successful, you'll be confident that your perturbo is working well and you can move on to the next hands-on sessions.
