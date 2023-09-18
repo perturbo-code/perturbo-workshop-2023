@@ -323,11 +323,6 @@ the testsuite will consist of three parts:
 The step 3 is necessary to test the `qe2pert.x` executable because one cannot compare the `prefix_epr.h5` files to the reference ones directly due to gauge freedom. Therefore, we need to use `perturbo.x`, whose correctness we confirmed in step 1, to use it to determine whether `qe2pert.x` worked correctly. Since there is no need to check all the `perturbo.x` tests to verify the work of `qe2pert.x`, at the third stage we run only three claculation modes of Perturbo for each `prefix_epr.h5` file: `phdisp`, `ephmat` and `bands`. If these three tests pass, it means that `qe2pert.x` works correctly.
 
 By default, the `qe2pert.x` testing is disabled as it is very time consuming (can take several hours in comparison with several minutes in case of `perturbo.x`) and requires a user to specify the Quantum Espresso and Wannier90 executables.
-To enable the tests of `qe2pert.x`, activate the `--run_qe2pert` option. Also we'll take only one `epr`-file out of six because of the time complexity:
-
-```bash
-   ./run_tests.py --run_qe2pert --epr epr4
-```
 
 Similarly to `perturbo.x`-only tests, the user needs to make a new the *config_machine/config_machine.yml* file, but this time the file should include more information. As a reference, you can take file  *config_machine_qe2pert.yaml*
 
@@ -393,6 +388,12 @@ For our case, we can define the *config_machine.yml* in the following way:
             prel_coms:
                 - export OMP_NUM_THREADS=8
             exec: perturbo.x -npools 8
+```
+
+To enable the tests of `qe2pert.x`, activate the `--run_qe2pert` option. Also we'll take only one `epr`-file out of six because of the time complexity (even in this case it would take ~20 minutes):
+
+```bash
+   ./run_tests.py --run_qe2pert --epr epr4
 ```
 
 When the tests are successful, you'll be confident that your perturbo is working well and you can move on to the next hands-on sessions.
