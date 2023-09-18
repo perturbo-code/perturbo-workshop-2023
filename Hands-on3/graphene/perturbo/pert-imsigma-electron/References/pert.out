@@ -1,0 +1,43 @@
+
+   Program PERTURBO starts on 15Sep2023 at 17:29:40 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'imsigma'
+     --------------------------------------------------
+     The graphene_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     N.B.: current system is 2D.
+     band_min:    2  band_max:    2
+     Reading list from file: graphene_tet.kpt
+     total number of k-points:        624
+     total number of q-points:      50000
+    |--------------------------------------------------|
+     Im[Sigma]:                          
+           5.00%
+          10.00%
+          15.00%
+          20.00%
+          25.00%
+          30.00%
+          35.00%
+          40.00%
+          45.00%
+          50.00%
+          55.00%
+          60.00%
+          65.00%
+          70.00%
+          75.00%
+          80.00%
+          85.00%
+          90.00%
+          95.00%
+         100.00%
+     >Im[Sigma] done.
+
+     PERTURBO     :  11m 7.40s CPU   2m47.59s WALL
+
+     init_eph_wan :      0.03s CPU      0.25s WALL (       1 calls)
+     calc_selfel  :    667.33s CPU    167.24s WALL (       1 calls)
+
+   Program was terminated on:  17:32:27  15Sep2023             

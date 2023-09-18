@@ -1,157 +1,232 @@
 # Installation of Perturbo
 Installing Perturbo can be complicated due to the fact that it depends on other packages, such as Quantum Espresso, HDF5, LAPACK, etc.
-Below we will look at 2 possible scenarios for installing Perturbo - from scratch (on your own) and using Docker.
+Therefore, there are 2 scenarios for installing our package - from scratch (which was covered on the first day in the first tutorial) and using containers. During the workshop you will use the second method, so now we will take a closer look at it.
 
-## Installation of Perturbo from scratch
+## Usage of containers
 
-PERTURBO uses a few subroutines from the PWSCF and Phonon packages of Quantum Espresso (QE). Therefore, it needs to be compiled on top of QE. PERTURBO needs the output files from Wannier 90 (W90), which can ba obtained from the QE. In addition, PERTURBO uses the HDF5 format to store data. For the detailed instructions on the installation of these packages, please refer to their official websites: [QE](https://www.quantum-espresso.org), [HDF5](https://portal.hdfgroup.org/display/HDF5/Introduction+to+HDF5). 
-If you run the calculations on a cluster or a supercomputer, these packages might be already pre-installed. Here we provide some brief instructions on the installation of these packages. Please note that these instructions can be different for your computing environement. 
+It is possible to run perturbo faster and easier if you use soft called Docker. This will not be a universal solution, but it will allow you to get acquainted with the functionality of the package, as well as to run programs that are not computationally intensive.
 
-### HDF5
-
-To compile the HDF5 library, please download its source code from the [official website](https://portal.hdfgroup.org/display/support/Downloads). Once the source code is downloaded, please create an empty directory where the HDF5 library will be installed.
-
-For example, the current directory is called _'mylib'_. We download the source code inside the directory called _'hdf5-1.12.0-source-codes'_. Now we are going to install the HDF5 library into a directory called _'hdf5'_. 
-
-Generate a Makefile for compiling the HDF5 library using the fortran option: `--enable-fortran`. Please modify the `'prefix'` path to fit your case. Here we compile the serial HDF5 library: 
- 
-```bash
-cd hdf5-1.12.0-source-codes
-./configure --prefix=mylib/hdf5 --enable-fortran 
-```
-
-One can specify the compilers running the `./configure` command with the additional options: `CC=<c compiler>`, `CXX=<c++ compiler>`, `FC=<fortran compiler>`. For more information, run `./configure --help`. Compile HDF5:
-
-```bash
-make
-make install
-```
-
-To check whether HDF5 was compiled correctly, one can run the test suite:
-```bash
-make test
-```
-
-
-
-Now we have the compiled HDF5 library inside the directory _'hdf5'_. We suggest to use the directory path when compiling QE (`--with-hdf5=mylib/hdf5` flag for QE compilation, see below).  
-
-### Quantum Espresso
-
-To download QE, one can use the `wget` command:
-
-```
-wget https://github.com/QEF/q-e/archive/qe-7.2.tar.gz
-tar xvzf qe-7.2.tar.gz
-cd q-e-qe-7.2
-```
-
-or to clone the package from the QE GitHub repository, specifying the version:
-
-```bash
-git clone https://github.com/QEF/q-e.git
-cd q-e
-git checkout qe-7.2
-```
-
-Once the package is downloaded run the configure command: 
-```bash
-./configure
-```
-Configuration parameters strongly depend on the compilation scenarios (compilers, parallelization, etc.). On the [PERTURBO github page](https://github.com/perturbo-code/perturbo/tree/master/config) you can find several compilation scripts with corresponding parameters.
-
-When you can compile QE with W90:
-```bash
-make pw ph pp w90
-```
-
-### PERTURBO Download and Installation
-
-Clone the folder with Perturbo code from the [PERTURBO github page](https://github.com/perturbo-code/perturbo/tree/master/) into the QE directory.
-There are three subdirectories inside the directory _"perturbo"_:
-
-* _"config"_ contains the system-dependent files _make\_XXX.sys._
-* _"pert-src"_ contains the source code of `perturbo.x` to compute electron dynamics 
-* _"qe2pert-src"_ contains the source code of the interface program `qe2pert.x`
-
-PERTURBO uses the config file _make.inc_ of QE for most of the compiler options. The configuration files in the _"config"_ folder inside the directory _"perturbo"_ specifies additional options required by Perturbo for different compiler versions and compilation scripts.  
-
-You can take one of the provided make files as a basis, and modify it to suit your case.
-
-Copy your chosen sample to the root folder _"perturbo"_:
-
-```bash
-$ cp make_files/make_gcc_serial.sys make.sys
-```
-
-and make the necessary changes in it. For example, you need to specify the path to your HDF5 library, if you haven't made it on the step of the QE compilation:
-
-```bash
-IFLAGS += -I/path/to/hdf5/include
-HDF5_LIBS = -L/path/to/hdf5/lib -lhdf5 -lhdf5_fortran
-```
-
-Once the file _make.sys_ has been modified, you are ready to compile PERTURBO:
-
-```bash
-make
-```
-
-After the compilation, a directory called _'bin'_ is generated, which contains two executables, `perturbo.x` and `qe2pert.x`. You are ready for work with Perturbo!
-
-
-## Usage of Docker
-
-It is possible to run perturbo faster and easier if you use Docker. This will not be a universal solution, but it will allow you to get acquainted with the functionality of the package, as well as to run programs that are not computationally intensive.
-
-### About Docker
+### About Docker and containers
 Docker is a set of platform as a service (PaaS) products that use OS-level virtualization to deliver software in packages called containers. 
 
-To summarize, Docker is essentially a small virtual machine that is configured to use a specific functionality. For example, if we're talking about `perturbo:gcc`, this image (more on that below) consists of:
+So Docker is just the name of the software that allows you to use things called containers. Accordingly, we need to understand what containers are. 
+![Containers vs. virtual machine](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on1/images/docker_def.png)
+
+Let's consider a container versus a virtual machine. In the latter case, we have several separate operating systems running, managed by a hypervisor. In this case, each OS is independent and exists on its own, they are completely separated from each other.
+
+A container, on the other hand, uses the kernel of the host operating system, and on its basis runs a "micro-OS", inside which there are only a few necessary applications. This allows you to get an environment with applications installed in it and start using it quite quickly without large memory and computational costs.
+
+For example, if we're talking about `perturbo/perturbo:gcc`, this image (more on that below) consists of:
 
 1. Ubuntu shell
 2. The built gcc compiler
-3. Some supplementary packages (`vim`, `unzip`, etc.)
-3. the HDF5 and Quantum Espresso libraries
-4. Perturbo library
+3. Some supplementary staff (`vim`, `unzip`, etc.)
+3. the HDF5 and Quantum Espresso packages
+4. Perturbo package
+
+![perturbo/perturbo:gcc](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on1/images/perturbo_gcc.png)
+
 Accordingly, by running a container of this image (more on this below) on any computer running [Docker](https://www.docker.com) or its analogs (such as [Podman](https://podman.io)), you will be able to perform calculations using `Perturbo`, avoiding compilation. That's the point of containerization - to create an image ready to use.
 
 ### Basic concepts:
 
-1. Image is a "virtual machine" that will be used. It is these images that are hosted on the [docker hub](https://hub.docker.com), where you can find images for many different applications. 
-2. Container - is an instance of a "virtual machine" that is created from an existing image. It is in the created container that your work is done.
-
-The relationship between an image and a container is roughly the same as between a class and an instance of the class. 
+1. Image is a "mini-OS" that will be used. It is these images that are hosted on the [docker hub](https://hub.docker.com), where you can find images for many different applications. That's where the name of our images comes from. In this case, what comes before the slash is the name of the repository owner, after the slash is the name of the repository itself, and after the colon is the image tag. So the name [**perturbo/perturbo:gcc**](https://hub.docker.com/repository/docker/perturbo/perturbo/general) can be understood as "The image of the perturbo user from the perturbo repository with the *gcc* tag" 
+2. Container - is an instance of a "virtual machine" that is created from an existing image. It is in the created container that your work is done. The relationship between an image and a container is similar to the relationship between a class and its instance. The class defines general characteristics, while we work with instances of the class. Here the essence is the same.
 
 While a container is simply an instance built from an image, the image itself can be used in different ways. It can be used to create new containers as well as to create new images. For example, the Perturbo image is built in two stages - first, the supplementary [Docker Images](https://hub.docker.com/repository/docker/perturbo/perturbo_suppl/general) (containing all the supplementary libraries). The supplementary images take [Ubuntu](https://hub.docker.com/_/ubuntu)images as their base.
 
 3. Volumes - are the preferred mechanism for persisting data generated by and used by Docker containers. The idea is that when each container is created, a corresponding volume is created. By default, such volumes are deleted when the container itself is deleted. This is inconvenient if we need to save some files from the container. Below is how to avoid this.
+
 Visit https://docker-curriculum.com for more information.
 
 ### Run the Docker on your computer 
 If you want to use builded images on your computer, you will need to follow these steps:
-1. Install the [Docker](https://www.docker.com) application on your computer;
+
+1. Install the [Docker](https://www.docker.com) application on your computer. This program should always be running, it is the Docker daemons that allow containers to run. If you have everything installed and running correctly, invoke the `docker` command in the terminal. You should then get the following system response:
+   ```bash
+   docker
+
+   Usage:  docker [OPTIONS] COMMAND
+
+   A self-sufficient runtime for containers
+
+   Common Commands:
+     run         Create and run a new container from an image
+     exec        Execute a command in a running container
+     ps          List containers
+     build       Build an image from a Dockerfile
+     pull        Download an image from a registry
+     push        Upload an image to a registry
+     images      List images
+     login       Log in to a registry
+     logout      Log out from a registry
+     search      Search Docker Hub for images
+     version     Show the Docker version information
+     info        Display system-wide information
+
+   Management Commands:
+     builder     Manage builds
+     buildx*     Docker Buildx (Docker Inc., v0.11.2-desktop.4)
+     compose*    Docker Compose (Docker Inc., v2.21.0-desktop.1)
+     container   Manage containers
+     context     Manage contexts
+     dev*        Docker Dev Environments (Docker Inc., v0.1.0)
+     extension*  Manages Docker extensions (Docker Inc., v0.2.20)
+     image       Manage images
+     init*       Creates Docker-related starter files for your project (Docker Inc., v0.1.0-beta.7)
+     manifest    Manage Docker image manifests and manifest lists
+     network     Manage networks
+     plugin      Manage plugins
+     sbom*       View the packaged-based Software Bill Of Materials (SBOM) for an image (Anchore Inc., 0.6.0)
+     scan*       Docker Scan (Docker Inc., v0.26.0)
+     scout*      Command line tool for Docker Scout (Docker Inc., 0.24.1)
+     system      Manage Docker
+     trust       Manage trust on Docker images
+     volume      Manage volumes
+
+   Swarm Commands:
+     swarm       Manage Swarm
+
+   Commands:
+     attach      Attach local standard input, output, and error streams to a running container
+     commit      Create a new image from a container's changes
+     cp          Copy files/folders between a container and the local filesystem
+     create      Create a new container
+     diff        Inspect changes to files or directories on a container's filesystem
+     events      Get real time events from the server
+     export      Export a container's filesystem as a tar archive
+     history     Show the history of an image
+     import      Import the contents from a tarball to create a filesystem image
+     inspect     Return low-level information on Docker objects
+     kill        Kill one or more running containers
+     load        Load an image from a tar archive or STDIN
+     logs        Fetch the logs of a container
+     pause       Pause all processes within one or more containers
+     port        List port mappings or a specific mapping for the container
+     rename      Rename a container
+     restart     Restart one or more containers
+     rm          Remove one or more containers
+     rmi         Remove one or more images
+     save        Save one or more images to a tar archive (streamed to STDOUT by default)
+     start       Start one or more stopped containers
+     stats       Display a live stream of container(s) resource usage statistics
+     stop        Stop one or more running containers
+     tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+     top         Display the running processes of a container
+     unpause     Unpause all processes within one or more containers
+     update      Update configuration of one or more containers
+     wait        Block until one or more containers stop, then print their exit codes
+
+   Global Options:
+         --config string      Location of client config files (default
+                              "/Users/kliavinekss/.docker")
+     -c, --context string     Name of the context to use to connect to the
+                              daemon (overrides DOCKER_HOST env var and
+                              default context set with "docker context use")
+     -D, --debug              Enable debug mode
+     -H, --host list          Daemon socket to connect to
+     -l, --log-level string   Set the logging level ("debug", "info",
+                              "warn", "error", "fatal") (default "info")
+         --tls                Use TLS; implied by --tlsverify
+         --tlscacert string   Trust certs signed only by this CA (default
+                              "/Users/kliavinekss/.docker/ca.pem")
+         --tlscert string     Path to TLS certificate file (default
+                              "/Users/kliavinekss/.docker/cert.pem")
+         --tlskey string      Path to TLS key file (default
+                              "/Users/kliavinekss/.docker/key.pem")
+         --tlsverify          Use TLS and verify the remote
+     -v, --version            Print version information and quit
+
+   Run 'docker COMMAND --help' for more information on a command.
+
+   For more help on how to use Docker, head to https://docs.docker.com/go/guides/
+   ```
+   Also, you can check that images do you have on your computer right now:
+   ```bash
+   docker images
+   ```
+   It's expected to obtain something like that:
+   ```bash
+   REPOSITORY          TAG                IMAGE ID       CREATED        SIZE
+   ```
+   Now you don't have any images. If you want to check what containers do you have, you need to run the command `docker ps -a`, where `-a` means all containers. You'll see the following response:
+   ```bash
+   CONTAINER ID   IMAGE                           COMMAND       CREATED       STATUS                     PORTS    NAMES
+   ```
+   Now you don't have any containers.
 2. Clone the Image from the [Docker Hub of the Perturbo](https://hub.docker.com/repository/docker/perturbo/perturbo/general). You can find the command for pulling the images on the tab **Tags**. For example, for GCC case it would be:
 	```bash
-	docker pull perturbo/perturbo:ifort_mpi
+	docker pull perturbo/perturbo:gcc
 	```
+	You can use this container because it is light enough and it is also well suited for computers with ARM64 processors (Macs with M1/M2). In case of computers with Intel processors, a good solution is to use the *ifort_openmp* container, which supports parallelization.
+3. Let's verify that you do indeed have a new image:
+	```bash
+	docker images
+	```
+	It's expected to obtain something like that:
+	```bash
+	REPOSITORY          TAG                IMAGE ID       CREATED        SIZE
+	perturbo/perturbo   gcc                b68664b8a5f9   5 hours ago    4.38GB
+	```
+
 3. Run the following command:
 	```bash
-	docker run -v name_of_your_work_folder:/home/user/run/name_of_your_work_folder_in_container --user 500 -it -h perturbocker --rm --name perturbo perturbo/perturbo:tag
+	docker run -v name_of_your_work_folder:/home/user/run/workshop -h perturbocker --rm --name perturbo perturbo/perturbo:tag
 	```
 This command has the following meaning:
-1. `-v` - V for ~~Vendetta~~ Volumes, which we talked about earlier. To connect a folder on your primary OS to a folder inside the container, specify the name of the folder on your computer, and after the colon, what the same volume inside the container will be called. In this case, the changes that will happen to the volume inside the container will be reflected in your OS and vice versa. This allows you to not only transfer input files to the container, but also to save all outputfiles after the container is finished and the container itself is deleted;
-2. `--user 500` - by default, the container is started via root, which gives a very wide range of possibilities for using the container. Often clusters (`Perlmutter`, for example) forbid this login because of its danger. Therefore, it is recommended to log in via user. This user is preregistered in the container; 
-3. `-it` - interactive launch of the container, so that we can go inside and run some calculations there. Without this command, the container would start and close immediately, since no execution is defined in it;
-4. `-h perturbocker` - is the hostname of the container. By default, it is the same as the container ID, which may not be particularly informative or readable. So we give it a specific name;
-5. `--rm` - deletes the container after its use is finished. Made to save memory. If it is important for you to save the container itself (for example, if you have installed any packages there), this option should be removed, and the container should be started using `docker start` in the future. [Docs](https://docs.docker.com/engine/reference/commandline/start/);
-6. `--name` - the name that the container will receive. During run (and, if the container is not deleted, during storage) it can be referred to by this name. 
+1. `-v` - V for ~~Vendetta~~ Volumes, which we talked about earlier. To connect a folder on your primary OS to a folder inside the container, specify the name of the folder on your computer, and after the colon, what the same volume inside the container will be called. In this case, the changes that will happen to the volume inside the container will be reflected in your OS and vice versa. This allows you to not only transfer input files to the container, but also to save all output-files after the container is finished and the container itself is deleted. Below we take a look at how this works; 
 
-Full list of the command line options is provided on the [offical page](https://docs.docker.com/engine/reference/commandline/run/)
+2. `-h perturbocker` - is the hostname of the container. By default, it is the same as the container ID, which may not be particularly informative or readable. So we give it a specific name;
+3. `--rm` - deletes the container after its use is finished. Made to save memory. If it is important for you to save the container itself (for example, if you have installed any packages there), this option should be removed, and the container should be started using [`docker start`](https://docs.docker.com/engine/reference/commandline/start/) in the future. 
+4. `--name` - the name that the container will receive. During run (and, if the container is not deleted, during storage) it can be referred to by this name. 
 
 You need to change two parameters:
 
-1. The names of your volumes and volume in the container
+1. The names of your volume;
 2. The name of the image itself - instead of `tag` specify the tag of the image you want to use as a basis for creating the container.
 
-Now you are ready for the usage of Perturbo in the Docker!
+Full list of the command line options is provided on the [offical page](https://docs.docker.com/engine/reference/commandline/run/).
+
+Now we can run the container aaand... nothing will happen. The point is that inside the container itself, it has a single action prescribed to it - to run bash. If we run it without interactive mode, it will run bash and that will be the end of it. That doesn't work for us - we're interested in running inside the container. That's why we need to run another parameter  `-it (means interactive):
+
+```bash
+docker run -v name_of_your_work_folder:/home/user/run/workshop -h perturbocker -it --rm --name perturbo perturbo/perturbo:tag
+```
+
+
+Now you're inside the container, congratulations! 
+
+We can check, that we actually run the container. Call in the new Terminal window `docker ps -a`, and you'll obtain:
+```bash 
+CONTAINER ID   IMAGE                           COMMAND       CREATED         STATUS                     PORTS     NAMES
+58dfcc3ac8cc   perturbo/perturbo:gcc           "/bin/bash"   6 seconds ago   Up 3 seconds                         perturbo
+```
+
+If you want to use perturbo, all you have to do is type in the terminal
+
+```bash 
+perturbo.x 
+```
+
+And you will see the program start up. Similarly with Quantum Espresso executables.
+
+Let's now go back to how volumes work. Create a test_volumes file in our folder on the Host OS:
+```bash
+touch test_volumes
+```
+Now let's check inside the container to see how our folder has changed:
+```bash
+cd workshop/
+ls
+
+Hands-on1  Hands-on2  Hands-on3  Hands-on4  README.md  Tutorial2  Tutorial3  Tutorial4  test_volumes
+
+```
+We see the created file. Now let's rename it in the container:
+```bash
+mv test_volume test_volume_2
+```
+
+We can check that in our Host OS the file has also been renamed. That is, we can change files inside the container and inside the Host OS at the same time.
+
+Now you are ready for the usage of Perturbo in the container form!

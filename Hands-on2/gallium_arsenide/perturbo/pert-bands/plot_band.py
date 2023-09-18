@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 fig, ax  = plt.subplots()
 plt.rcParams.update(ppy.plot_tools.plotparams)
 
-si_bands = ppy.Bands.from_yaml('gaas_bands.yml')
-si_bands.kpt.add_labels(ppy.lattice.points_fcc)
+gaas_bands = ppy.Bands.from_yaml('gaas_bands.yml')
+gaas_bands.kpt.add_labels(ppy.lattice.points_fcc)
 
-si_bands.plot_bands(ax)
-plt.show()
+gaas_bands.plot_bands(ax)
+#plt.show()
+plt.savefig('gaas_band.png')

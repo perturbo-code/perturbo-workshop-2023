@@ -1,0 +1,16 @@
+&perturbo
+ prefix      = 'graphene'
+ calc_mode   = 'imsigma'
+
+ band_min = 2
+ band_max = 2
+ 
+ ftemper  = 'graphene.temper'
+ fklist  = 'graphene_tet.kpt'
+
+ phfreq_cutoff = 0.625  !meV
+ delta_smear = 5        !meV
+
+ nsamples = 50000
+ sampling = 'uniform'
+/
