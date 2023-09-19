@@ -1,0 +1,24 @@
+
+   Program PERTURBO starts on 19Sep2023 at  3: 2:50 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'setup'
+     --------------------------------------------------
+     The graphene_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     N.B.: current system is 2D.
+     band_min:    2  band_max:    2
+     >generating grid ...
+
+     number of  tetrahedra selected:       7464
+     number of   reducible k-points:       1358
+     number of irreducible k-points:        130
+
+     Energy window (eV):    -4.505271    -4.030000
+
+
+     PERTURBO     :      1.13s CPU      0.35s WALL
+
+     Grid_gen     :      0.77s CPU      0.23s WALL (       1 calls)
+
+   Program was terminated on:   3: 2:50  19Sep2023             

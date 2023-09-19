@@ -103,6 +103,7 @@ ln -sf ../../qe2pert/gaas_epr.h5
 We can then run perturbo.x
 
 ```
+export OMP_NUM_THREADS=4
 perturbo.x -i pert.in > pert.out
 ```
 
@@ -210,6 +211,7 @@ ln -sf ../../qe2pert/gaas_epr.h5
 We can then run the calculation with the following command
 
 ```
+export OMP_NUM_THREADS=4
 perturbo.x -i pert.in > pert.out
 ```
 
@@ -379,62 +381,41 @@ cd ../dynamics-pp
 
 ### Input files
 
-run.sh
+pert.in
+```
+&perturbo
+ prefix               = 'gaas'
+ calc_mode            = 'dynamics-pp'
+ boltz_kdim(1)        = 60
+ boltz_kdim(2)        = 60
+ boltz_kdim(3)        = 60
+ boltz_efield(1)      = 200.0
+ boltz_efield(2)      = 0.0
+ boltz_efield(3)      = 0.0
+ boltz_emin           = 5.665
+ boltz_emax           = 6.465
+ band_min             = 5
+ band_max             = 5
+ hole                 = .false.
+ ftemper              = 'gaas.temper'
+/
+```
+
+### Run perturbo.x
+
+First we must link the epr.h5 file, the tet.h5 file and the cdyna.h5 file
 
 ```
-#!/bin/bash
+ln -sf ../../qe2pert/gaas_epr.h5
+ln -sf ../setup/gaas_tet.h5
+ln -sf ../dynamics-run/efield-0/gaas_cdyna.h5
+```
 
-PREFIX='gaas'
+We can then run perturbo.x
 
-# Test with two values first, then run full selection
-# EFIELDS=($(seq 200 200 3000))
-EFIELDS=(0)
-# EFIELDS=($(seq 0 200 3000))
- 
-# OpenMP variables
-OMP_THREADS=4
-
-OS='LINUX'
-
-for efield in ${EFIELDS[@]}
-do
-   echo dynamics-pp for Efield= $efield
-
-   DIR=efield-$efield
-   mkdir -p $DIR
-
-   cd $DIR
-
-   #change pert.in
-   cp ../../dynamics-run/efield-${efield}/pert.in  ./pert.in
-
-   if [ "$OS" == "MACOS" ]; then
-      sed -i '' "s|.*calc_mode.*|  calc_mode            = 'dynamics-pp'|g"   pert.in
-   elif [ "$OS" == "LINUX" ]; then
-      sed -i "s|.*calc_mode.*|  calc_mode            = 'dynamics-pp'|g"   pert.in
-   else
-      echo OS not supported
-   fi
-
-   # link prefix_epr.h5 and prefix_tet.h5
-      ln -sf ../../../qe2pert/${PREFIX}_epr.h5
-      ln -sf ../../setup/${PREFIX}_tet.h5
-      ln -sf ../../dynamics-run/efield-0/${PREFIX}_cdyna.h5
-
-   # copy prefix.temper
-   cp ../../setup/${PREFIX}.temper .
-
-   # run perturbo.x
-   perturbo.x -i pert.in > pert.out 
-
-   echo Done $efield
-
-   # wait for a short period of time.  
-   #done, return to upper directory.   
-   cd ..
- 
-   sleep 1
-done
+```
+export OMP_NUM_THREADS=4
+perturbo.x -i pert.in > pert.out
 ```
 
 ### Output
@@ -452,14 +433,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+# Parameters
 prefix = 'gaas'
-efields = np.arange(0, 3000, 200)
+efields = np.arange(0, 1600, 200)
 nsnaps_per_run = 20
 
+# Store drift velocities at the end
+# of each run
 drift_vels = []
 
 # yml file
-yml_file = f'efield-3000/{prefix}_dynamics-pp.yml'
+yml_file = f'{prefix}_dynamics-pp.yml'
 
 # Opening yml file
 with open(yml_file, 'r') as stream:
@@ -470,26 +454,33 @@ with open(yml_file, 'r') as stream:
     except yaml.YAMLError as e:
         print(e)
 
+# Get velocities from dictionary
 vels_efield = dct['dynamics-pp']['velocity']
 
+# Loop over field strengths
 for i, efield in enumerate(efields):
     if i == 0:
+        # Hard code to 0 as not outputted
+        # when E = 0
         vel_i = 0.0
     else:
+        # Get drift velocity of final snap in run
         idx = i * nsnaps_per_run + (nsnaps_per_run - 1)
         vel_i = (-1.0) * vels_efield[idx]
 
+    # Store in list
     drift_vels.append(vel_i)
 
+# Rescale for plotting purposes
 drift_vels = np.asarray(drift_vels) / 1e6
 
 # Plot velocity-field curve
 fig, ax = plt.subplots()
 ax.plot((efields / 1000), drift_vels, ls='', marker='o')
 ax.set_xlabel('E (kV/cm)')
-ax.set_ylabel('$v_d$ (cm/s)')
+ax.set_ylabel('$v_d$ ($10^6$ cm/s)')
 plt.savefig('velocity-field_curve.png')
-plt.show()
+# plt.show()
 ```
 
 Again we run this with the simple python command

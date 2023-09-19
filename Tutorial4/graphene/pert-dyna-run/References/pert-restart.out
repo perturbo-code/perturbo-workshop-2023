@@ -1,0 +1,39 @@
+
+   Program PERTURBO starts on 19Sep2023 at  1:54:49 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'dynamics-run'
+     --------------------------------------------------
+     The graphene_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     N.B.: current system is 2D.
+     band_min:    2  band_max:    2
+     >loading kpt, tetra from graphene_tet.h5
+
+     number of  tetrahedra selected:      31560
+     number of   reducible k-points:       5502
+     number of irreducible k-points:        493
+
+     >start scatter_setup
+     No. of q-points and (k,q) pairs on each processor:
+     Proc.   1:  #.q      4096 |  #.(k,q)     1421526
+     >scatter_setup done.
+    |--------------------------------------------------|
+     Carrier Dynamics:                   
+           2.22%
+          22.22%
+          42.22%
+          62.22%
+          82.22%
+         100.00%
+    |--------------------------------------------------|
+
+     PERTURBO     :   3m22.68s CPU     51.82s WALL
+
+     scat_setup   :      4.11s CPU      1.92s WALL (       1 calls)
+     set_kq_pair  :      3.46s CPU      0.95s WALL (       1 calls)
+     load_eph_g2  :      0.62s CPU      0.90s WALL (       1 calls)
+     dynamics_tot :    198.02s CPU     49.70s WALL (       1 calls)
+     dynamics_col :    197.33s CPU     49.52s WALL (     720 calls)
+
+   Program was terminated on:   1:55:41  19Sep2023             
