@@ -10,6 +10,7 @@
  boltz_emax = -4.13 ! Dirac cone + 400 meV
  band_min = 2
  band_max = 2
- 
+
+ !find_efermi = .true.
  ftemper  = 'graphene.temper'  !optional
 /
