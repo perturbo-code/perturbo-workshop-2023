@@ -10,6 +10,7 @@
  boltz_emax = 6.9  !Energy window
  band_min = 5	   !Band index
  band_max = 6
- 
+
+ !find_efermi = .true. 
  ftemper  = 'si.temper' !Name of .temper file
 /

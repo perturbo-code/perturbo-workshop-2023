@@ -2,8 +2,8 @@
 program: perturbo
 
 start date and time:
-   date: 12 September 2023
-   time: " 4:40: 8"
+   date: 19 September 2023
+   time: "20:22:36"
 
 parallelization:
    type: OpenMP
@@ -13,6 +13,7 @@ input parameters:
    after conversion:
       band_max:                   6
       band_min:                   5
+      boltz_acc_thr:           0.0000000000000000E+00
       boltz_de:           7.3498617648950546E-05
       boltz_efield:          [ 0.0000000000000000E+00,   0.0000000000000000E+00,   0.0000000000000000E+00,  ]
       boltz_emax:           5.0714046177775884E-01
@@ -23,11 +24,13 @@ input parameters:
       boltz_kdim:          [        40,          40,          40,  ]
       boltz_norm_dist:          False
       boltz_nstep:                   0
+      boltz_nstep_min:                   1
       boltz_qdim:          [        40,          40,          40,  ]
       calc_mode:          setup
       cauchy_scale:           5.0000000745058060E-02
       debug:          False
       delta_smear:           7.3498617648950549E-04
+      find_efermi:          False
       fklist:          
       fqlist:          
       ftemper:          si.temper
@@ -891,12 +894,7 @@ timings:
    time units: s
 
    PERTURBO:
-      cpu:         0.74173600
-      wall:        0.23593092
-      calls:         1
-
-   Grid_gen:
-      cpu:         0.06955700
-      wall:        0.02847505
+      cpu:         0.69671600
+      wall:        0.20740795
       calls:         1
 ...
