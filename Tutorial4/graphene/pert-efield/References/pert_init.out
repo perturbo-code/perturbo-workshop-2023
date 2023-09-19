@@ -1,0 +1,62 @@
+
+   Program PERTURBO starts on 19Sep2023 at  3: 5: 4 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'dynamics-run'
+     --------------------------------------------------
+     The graphene_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     N.B.: current system is 2D.
+     band_min:    2  band_max:    2
+     >loading kpt, tetra from graphene_tet.h5
+
+     number of  tetrahedra selected:       7464
+     number of   reducible k-points:       1358
+     number of irreducible k-points:        130
+
+     >start scatter_setup
+     No. of q-points and (k,q) pairs on each processor:
+     Proc.   1:  #.q      3843 |  #.(k,q)      502064
+    |--------------------------------------------------|
+     Computing EPhMatrix:                
+           2.06%
+           6.04%
+          10.01%
+          14.06%
+          18.04%
+          22.02%
+          26.07%
+          30.04%
+          34.02%
+          38.07%
+          42.05%
+          46.02%
+          50.00%
+          54.05%
+          58.03%
+          62.00%
+          66.05%
+          70.03%
+          74.01%
+          78.06%
+          82.03%
+          86.01%
+          90.06%
+          94.04%
+          98.01%
+         100.00%
+    |--------------------------------------------------|
+     >scatter_setup done.
+    |--------------------------------------------------|
+     Carrier Dynamics:                   
+
+     PERTURBO     :   1m35.08s CPU     24.84s WALL
+
+     scat_setup   :     94.71s CPU     24.72s WALL (       1 calls)
+     set_kq_pair  :      0.54s CPU      0.14s WALL (       1 calls)
+     init_eph_wan :      0.14s CPU      0.29s WALL (       1 calls)
+     compute_g2   :     93.83s CPU     24.02s WALL (       1 calls)
+     load_eph_g2  :      0.19s CPU      0.23s WALL (       1 calls)
+     dynamics_tot :      0.00s CPU      0.00s WALL (       1 calls)
+
+   Program was terminated on:   3: 5:29  19Sep2023             

@@ -1,0 +1,104 @@
+
+   Program PERTURBO starts on 19Sep2023 at  3:25:14 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'dynamics-run'
+     --------------------------------------------------
+     The graphene_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     N.B.: current system is 2D.
+     band_min:    2  band_max:    2
+     >loading kpt, tetra from graphene_tet.h5
+
+     number of  tetrahedra selected:       7464
+     number of   reducible k-points:       1358
+     number of irreducible k-points:        130
+
+     >start scatter_setup
+     No. of q-points and (k,q) pairs on each processor:
+     Proc.   1:  #.q      3843 |  #.(k,q)      502064
+    |--------------------------------------------------|
+     Computing EPhMatrix:                
+           2.06%
+           6.04%
+          10.01%
+          14.06%
+          18.04%
+          22.02%
+          26.07%
+          30.04%
+          34.02%
+          38.07%
+          42.05%
+          46.02%
+          50.00%
+          54.05%
+          58.03%
+          62.00%
+          66.05%
+          70.03%
+          74.01%
+          78.06%
+          82.03%
+          86.01%
+          90.06%
+          94.04%
+          98.01%
+         100.00%
+    |--------------------------------------------------|
+
+     >excluding phonon modes:
+
+        mode number | included/excluded (+/-)
+        -------------------------------------
+                 1  |            +
+                 2  |            +
+                 3  |            +
+                 4  |            +
+                 5  |            -
+                 6  |            -
+        -------------------------------------
+
+     >scatter_setup done.
+    |--------------------------------------------------|
+     Carrier Dynamics:                   
+           2.00%
+           6.00%
+          10.00%
+          14.00%
+          18.00%
+          22.00%
+          26.00%
+          30.00%
+          34.00%
+          38.00%
+          42.00%
+          46.00%
+          50.00%
+          54.00%
+          58.00%
+          62.00%
+          66.00%
+          70.00%
+          74.00%
+          78.00%
+          82.00%
+          86.00%
+          90.00%
+          94.00%
+          98.00%
+         100.00%
+    |--------------------------------------------------|
+
+     PERTURBO     :   4m40.46s CPU   1m11.35s WALL
+
+     scat_setup   :     94.63s CPU     24.65s WALL (       1 calls)
+     set_kq_pair  :      0.54s CPU      0.14s WALL (       1 calls)
+     init_eph_wan :      0.14s CPU      0.27s WALL (       1 calls)
+     compute_g2   :     93.73s CPU     23.96s WALL (       1 calls)
+     load_eph_g2  :      0.18s CPU      0.23s WALL (       1 calls)
+     exclude_ph_m :      0.02s CPU      0.01s WALL (       1 calls)
+     dynamics_tot :    185.48s CPU     46.56s WALL (       1 calls)
+     dynamics_col :    184.96s CPU     46.42s WALL (    2000 calls)
+
+   Program was terminated on:   3:26:25  19Sep2023             

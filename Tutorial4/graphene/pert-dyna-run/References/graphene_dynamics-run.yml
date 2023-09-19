@@ -1,0 +1,260 @@
+---
+program: perturbo
+
+start date and time:
+   date: 19 September 2023
+   time: " 1:54:49"
+
+parallelization:
+   type: OpenMP
+   number of OpenMP threads:   4
+
+input parameters:
+   after conversion:
+      band_max:                   2
+      band_min:                   2
+      boltz_acc_thr:           0.0000000000000000E+00
+      boltz_de:           7.3498617648950546E-05
+      boltz_efield:          [ 0.0000000000000000E+00,   0.0000000000000000E+00,   0.0000000000000000E+00,  ]
+      boltz_emax:          -2.5945012030079545E-01
+      boltz_emin:          -3.6234818500932620E-01
+      boltz_init_dist:          restart
+      boltz_init_e0:          -3.1075992517178058E-01
+      boltz_init_smear:           1.0772692388806682E-02
+      boltz_kdim:          [       400,         400,           1,  ]
+      boltz_norm_dist:          False
+      boltz_nstep:                 180
+      boltz_nstep_min:                   1
+      boltz_qdim:          [       200,         200,           1,  ]
+      calc_mode:          dynamics-run
+      cauchy_scale:           5.0000000745058060E-02
+      debug:          False
+      delta_smear:           7.3498617648950549E-04
+      find_efermi:          False
+      fklist:          
+      fqlist:          
+      ftemper:          graphene.temper
+      full_ite:          True 
+      hole:          False
+      load_scatter_eph:          True 
+      nsamples:              100000
+      output_nstep:                   4
+      phfreq_cutoff:           7.3498617648950546E-05
+      polar_split:          
+      prefix:          graphene
+      sampling:          uniform
+      solver:          rk4
+      time_step:           1.0335343233751543E+02
+      tmp_dir:          ./tmp/
+      trans_thr:           2.0000000000000000E-03
+      yaml_fname:          graphene_dynamics-run.yml
+
+
+basic data:
+   alat:           4.6487262869
+   alat units:       bohr
+   # a vector is a row
+   lattice vectors:
+         - [   1.00000,     0.00000,     0.00000,  ]
+         - [  -0.50000,     0.86603,     0.00000,  ]
+         - [   0.00000,     0.00000,     4.87805,  ]
+   lattice vectors units:       alat
+   reciprocal lattice vectors:
+   # a vector is a row
+         - [   1.00000,     0.57735,    -0.00000,  ]
+         - [   0.00000,     1.15470,     0.00000,  ]
+         - [   0.00000,    -0.00000,     0.20500,  ]
+   reciprocal lattice vectors units:       2pi/alat
+   number of atoms in unit cell:                2
+   atomic positions:
+   # a vector is a row
+         - [   0.00000,     0.00000,     0.00000,  ]
+         - [  -0.00000,     0.57735,     0.00000,  ]
+   atomic positions units:       alat
+   volume:         424.4032478275
+   volume units:       bohr^3
+   number of symmetry operations:               24
+   symop:
+      1:
+         - [    1,      0,      0,  ]
+         - [    0,      1,      0,  ]
+         - [    0,      0,      1,  ]
+      2:
+         - [   -1,      0,      0,  ]
+         - [    0,     -1,      0,  ]
+         - [    0,      0,      1,  ]
+      3:
+         - [   -1,      1,      0,  ]
+         - [    0,      1,      0,  ]
+         - [    0,      0,     -1,  ]
+      4:
+         - [    1,     -1,      0,  ]
+         - [    0,     -1,      0,  ]
+         - [    0,      0,     -1,  ]
+      5:
+         - [    1,     -1,      0,  ]
+         - [    1,      0,      0,  ]
+         - [    0,      0,      1,  ]
+      6:
+         - [    0,      1,      0,  ]
+         - [   -1,      1,      0,  ]
+         - [    0,      0,      1,  ]
+      7:
+         - [    0,     -1,      0,  ]
+         - [    1,     -1,      0,  ]
+         - [    0,      0,      1,  ]
+      8:
+         - [   -1,      1,      0,  ]
+         - [   -1,      0,      0,  ]
+         - [    0,      0,      1,  ]
+      9:
+         - [    0,     -1,      0,  ]
+         - [   -1,      0,      0,  ]
+         - [    0,      0,     -1,  ]
+      10:
+         - [    1,      0,      0,  ]
+         - [    1,     -1,      0,  ]
+         - [    0,      0,     -1,  ]
+      11:
+         - [   -1,      0,      0,  ]
+         - [   -1,      1,      0,  ]
+         - [    0,      0,     -1,  ]
+      12:
+         - [    0,      1,      0,  ]
+         - [    1,      0,      0,  ]
+         - [    0,      0,     -1,  ]
+      13:
+         - [   -1,      0,      0,  ]
+         - [    0,     -1,      0,  ]
+         - [    0,      0,     -1,  ]
+      14:
+         - [    1,      0,      0,  ]
+         - [    0,      1,      0,  ]
+         - [    0,      0,     -1,  ]
+      15:
+         - [    1,     -1,      0,  ]
+         - [    0,     -1,      0,  ]
+         - [    0,      0,      1,  ]
+      16:
+         - [   -1,      1,      0,  ]
+         - [    0,      1,      0,  ]
+         - [    0,      0,      1,  ]
+      17:
+         - [   -1,      1,      0,  ]
+         - [   -1,      0,      0,  ]
+         - [    0,      0,     -1,  ]
+      18:
+         - [    0,     -1,      0,  ]
+         - [    1,     -1,      0,  ]
+         - [    0,      0,     -1,  ]
+      19:
+         - [    0,      1,      0,  ]
+         - [   -1,      1,      0,  ]
+         - [    0,      0,     -1,  ]
+      20:
+         - [    1,     -1,      0,  ]
+         - [    1,      0,      0,  ]
+         - [    0,      0,     -1,  ]
+      21:
+         - [    0,      1,      0,  ]
+         - [    1,      0,      0,  ]
+         - [    0,      0,      1,  ]
+      22:
+         - [   -1,      0,      0,  ]
+         - [   -1,      1,      0,  ]
+         - [    0,      0,      1,  ]
+      23:
+         - [    1,      0,      0,  ]
+         - [    1,     -1,      0,  ]
+         - [    0,      0,      1,  ]
+      24:
+         - [    0,     -1,      0,  ]
+         - [   -1,      0,      0,  ]
+         - [    0,      0,      1,  ]
+   kc dimensions:
+         - [     36,       36,        1,  ]
+   spinor:       False
+   polar_alpha:           1.0000000000
+   epsil:
+   # a vector is a row
+         - [      0.00000000,        0.00000000,        0.00000000,  ]
+         - [      0.00000000,        0.00000000,        0.00000000,  ]
+         - [      0.00000000,        0.00000000,        0.00000000,  ]
+   qc dimensions:
+         - [     18,       18,        1,  ]
+   mass:
+      -       10947.15627452
+      -       10947.15627452
+   mass units:       atomic
+   zstar:
+      1:
+         - [   0.00000,     0.00000,     0.00000,  ]
+         - [   0.00000,     0.00000,     0.00000,  ]
+         - [   0.00000,     0.00000,     0.00000,  ]
+      2:
+         - [   0.00000,     0.00000,     0.00000,  ]
+         - [   0.00000,     0.00000,     0.00000,  ]
+         - [   0.00000,     0.00000,     0.00000,  ]
+   system_2d:       True 
+   number of Wannier functions:                2
+   wannier_center:
+   # a vector is a row
+         - [  -0.00000,     0.00000,    -0.00000,  ]
+         - [  -0.00000,     0.57735,    -0.00000,  ]
+   wannier_center units: cartesian
+   wannier_center_cryst:
+   # a vector is a row
+         - [   0.00000,     0.00000,    -0.00000,  ]
+         - [   0.33333,     0.66667,    -0.00000,  ]
+   wannier_center_cryst units: crystal
+
+grid:
+   number of  tetrahedra selected:      31560
+   number of reducible k-points:       5502
+   number of irreducible k-points:        493
+
+
+scatter parallelization:
+
+   MPI task index:
+
+      1:
+         number of q-points:            4096
+         number of (k,q) pairs:         1421526
+
+dynamics-run:
+
+timings:
+
+   time units: s
+
+   PERTURBO:
+      cpu:       202.68412600
+      wall:       51.82082486
+      calls:         1
+
+   scat_setup:
+      cpu:         4.10767000
+      wall:        1.92424917
+      calls:         1
+
+   set_kq_pair:
+      cpu:         3.46238000
+      wall:        0.94503903
+      calls:         1
+
+   load_eph_g2:
+      cpu:         0.61721600
+      wall:        0.89538097
+      calls:         1
+
+   dynamics_tot:
+      cpu:       198.02335200
+      wall:       49.69529796
+      calls:         1
+
+   dynamics_col:
+      cpu:       197.33033500
+      wall:       49.52196264
+      calls:       720
+...

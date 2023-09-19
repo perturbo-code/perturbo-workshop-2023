@@ -1,0 +1,70 @@
+
+   Program PERTURBO starts on 19Sep2023 at  1:41:11 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'dynamics-run'
+     --------------------------------------------------
+     The graphene_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     N.B.: current system is 2D.
+     band_min:    2  band_max:    2
+     >loading kpt, tetra from graphene_tet.h5
+
+     number of  tetrahedra selected:      31560
+     number of   reducible k-points:       5502
+     number of irreducible k-points:        493
+
+     >start scatter_setup
+     No. of q-points and (k,q) pairs on each processor:
+     Proc.   1:  #.q      4096 |  #.(k,q)     1421526
+    |--------------------------------------------------|
+     Computing EPhMatrix:                
+           2.02%
+           6.02%
+          10.01%
+          14.01%
+          18.01%
+          22.01%
+          26.01%
+          30.01%
+          34.01%
+          38.00%
+          42.00%
+          46.00%
+          50.00%
+          54.02%
+          58.02%
+          62.01%
+          66.01%
+          70.01%
+          74.01%
+          78.01%
+          82.01%
+          86.01%
+          90.00%
+          94.00%
+          98.00%
+         100.00%
+    |--------------------------------------------------|
+     >scatter_setup done.
+    |--------------------------------------------------|
+     Carrier Dynamics:                   
+          10.00%
+          30.00%
+          50.00%
+          70.00%
+          90.00%
+         100.00%
+    |--------------------------------------------------|
+
+     PERTURBO     :   6m19.56s CPU   1m40.65s WALL
+
+     scat_setup   :    348.58s CPU     92.80s WALL (       1 calls)
+     set_kq_pair  :      3.69s CPU      1.22s WALL (       1 calls)
+     init_eph_wan :      0.18s CPU      0.54s WALL (       1 calls)
+     compute_g2   :    343.87s CPU     89.66s WALL (       1 calls)
+     load_eph_g2  :      0.80s CPU      1.17s WALL (       1 calls)
+     dynamics_tot :     30.37s CPU      7.65s WALL (       1 calls)
+     dynamics_col :     30.24s CPU      7.62s WALL (     100 calls)
+
+   Program was terminated on:   1:42:52  19Sep2023             

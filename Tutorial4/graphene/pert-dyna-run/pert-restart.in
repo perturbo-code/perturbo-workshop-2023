@@ -1,0 +1,31 @@
+&perturbo
+! ***Mandatory parameters***
+ calc_mode           = 'dynamics-run'
+ prefix              = 'graphene'
+ boltz_kdim(1)       = 400
+ boltz_kdim(2)       = 400
+ boltz_kdim(3)       = 1
+ ftemper             = 'graphene.temper'
+ boltz_nstep         = 180
+ output_nstep        = 4
+ time_step           = 5.0             ! fs
+ boltz_init_dist     = 'restart'
+
+
+! ***Optional parameters***
+ solver             = 'rk4'
+ boltz_init_e0      = -4.2281057129     ! eV
+ boltz_init_smear   = 146.57            ! meV
+ delta_smear        = 10.0              ! meV
+ phfreq_cutoff      = 1.0               ! meV
+ boltz_qdim(1)      = 200
+ boltz_qdim(2)      = 200
+ boltz_qdim(3)      = 1
+ hole               = .false.
+ band_min           = 2
+ band_max           = 2
+ boltz_emin         = -4.93         ! eV
+ boltz_emax         = -3.53          ! eV
+ load_scatter_eph   = .true.
+ tmp_dir            = './tmp'
+/
