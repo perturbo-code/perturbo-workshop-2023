@@ -33,6 +33,7 @@ The input file pert.in has several parameters
  band_min = 5      !Band index 
  band_max = 6
 
+ !find_efermi = .true.
  ftemper  = 'si.temper' !Name of .temper file
 /
 ```
@@ -40,9 +41,9 @@ The parameters such as energy window (**boltz_emin** and **boltz_emax**) and ban
 
 <img src="./silicon/si_bands.png" width="500" height="350">
 
-The si.temper file contains information about temperature, chemical potential, carrier concentration and magnetic field
+The **si.temper** file contains information about temperature, chemical potential, carrier concentration and magnetic field (optional). Note that in the file **pert.in**, the flag ``find_efermi`` has been commented out. By default, our calculation computes the carrier concentration by fixing the chemical potential. If instead we want to calculate the chemical potential from a specified carrier concentration, we set the flag ``find_efermi`` to true. 
 ```
-1  F !T(K)      Ef(eV)     n(cm^-3)    Bx   By  Bz(Tesla)
+1     !T(K) Ef(eV)     n(cm^-3)    Bx   By  Bz(Tesla)
      300.00 6.5504824219 0.9945847E+18 0.0 0.0 0.0
 ```
 
@@ -131,7 +132,7 @@ To do the RTA-transport calculation, copy the **si_tet.h5** file from the setup 
 
 Here is the modified **si.temper** file
 ```
-5  F !T(K)      Ef(eV)     n(cm^-3)    Bx   By  Bz(Tesla)
+5    !T(K)      Ef(eV)     n(cm^-3)    Bx   By  Bz(Tesla)
      150.00 6.5504824219 0.9945847E+18 0.0 0.0 0.0
      200.00 6.5504824219 0.9945847E+18 0.0 0.0 0.0
      250.00 6.5504824219 0.9945847E+18 0.0 0.0 0.0
@@ -210,7 +211,7 @@ Note that we are doing different magnetic fields at the same temperature, as opp
 
 We specify the magnetic fields inside the file **si.temper**
 ```
-5  F !T(K)      Ef(eV)     n(cm^-3)    Bx   By  Bz(Tesla)
+5  !T(K)      Ef(eV)     n(cm^-3)    Bx   By  Bz(Tesla)
   300.00          6.5504824219           0.9945847E+18   0.0   0.0  0.0
   300.00          6.5504824219           0.9945847E+18   0.0   0.0  0.002
   300.00          6.5504824219           0.9945847E+18   0.0   0.0  0.004
