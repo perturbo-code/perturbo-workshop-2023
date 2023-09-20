@@ -7,6 +7,7 @@ This tutorial shows how to generate epr file, the core database of perturbo. We 
 Example : Silicon
 ![work flow](si.png)
 ## 0. docker setup
+Check `https://perturbo-code.github.io/mydoc_docker.html` to setup docker of perturbo. 
 For gcc version
 ```
 docker run -v /Users/yaoluo/workshop:/run/epr_gen --user 500 -it --rm --name 
