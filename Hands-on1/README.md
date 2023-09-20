@@ -16,7 +16,7 @@ Let's consider a container versus a virtual machine. In the latter case, we have
 
 A container, on the other hand, uses the kernel of the host operating system, and on its basis runs a "micro-OS", inside which there are only a few necessary applications. This allows you to get an environment with applications installed in it and start using it quite quickly without large memory and computational costs.
 
-For example, if we're talking about `perturbo/perturbo:gcc`, this image (more on that below) consists of:
+For example, if we're talking about `perturbo/perturbo:gcc_openmp`, this image (more on that below) consists of:
 
 1. Ubuntu shell
 2. The built gcc compiler
@@ -30,7 +30,7 @@ Accordingly, by running a container of this image (more on this below) on any co
 
 ### Basic concepts:
 
-1. Image is a "mini-OS" that will be used. It is these images that are hosted on the [docker hub](https://hub.docker.com), where you can find images for many different applications. That's where the name of our images comes from. In this case, what comes before the slash is the name of the repository owner, after the slash is the name of the repository itself, and after the colon is the image tag. So the name [**perturbo/perturbo:gcc**](https://hub.docker.com/repository/docker/perturbo/perturbo/general) can be understood as "The image of the perturbo user from the perturbo repository with the *gcc* tag" 
+1. Image is a "mini-OS" that will be used. It is these images that are hosted on the [docker hub](https://hub.docker.com), where you can find images for many different applications. That's where the name of our images comes from. In this case, what comes before the slash is the name of the repository owner, after the slash is the name of the repository itself, and after the colon is the image tag. So the name [**perturbo/perturbo:gcc_openmp**](https://hub.docker.com/repository/docker/perturbo/perturbo/general) can be understood as "The image of the perturbo user from the perturbo repository with the *gcc_openmp* tag" 
 2. Container - is an instance of a "virtual machine" that is created from an existing image. It is in the created container that your work is done. The relationship between an image and a container is similar to the relationship between a class and its instance. The class defines general characteristics, while we work with instances of the class. Here the essence is the same.
 
 While a container is simply an instance built from an image, the image itself can be used in different ways. It can be used to create new containers as well as to create new images. For example, the Perturbo image is built in two stages - first, the supplementary [Docker Images](https://hub.docker.com/repository/docker/perturbo/perturbo_suppl/general) (containing all the supplementary libraries). The supplementary images take [Ubuntu](https://hub.docker.com/_/ubuntu)images as their base.
@@ -154,11 +154,11 @@ If you want to use builded images on your computer, you will need to follow thes
    CONTAINER ID   IMAGE                           COMMAND       CREATED       STATUS                     PORTS    NAMES
    ```
    Now you don't have any containers.
-2. Clone the Image from the [Docker Hub of the Perturbo](https://hub.docker.com/repository/docker/perturbo/perturbo/general). You can find the command for pulling the images on the tab **Tags**. For example, for GCC case it would be:
+2. Clone the Image from the [Docker Hub of the Perturbo](https://hub.docker.com/repository/docker/perturbo/perturbo/general). You can find the command for pulling the images on the tab **Tags**. For example, for **gcc_openmp** case it would be:
 	```bash
-	docker pull perturbo/perturbo:gcc
+	docker pull perturbo/perturbo:gcc_openmp
 	```
-	You can use this container because it is light enough and it is also well suited for computers with ARM64 processors (Macs with M1/M2). In case of computers with Intel processors, a good solution is to use the *ifort_openmp* container, which supports parallelization.
+	You can use this container because it is light enough and it is also especially well suited for computers with ARM64 processors (Macs with M1/M2). In case of computers with Intel processors, a possible solution is to use the *ifort_openmp* container, which supports parallelization.
 3. Let's verify that you do indeed have a new image:
 	```bash
 	docker images
@@ -166,7 +166,7 @@ If you want to use builded images on your computer, you will need to follow thes
 	It's expected to obtain something like that:
 	```bash
 	REPOSITORY          TAG                IMAGE ID       CREATED        SIZE
-	perturbo/perturbo   gcc                b68664b8a5f9   5 hours ago    4.38GB
+	perturbo/perturbo   gcc_openmp         b68664b8a5f9   5 hours ago    4.38GB
 	```
 
 3. Run the following command:
@@ -187,7 +187,7 @@ You need to change two parameters:
 
 Full list of the command line options is provided on the [offical page](https://docs.docker.com/engine/reference/commandline/run/).
 
-Now we can run the container aaand... nothing will happen. The point is that inside the container itself, it has a single action prescribed to it - to run bash. If we run it without interactive mode, it will run bash and that will be the end of it. That doesn't work for us - we're interested in running inside the container. That's why we need to run another parameter  `-it (means interactive):
+Now we can run the container aaand... nothing will happen. The point is that inside the container itself, it has a single action prescribed to it - to run bash. If we run it without interactive mode, it will run bash and that will be the end of it. That doesn't work for us - we're interested in running inside the container. That's why we need to run another parameter  `-it` (means interactive):
 
 ```bash
 docker run -v name_of_your_work_folder:/home/user/run/workshop -h perturbocker -it --rm --name perturbo perturbo/perturbo:tag
@@ -199,7 +199,7 @@ Now you're inside the container, congratulations!
 We can check, that we actually run the container. Call in the new Terminal window `docker ps -a`, and you'll obtain:
 ```bash 
 CONTAINER ID   IMAGE                           COMMAND       CREATED         STATUS                     PORTS     NAMES
-58dfcc3ac8cc   perturbo/perturbo:gcc           "/bin/bash"   6 seconds ago   Up 3 seconds                         perturbo
+58dfcc3ac8cc   perturbo/perturbo:gcc_openmp    "/bin/bash"   6 seconds ago   Up 3 seconds                         perturbo
 ```
 
 If you want to use perturbo, all you have to do is type in the terminal
