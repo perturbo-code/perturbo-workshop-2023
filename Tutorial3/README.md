@@ -1,7 +1,7 @@
-# Tutorial 3: From prefix_epr.h5 to BTE transport (GaAs)
+# Tutorial 3: From `prefix_epr.h5` to Boltzmann Transport Equation (BTE)
 
 ## Galium Arsenide
-GaAs is a polar semiconductor with a direct gap of ~1.42eV at the $\Gamma$ valley. The challenge with this material is the long-range coupling between electron and the LO phonons, which makes it difficult for converging transport calculation. In addition, in GaAs, electron-2-phonon scattering proccesses is also an important factor, as we shall see in this tutorial.
+GaAs is a polar semiconductor with a direct gap of ~1.42 eV at the $\Gamma$ valley. The challenge with this material is the long-range coupling between electron and the LO phonons, which makes it difficult for converging transport calculation. Additionally, in GaAs, electron-2-phonon scattering proccesses is also an important factor, as we shall see in this tutorial.
 
 ![image](https://github.com/perturbo-code/perturbo-workshop-2023/assets/85775106/a3e40d0c-e054-4d7f-85f9-5d0e08448106)
 
