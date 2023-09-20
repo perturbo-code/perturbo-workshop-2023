@@ -17,4 +17,4 @@ gaas_phdisp.qpt.add_labels(ppy.lattice.points_fcc)
 
 gaas_phdisp.plot_phdisp(ax)
 #plt.show()
-plt.savefig('phdisp.png')
+plt.savefig('gaas_phdisp.png')

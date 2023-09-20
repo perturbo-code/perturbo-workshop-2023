@@ -4,7 +4,7 @@
 
 
 ## Introduction
-This handout mainly aims at showing how to generate epr.h5 file (**in the most recent released Perturbo version, the name of ~~epwan.h5~~ has been changed to epr.h5**), which is the most important input file for various following Perturbo calculations in hands-on 3&4. From the flowchart below, you can see the data flow,
+This handout mainly aims at showing how to generate epr.h5 file (**in the most recent released Perturbo version, the name of ~~epwan.h5~~ has been changed to epr.h5**), which is the most important input file for various following Perturbo calculations in hands-on 3&4. We take gallium arsenide (GaAs) with a coarse grid of (**k**, **q**) for an example. From the flowchart below, you can see the data flow,
 ![](./pic/flowchart.png)
 
 
@@ -21,14 +21,14 @@ docker image ls
 ```
 * pull perturbo image
 ```bash=
-docker pull perturbo/perturbo:gcc
+docker pull perturbo/perturbo:gcc_openmp
 ```
 * based on the image, creat a container
 
 ```bash=
-docker run -v /Users/sypeng/work/docker_run/workshop_perturbo_2023:/home/user/run/workshop_perturbo_2023 -it --rm --name perturbo2023 perturbo/perturbo:gcc
+docker run -v /Users/sypeng/work/docker_run/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 -it --rm -h perturbocker --name perturbo2023 perturbo/perturbo:gcc_openmp
 ```
-For the meaning of the parameters, please refer to [Perturbo website](https://perturbo-code.github.io/mydoc_docker.html). Here, we just emphasis that **-v**, which binds local directory of `/Users/sypeng/work/docker_run/workshop_perturbo_2023` and docker os folder `/home/user/run/workshop_perturbo_2023`, which means you can put the data which you will used in docker in the local foder of `/Users/sypeng/work/docker_run/workshop_perturbo_2023`, and then you can visit the data at docker folder of `/home/user/run/workshop_perturbo_2023`
+For the meaning of the parameters, please refer to [Perturbo website](https://perturbo-code.github.io/mydoc_docker.html). Here, we just emphasis that **-v**, which binds local directory of `/Users/sypeng/work/docker_run/perturbo-workshop-2023` and docker os folder `/home/user/run/perturbo-workshop-2023`, which means you can put the data which you will used in docker in the local foder of `/Users/sypeng/work/docker_run/perturbo-workshop-2023`, and then you can visit the data at docker folder of `/home/user/run/perturbo-workshop-2023`
 
 
 * install perturbopy
@@ -58,52 +58,44 @@ First of all, we need to perform the self-consistent calculation of electron den
 * execute command 
 ```bash=
 >> cd workshop_perturbo_2023
->> cd silicon
+>> cd gallium_arsenide
 >> cd pw_ph_wan
 >> cd scf
-#mpi: 
->> mpirun -np [number_of_process] pw.x -npools [number of pools] < scf.in > scf.out
-#serial: 
->> pw.x < scf.in > scf.out
+>> export OMP_NUM_THREADS=6 # customize it with your PC
+>> pw.x -i scf.in | tee scf.out
 ```
 * job check: "JOB DONE" in the end of scf.out
-* output: the charge density and wavefunction of the ground state is stored in /tmp/si.save by hdf5 format if you compiled Q-E with hdf5.
+* output: the charge density and wavefunction of the ground state is stored in /tmp/gaas.save by hdf5 format if you compiled Q-E with hdf5.
 
 ```
 #scf.in
-&CONTROL
-  prefix = 'si'
-  calculation = 'scf'
-  wf_collect = .true.
-  outdir='./tmp'
-  pseudo_dir='../pseudo'
+&control
+   calculation='scf',
+   prefix='gaas'
+   pseudo_dir = '../pseudo'
+   outdir='./tmp'
+   tstress = .true.
 /
-&SYSTEM
-  ibrav = 2
-  celldm(1) = 10.264
-  nat = 2
-  nbnd = 16
-  ntyp = 1
-  ecutwfc = 40.0
+&system
+   ibrav=  2,
+   celldm(1) =  10.50
+   nat=  2,
+   ntyp= 2,
+   ecutwfc = 72.0,
 /
-&ELECTRONS
-  conv_thr = 1.0d-15
-  mixing_mode = 'plain'
-  mixing_beta = 0.7
-  diagonalization = 'david'
-  diago_full_acc = .true.
-/
-&IONS
-/
-&CELL
-press_conv_thr = 0.01
+&electrons
+   mixing_beta     = 0.7
+   conv_thr        = 1.0d-12
+   diagonalization = 'david'
+   diago_full_acc  = .true.
 /
 ATOMIC_SPECIES
-  Si   28.085  Si_DOJO_PBEsol.upf
-ATOMIC_POSITIONS crystal
-Si  0.00000000  0.00000000  0.00000000
-Si -0.25000000  0.75000000 -0.25000000
-K_POINTS (automatic)
+ Ga  69.72   Ga.pz-hgh.UPF
+ As  74.922  As.pz-hgh.UPF
+ATOMIC_POSITIONS
+ Ga 0.00000000 0.00000000 0.00000000
+ As 0.25000000 0.25000000 0.25000000
+K_POINTS {automatic}
  8 8 8 0 0 0
 ```
 
@@ -118,10 +110,7 @@ Based on the convergent charge density, we can perform phonon and nscf calculati
 ```bash=
 >> cd phonon
 >> cp -r ../scf/tmp ./
-#mpi: 
->> mpirun -n 192 ph.x -npools 8 < ph.in > ph.out
-#serial: 
->> ph.x < ph.in > ph.out
+>> ph.x -i ph.in | tee ph.out
 ```
 * job check: "JOB DONE" in the end of ph.out
 * output: most information such as dynamical matrix, phonon perturbation potentials, is stored in tmp/_ph0/.
@@ -132,15 +121,15 @@ Based on the convergent charge density, we can perform phonon and nscf calculati
 The input file is attached. For fast running, you can use q grid by 2*2*2 in personal laptop.
 ```
 #ph.in
+Phonons on a uniform grid
 &inputph
-  verbosity='debug'
-  tr2_ph=1.0d-17
-  prefix='si'
+  tr2_ph=1.0d-13
+  prefix='gaas'
   ldisp=.true.
   epsil=.true.
-  lqdir=.true.
+  lqdir = .true.
   outdir='./tmp'
-  fildyn  = 'si.dyn.xml'
+  fildyn  = 'gaas.dyn.xml'
   fildvscf = 'dvscf'
   nq1=2, nq2=2, nq3=2,
 /
@@ -155,13 +144,10 @@ For constructing good maximum localized wannier functions, it needs a ground sta
 ```bash=
 >> cd nscf
 >> cp -r ../scf/tmp ./
-#mpi: 
->> mpirun -n 192 pw.x -npools 8 < nscf.in > nscf.out
-#serial: 
->> pw.x < nscf.in > nscf.out
+>> pw.x -i nscf.in | tee nscf.out
 ```
 * job check: "JOB DONE" in the end of nscf.out
-* output: the charge density and wavefunction of the ground state is stored in /tmp/si.save by hdf5 format if you compiled Q-E with hdf5.
+* output: the charge density and wavefunction of the ground state is stored in /tmp/gaas.save by hdf5 format if you compiled Q-E with hdf5.
 
 truncated nscf.in is attached
 ```
@@ -170,134 +156,126 @@ truncated nscf.in is attached
   calculation = 'nscf'
 /
 K_POINTS crystal 
-512 
+64 
 ```
 
 ### MLWF
 Maximum localized wannier function is constructed to represent e-ph matrix in real space, which is crucial for interpolating ultra-fine (**k**,**q**) grid using perturbo later.
 * executable: pw2wannier.x, wannier90.x
-* input file: pw2wan.in, si.win, nscf/tmp/si.save
+* input file: pw2wan.in, gaas.win, nscf/tmp/gaas.save
 * execute command 
 ```bash=
 >> cd wannier
 >> mkdir tmp
 >> cd tmp
->> ln -sf ../../nscf/tmp/si.save  # just read it not write it, os a soft link is better
+>> ln -sf ../../nscf/tmp/gaas.save  # just read it not write it, os a soft link is better
 # generate a list of the require overlops
->> wannier90.x -pp si
->> pw2wannier90.x < pw2wan.in > pw2wan.out
->> wannier90.x si
+>> wannier90.x -pp gaas
+>> pw2wannier90.x -i pw2wan.in | tee pw2wan.out
+>> wannier90.x gaas
 ```
 * job check: "JOB DONE" in the end of pw2wan.out for pw2wannier90.x; and "All done: wannier90 exiting" in si.wout
-* output: si_u.mat, si_u_dis.mat, and si_centres.xyz for qe2pert
+* output: gaas_u.mat, gaas_u_dis.mat, and gaas_centres.xyz for qe2pert
 
 pw2wan.in and truncated si.win is attached
 ```
 #pw2wan.in 
 &inputpp
-  outdir='./tmp'
-  prefix = 'si'
-  seedname = 'si'
+ outdir='./tmp/'
+  prefix = 'gaas'
+  seedname = 'gaas'
   spin_component = 'none'
   write_mmn = .true.
   write_amn = .true.
-  write_unk = .false. 
+  write_unk = .false.
 /
 ```
+
 ```
-#si.win
+#gaas.win
 begin projections
-  Si:sp3
- end projections
- guiding_centres=true
- 
- num_bands = 16
- num_wann = 8
- 
- write_hr = .true.
- 
- iprint = 2
- dis_num_iter =  500
- dis_win_min =  -100.000
- dis_win_max =   17.200
- dis_froz_min = -100.000
- dis_froz_max  = 9.000
- num_iter  =   10000
- mp_grid : 4 4 4
- 
- begin unit_cell_cart
- bohr
- -5.1320  0.0000  5.1320
-  0.0000  5.1320  5.1320
- -5.1320  5.1320  0.0000
- end unit_cell_cart
- 
- write_u_matrices = .true.
- write_xyz = .true.
- 
- #restart = plot
- BANDS_PLOT = TRUE
- BANDS_PLOT_FORMAT = gnuplot
- BANDS_NUM_POINTS = 100
- 
- BEGIN KPOINT_PATH
- L 0.500 0.500 0.500  G 0.000 0.000 0.000
- G 0.000 0.000 0.000  X 0.500 0.000 0.500
- X 0.500 0.000 0.500  W 0.500 0.250 0.750
- W 0.500 0.250 0.750  K 0.375 0.375 0.750
- K 0.375 0.375 0.750  G 0.000 0.000 0.000
- END KPOINT_PATH
- 
- begin atoms_frac
-  Si    0.00000   0.00000   0.00000
-  Si   -0.25000   0.75000  -0.25000
- end atoms_frac
- 
- begin kpoints
+ Ga:sp3
+ As:sp3
+end projections
+guiding_centres=true
+
+num_bands = 24
+num_wann = 8
+
+iprint = 2
+dis_num_iter =  50
+dis_win_min =  -1000.000
+dis_win_max =   25.000
+dis_froz_min = -1000.000
+dis_froz_max  = 10.000
+num_iter  =   100
+mp_grid : 4 4 4
+
+begin unit_cell_cart
+bohr
+-5.2500  0.0000  5.2500
+ 0.0000  5.2500  5.2500
+-5.2500  5.2500  0.0000
+end unit_cell_cart
+
+write_u_matrices = .true.
+write_xyz = .true.
+
+BANDS_PLOT = TRUE
+BANDS_PLOT_FORMAT = gnuplot
+BANDS_NUM_POINTS = 100
+BEGIN KPOINT_PATH
+L 0.500 0.500 0.500  G 0.000 0.000 0.000
+G 0.000 0.000 0.000  X 0.500 0.000 0.500
+X 0.500 0.000 0.500  W 0.500 0.250 0.750
+W 0.500 0.250 0.750  K 0.375 0.375 0.750
+K 0.375 0.375 0.750  G 0.000 0.000 0.000
+END KPOINT_PATH
+
+begin atoms_frac
+ Ga    0.00000   0.00000   0.00000
+ As   -0.25000   0.75000  -0.25000
+end atoms_frac
+
+begin kpoints
  ...
- end kpoints
+end kpoints
 ```
 
 ### qe2pert
 After finishing nscf, phonon and mlwf, we can perform qe2pert to integrate them to produce epr.h5 which will be input to perturbo.x.
 
 * executable: qe2pert.in
-* input file: qe2pert.in, phonon/save, nscf/tmp/si.save, si_centres.xyz, si_u_dis.mat, si_u.mat
+* input file: qe2pert.in, phonon/save, nscf/tmp/gaas.save, gaas_centres.xyz, gaas_u_dis.mat, gaas_u.mat
 * execute command 
 ```bash=
 >> cd qe2pert
 >> mkdir tmp
 >> cd tmp
->> ln -sf ../../pw-ph-wann/nscf/tmp/si.save
+>> ln -sf ../../pw-ph-wann/nscf/tmp/gaas.save
 >> cd ../
->> ln -sf ../wann/si_u.mat
->> ln -sf ../wann/si_u_dis.mat
->> ln -sf ../wann/si_centres.xyz
-# qe2pert
-#mpi
->> export OMP_NUM_THREADS=4
->> mpirun -n 32 qe2pert.x -npools 32 -i qe2pert.in > qe2pert.out
-# serial
->>  qe2pert.x -i qe2pert.in > qe2pert.out
+>> ln -sf ../pw-ph-wann/wann/gaas_u.mat
+>> ln -sf ../pw-ph-wann/wann/gaas_u_dis.mat
+>> ln -sf ../pw-ph-wann/wann/gaas_centres.xyz
+>>  qe2pert.x -i qe2pert.in | tee qe2pert.out
 ```
 * job check: "Program was terminated on:" in qe2pert.out
-* output: **epr.h5**
+* output: **gaas_epr.h5**
 
 
 
 ```
 #qe2pert.in
+qe2pert
 &qe2pert
-  prefix='si'
+  prefix='gaas'
   outdir='./tmp'
   phdir='../pw-ph-wann/phonon/save'
   nk1=4, nk2=4, nk3=4
   dft_band_min = 1
-  dft_band_max = 16
+  dft_band_max = 24
   num_wann = 8
-  lwannier=.true.
-  load_ephmat = .false.
-  system_2d = .false.
+  lwannier = .true.
 /
 ```
 
@@ -328,9 +306,9 @@ For further processing with HDFVIEW, please refer to the [user guide](https://ww
 ### h5ls
 just type the follow command in the terminal 
 ```bash=
-h5ls si_epr.h5
+h5ls gaas_epr.h5
 #or
-h5ls demo_si_epr.h5/basic_data/zstar
+h5ls demo_gaas_epr.h5/basic_data/zstar
 ```
 
 ### h5py
@@ -351,7 +329,7 @@ import numpy as np
 
 * read the epr.h5 file and access to the top sturcutre
 ```python!
-f = h5py.File('si_epr.h5', 'r')
+f = h5py.File('gaas_epr.h5', 'r')
 f_key = list(f.keys())
 print('f_key_list=',f_key)
 ```
@@ -418,25 +396,22 @@ Here we will use perturbo.x to performs electronic structure interpolation and p
 ### electronic structure interpolation
 
 * executable: perturbo.x
-* input file: pert.in, si_epr.h5, si_band.kpt
+* input file: pert.in, gaas_epr.h5, gaas_band.kpt
 * execute command 
 ```bash=
 >> cd pert-bands
-# mpi
->> export OMP_NUM_THREADS=4
->> mpirun -n 16 perturbo.x -npools 16 -i pert.in  > pert.out
-# serial
->> perturbo.x -i pert.in  > pert.out
+>> ln -sf ../../qe2pert/gaas_epr.h5
+>> perturbo.x -i pert.in | tee pert.out
 ```
 * job check: "Program was terminated on:" in pert.out
-* output: si.bands, si_bands.yml
+* output: gaas.bands, gaas_bands.yml
 * the pert.in is attached
 ```
 &perturbo
-  prefix      = 'si'
-  calc_mode   = 'bands'
-  fklist   = 'si_band.kpt'
- /
+ prefix = 'gaas'
+ calc_mode = 'bands'
+ fklist = 'gaas_band.kpt'
+/
 ```
 
 * visualize the band (using perturbopy)
@@ -451,44 +426,41 @@ import matplotlib.pyplot as plt
 fig, ax  = plt.subplots()
 plt.rcParams.update(ppy.plot_tools.plotparams)
 
-si_bands = ppy.Bands.from_yaml('si_bands.yml')
-si_bands.kpt.add_labels(ppy.lattice.points_fcc)
+gaas_bands = ppy.Bands.from_yaml('gaas_bands.yml')
+gaas_bands.kpt.add_labels(ppy.lattice.points_fcc)
 
-si_bands.plot_bands(ax)
+gaas_bands.plot_bands(ax)
 #plt.show()
-plt.savefig('si_band.png')
+plt.savefig('gaas_band.png')
 ```
-open the finder or directly open it with preview (Mac):
+open it with preview or open the finder (Mac):
 ```bash
->> open si_band.png 
+>> open gaas_band.png 
 #or 
 >> open -a Finder .
 ```
-![](./pic/si_band.png)
+![](./pic/gaas_band.png)
 
 
 ### phonon dispersion
 
 * executable: perturbo.x
-* input file: pert.in, si_epr.h5, si_phdisp.qpt
+* input file: pert.in, gaas_epr.h5, gaas_phdisp.qpt
 * execute command 
 ```bash=
 >> cd pert-phdisp
-# mpi
->> export OMP_NUM_THREADS=4
->> srun -n 16 perturbo.x -npools 16 -i pert.in  > pert.out
-# serial
->> perturbo.x -i pert.in  > pert.out
+>> ln -sf ../../qe2pert/gaas_epr.h5
+>> perturbo.x -i pert.in | tee pert.out
 ```
-* job check: "Program was terminated on:" in pert.out
-* output: si.phdisp, si_phdisp.yml
+* job check: "Program was terminated on:" in `pert.out`
+* output: `gaas.phdisp`, `gaas_phdisp.yml`
 * the pert.in is attached
 ```
 &perturbo
-  prefix = 'si'
-  calc_mode = 'phdisp'
-  fqlist = 'si_phdisp.qpt'
- /
+ prefix = 'gaas'
+ calc_mode = 'phdisp'
+ fqlist = 'gaas_phdisp.qpt'
+/
 ```
 
 * visualize the dispersion (using perturbopy)
@@ -499,7 +471,7 @@ open the finder or directly open it with preview (Mac):
 import perturbopy.postproc as ppy
 import matplotlib.pyplot as plt
 
-si_phdisp = ppy.Phdisp.from_yaml('si_phdisp.yml')
+gaas_phdisp = ppy.Phdisp.from_yaml('gaas_phdisp.yml')
 
 # Create a figure and axis for plotting
 fig, ax  = plt.subplots()
@@ -509,48 +481,42 @@ plt.rcParams.update(ppy.plot_tools.plotparams)
 
 # Optional, used to label the q-points with labels for the FCC crystal structure.
 # For example, [0.5, 0.5, 0.5] is the 'L' point in the FCC Brillouin zone.
-si_phdisp.qpt.add_labels(ppy.lattice.points_fcc)
+gaas_phdisp.qpt.add_labels(ppy.lattice.points_fcc)
 
-si_phdisp.plot_phdisp(ax)
+gaas_phdisp.plot_phdisp(ax)
 #plt.show()
-plt.savefig('si_phdisp.png')
+plt.savefig('gaas'_phdisp.png')
 ```
-open the finder or directly open it with preview (Mac):
+open it with preview or open the finder (Mac):
 ```bash
->> open si_phdisp.png 
+>> open gaas_phdisp.png 
 #or 
 >> open -a Finder .
 ```
-![](./pic/si_phdisp.png)
+![](./pic/gaas_phdisp.png)
 
 
 ### e-ph matrix 
 * executable: perturbo.x
-* input file: pert.in, eph.kpt, eph.qpt, si_epr.h5
+* input file: pert.in, eph.kpt, eph.qpt, gaas_epr.h5
 * execute command 
 ```bash=
 >> cd pert-ephmat
-# mpi
->> export OMP_NUM_THREADS=32
->> srun -n 1 perturbo.x -npools 1 -i pert.in  > pert.out
-# serial
->> perturbo.x -i pert.in  > pert.out
+>> perturbo.x -i pert.in | tee pert.out
 ```
 * job check: "Program was terminated on:" in pert.out
-* output: si.ephmat, si_ephmat.yml 
+* output: gaas.ephmat, gaas_ephmat.yml 
 * the pert.in is attached
 ```
 &perturbo
-  prefix = 'si'
-  calc_mode = 'ephmat'
-  fklist = 'eph.kpt'
-  fqlist = 'eph.qpt'
+ prefix = 'gaas'
+ calc_mode = 'ephmat'
+ fklist = 'gaas_band.kpt'
+ fqlist = 'gaas_band.qpt'
 
-  band_min = 2
-  band_max = 4
-
-  phfreq_cutoff = 1   !meV
- /
+ band_min = 5
+ band_max = 5
+/
 ```
 
 * visualize the e-ph matrix elements at the k-point [0, 0, 0] (using perturbopy)
@@ -561,23 +527,23 @@ open the finder or directly open it with preview (Mac):
 import perturbopy.postproc as ppy
 import matplotlib.pyplot as plt
 
-si_ephmat = ppy.Ephmat.from_yaml('si_ephmat.yml')
+gaas_ephmat = ppy.Ephmat.from_yaml('gaas_ephmat.yml')
 
 plt.rcParams.update(ppy.plot_tools.plotparams)
-si_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
+gaas_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
 
 fig, ax  = plt.subplots()
-si_ephmat.plot_ephmat(ax)
+gaas_ephmat.plot_ephmat(ax)
 #plt.show()
-plt.savefig('si_ephmat.png')
+plt.savefig('gaas_ephmat.png')
 ```
-open the finder or directly open it with preview (Mac):
+open it with preview or open the finder (Mac):
 ```bash
 >> open si_ephmat.png 
 #or 
 >> open -a Finder .
 ```
-![](./pic/si_ephmat.png)
+![](./pic/gaas_ephmat.png)
 
 
 * visualize deformation potential (using perturbopy)
@@ -586,23 +552,23 @@ open the finder or directly open it with preview (Mac):
 import perturbopy.postproc as ppy
 import matplotlib.pyplot as plt
 
-si_ephmat = ppy.Ephmat.from_yaml('si_ephmat.yml')
+gaas_ephmat = ppy.Ephmat.from_yaml('gaas_ephmat.yml')
 
 plt.rcParams.update(ppy.plot_tools.plotparams)
-si_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
+gaas_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
 
 fig, ax  = plt.subplots()
-si_ephmat.plot_defpot(ax)
+gaas_ephmat.plot_defpot(ax)
 #plt.show()
-plt.savefig('si_defpot.png')
+plt.savefig('gaas_defpot.png')
 ```
-open the finder or directly open it with preview (Mac):
+open it with preview or open the finder (Mac):
 ```bash
->> open si_defpot.png 
+>> open gaas_defpot.png 
 #or 
 >> open -a Finder .
 ```
-![](./pic/si_defpot.png)
+![](./pic/gaaas_defpot.png)
 
 
 * visualize the phonon dispersion  (using perturbopy)
@@ -611,22 +577,22 @@ open the finder or directly open it with preview (Mac):
 import perturbopy.postproc as ppy
 import matplotlib.pyplot as plt
 
-si_ephmat = ppy.Ephmat.from_yaml('si_ephmat.yml')
+gaas_ephmat = ppy.Ephmat.from_yaml('gaas_ephmat.yml')
 plt.rcParams.update(ppy.plot_tools.plotparams)
-si_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
+gaas_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
 
 fig, ax  = plt.subplots()
-si_ephmat.plot_phdisp(ax)
+gaas_ephmat.plot_phdisp(ax)
 #plt.show()
-plt.savefig('si_ephmat_phdisp.png')
+plt.savefig('gaas_ephmat_phdisp.png')
 ```
 open the finder or directly open it with preview (Mac):
 ```bash
->> open si_ephmat_phdisp.png
+>> open gaas_ephmat_phdisp.png
 #or 
 >> open -a Finder .
 ```
-![](./pic/si_ephmat_phdisp.png)
+![](./pic/gaas_ephmat_phdisp.png)
 
 
 
