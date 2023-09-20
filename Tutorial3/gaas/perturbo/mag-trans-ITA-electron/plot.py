@@ -11,7 +11,7 @@ plt.rcParams.update(ppy.plot_tools.plotparams)
 
 bfield = np.array(list(gaas_trans_mag_ita.bfield.values()))[:,2]
 
-# Get xx components of conductivities
+# Get xy components of conductivities
 conductivities_ita = np.array(list(gaas_trans_mag_ita.cond.values()))[:, 0, 1]
 conductivities_rta = np.array(list(gaas_trans_mag_rta.cond.values()))[:, 0, 1]
 
