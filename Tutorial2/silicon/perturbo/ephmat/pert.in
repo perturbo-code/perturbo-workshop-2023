@@ -1,0 +1,9 @@
+&perturbo 
+ prefix = 'si'
+ calc_mode = 'ephmat'
+ fklist = 'si_band.kpt'
+ fqlist = 'si_band.qpt'
+
+ band_min = 2 
+ band_max = 4 
+/

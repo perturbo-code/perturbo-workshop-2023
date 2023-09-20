@@ -1,11 +1,16 @@
 #Generation of epr file 
 This tutorial shows how to generate epr file, the core database of perturbo. We use Silicon with a very coarse grid as a minimal example. 
 ![work flow](workflow.png)
+
+![work flow](workflow-detail.png)
+
+Example : Silicon
+![work flow](si.png)
 ## 0. docker setup
 For gcc version
 ```
 docker run -v /Users/yaoluo/workshop:/run/epr_gen --user 500 -it --rm --name 
-perturbo perturbo/perturbo:gcc
+perturbo perturbo/perturbo:gcc_openmp
 ```
 ## 1. DFT & DFPT 
 Download the tutorial file, go to the directory `silicon/`.  
@@ -31,8 +36,6 @@ user@f34442ffeba6:/run/epr_gen/silicon/pw$ cat scf.in
   nat = 2
   ntyp = 1
   ecutwfc = 60.0 ! 
-  !noncolin = .true. 
-  !lspinorb = .true.
 /
 &ELECTRONS
   conv_thr = 1.0d-15
@@ -54,17 +57,19 @@ Si -0.25000000  0.75000000 -0.25000000
 K_POINTS (automatic) 
  8 8 8 0 0 0         !very coarse for demomnstration
 ```
-
-
-Run SCF calculation to get the groundstate charge density. 
+Run SCF calculation to get the ground-state charge density. 
 ```
 pw.x -i scf.in > scf.out 
 ```
 ### 1.2. NSCF 
-Run NSCF to get the electron wavefunction on a 4x4x4 k grid. 
+Run NSCF to get the electron wavefunction on a `4x4x4` k grid. This is a preparation for wannierization. 
 Go to `nscf/` directory.
-The input file is below. 
-`nbnd` specifies how many bands/eigenstate are calculated. We want to include the conduction bands, so we set a number larger than 8.  
+The input file `nscf.in` is below. 
+`nbnd` specifies how many bands/eigenstate are calculated. We want to include the four valence bands and four conduction bands, so we should set a number larger or equal than 8. The number of valence electrons are controlled by the pseudo-potential. 
+
+Command for generating the kpoint list :  `kmesh.pl 4 4 4`
+`kmesh.pl` can be found at `wannier90-3.1.0/utility/` inside the wannier90 code.
+
 ```
 user@f34442ffeba6:/run/epr_gen/silicon/nscf$ cat nscf.in
 &CONTROL
@@ -168,8 +173,6 @@ K_POINTS crystal
   0.75000000  0.75000000  0.50000000  1.562500e-02
   0.75000000  0.75000000  0.75000000  1.562500e-02
 ```
-How to generate this kpoint list : 
-`/opt/q-e-qe-7.2/wannier90-3.1.0/utility/kmesh.pl 4 4 4`
 
 
 
@@ -184,7 +187,7 @@ user@f34442ffeba6:/run/epr_gen/silicon/nscf$ pw.x -i nscf.in > nscf.out
 
 ### 1.3 Wannier 
 Go to `wannier/` directory.
-Construct wannier function using the wavefunction generated in the previous step.
+Construct wannier function using the wavefunction generated in the `nscf` step.
 
 The `wannier90.x` input file is si.win. Consistentcy on `num_bands` and `kpoints`. 
 ```
@@ -209,7 +212,13 @@ dis_win_max =   17.200
 dis_froz_min = -100.000
 dis_froz_max  = 9.000     
 num_iter  =   5000
+
+!same as the nscf step
 mp_grid : 4 4 4
+! perturbo needs this 
+write_u_matrices = .true.
+write_xyz = .true.
+
 
 begin unit_cell_cart
 bohr
@@ -218,9 +227,6 @@ bohr
 -5.1320  5.1320  0.0000
 end unit_cell_cart
 
-! perturbo needs this 
-write_u_matrices = .true.
-write_xyz = .true.
 
 
 #restart = plot
@@ -315,19 +321,23 @@ Link the wavefunction from NSCF calculation to the wannier90 working directory.
 ```
 user@silicon/wannier$ ln -sf ../nscf/tmp
 ```
-
+The script for wannierization. 
 ```
 user@silicon/wannier$ cat run-wan.sh
 #!/bin/bash
-#export OMP_NUM_THREADS=4
+export OMP_NUM_THREADS=4
 wannier90.x -pp si.win
 pw2wannier90.x  < pw2wan.in > pw2wan.out
 wannier90.x  si.win
 user@silicon/wannier$ ./run-wan.sh 
 ```
-Check `si.wout`
 
+Check `si.wout`. 
 
+One can use GW band struture in this wannier step. Check the example `23: Silicon – G0W0 bands structure interpolation` in wannier90's tutorial book.
+Wannier90 downloading : 
+`https://wannier.org/download/`
+![](gw.png)
 ### 1.4 DFPT 
 Go to `phonon/` directory. 
 Run DFPT to get dynamical matrix and e-ph matrix elements on coarse q-grid 2x2x2. 
@@ -349,7 +359,7 @@ Phonons on a uniform grid
   epsil=.true.      !calculate  macroscopic dielectric constant @ q=0, only for non-metal system  
   lqdir=.true. 
   outdir='./tmp'
-  fildyn  = 'si.dyn.xml'
+  fildyn  = 'si.dyn.xml'  !qe2pert.x only supports .xml format
   fildvscf = 'dvscf'
   nq1=2, nq2=2, nq3=2,
 /
@@ -358,7 +368,7 @@ user@f34442ffeba6:/run/epr_gen/silicon/phonon$ ph.x -i ph.in > ph.out
 
 This ph.x calculation takes 3 mins on my macbook. 
 
-Then, collect the dynamical matrix and e-ph matrix elements on coarse grid and save them in `/save`.
+Then, `ph-collect.sh` collects the dynamical matrix and e-ph matrix elements on the coarse grid and save them in `/save`.
 ```
 user@d163e83e57d2:/run/epr_gen/silicon/phonon$ cat ph-collect.sh
 #!/bin/bash
@@ -403,6 +413,7 @@ user@silicon/qe2pert/tmp$ cd ..
 
 Open qe2pert.in file, get familiar with it. 
 Check `https://perturbo-code.github.io/mydoc_param_qe2pert.html` for input parameters of `qe2pert.x`. 
+
 ```
 user@silicon/qe2pert$ cat qe2pert.in
 &qe2pert
@@ -413,7 +424,7 @@ user@silicon/qe2pert$ cat qe2pert.in
   dft_band_min = 1
   dft_band_max = 16
   num_wann = 8
-  lwannier=.true.
+  lwannier=.true.  !wfn in wannier gauge. 
 /
 ```
 Pay attention to the consistency on all the parameters. 
@@ -421,10 +432,17 @@ Pay attention to the consistency on all the parameters.
 ```
 user@silicon/qe2pert$ qe2pert.x -i qe2pert.in
 ```
+
+
 Finally, we have the `si_epr.h5` file. 
+`hdf5` format is cross-platform. 
+Check `https://perturbo-code.github.io/mydoc_qe2pert.html#structure-of-eprh5-hdf5-file` for the data struture of `_epr.h5`. 
 
 You can download `HDF5View` from `https://www.hdfgroup.org/downloads/hdfview/`.
 Use HDF5View to take a look at `si_epr.h5` file.
+
+`qe2pert_output.yml` is a light abd human-readable file containing the descriptive data for `_epr.h5`.
+
 
 ## 3. perturbo 
 With `si_epr.h5`, we can get electron's band struture, phonon's dispersion and e-ph matrix elements.
@@ -473,7 +491,7 @@ user@de401a4c683a:/run/epr_gen/silicon/perturbo/band$ python plot.py
 ```
 The bandstucture is shown in `band.jpg`. 
 
-![band structure](./bands/band.jpg)
+![band structure](./silicon/perturbo/bands/bands.jpg)
 
 ### Phonon dispersion
 Go to `perturbo/phonon/` directory.
@@ -526,7 +544,7 @@ plt.savefig('phdisp.jpg',dpi=400)
 user@de401a4c683a:/run/epr_gen/silicon/perturbo/phonon$ python plot.py
 ```
 The phonon dispersion is shown in `phdisp.jpg`. 
-![band structure](./phonon/phdisp.jpg)
+![band structure](./silicon/perturbo/phdisp/phdisp.jpg)
 ### E-ph
 Go to `perturbo/ephmat/` directory.
 Let's see the input files. 
@@ -582,4 +600,4 @@ user@silicon/perturbo/ephmat$ python plot.py
 ```
 The e-ph coupling strength along high symmetry points is shown in `ephmat.jpg`. 
 
-![band structure](./ephmat/ephmat.jpg)
+![band structure](./silicon/perturbo/ephmat/ephmat.jpg)

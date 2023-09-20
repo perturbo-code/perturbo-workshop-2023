@@ -1,0 +1,10 @@
+&inputpp
+  outdir='./tmp/'
+  prefix = 'si'
+  seedname = 'si'
+  !spin_component = 'none'
+  write_mmn = .true.
+  write_amn = .true.
+  !write_spn = .true.
+  !spn_formatted = .false.
+/

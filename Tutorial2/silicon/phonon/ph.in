@@ -1,0 +1,15 @@
+Phonons on a uniform grid
+&inputph
+  verbosity='debug'
+  tr2_ph=1.0d-13
+  prefix='si'
+  ldisp=.true.     ! do q points one by one  
+  epsil=.true.     ! for non-metallic system or say gapped  
+  lqdir=.true.     
+  outdir='./tmp'
+  fildvscf = 'dvscf'
+  !fildyn  = 'si.dyn'
+  fildyn  = 'si.dyn.xml'  !.xml format is needed for qe2pert.x 
+
+  nq1=2, nq2=2, nq3=2,    ! a minimal grid for tutorial purpose. 
+/

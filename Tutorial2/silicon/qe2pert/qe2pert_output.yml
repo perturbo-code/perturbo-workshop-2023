@@ -1,0 +1,66 @@
+---
+program: qe2pert
+
+start date and time:
+   date: 20 September 2023
+   time: " 4:31:12"
+
+parallelization:
+   type: OpenMP
+   number of OpenMP threads:   4
+
+input parameters:
+   before conversion:
+      asr:          crystal
+      debug:          False
+      dft_band_max:                  16
+      dft_band_min:                   1
+      dis_win_min:          -9.9990000000000000E+03
+      eig_corr:          
+      load_ephmat:          False
+      lwannier:          True 
+      nk1:                   4
+      nk2:                   4
+      nk3:                   4
+      num_wann:                   8
+      outdir:          ./tmp
+      phdir:          ../phonon/save
+      polar_alpha:           1.0000000000000000E+00
+      prefix:          si
+      spin_component:          none
+      system_2d:          False
+      tdep:          False
+      thickness_2d:           6.0000000000000000E+00
+      yaml_fname:          qe2pert_output.yml
+   after conversion:
+      asr:          crystal
+      debug:          False
+      dft_band_max:                  16
+      dft_band_min:                   1
+      dis_win_min:          -7.3491294486874756E+02
+      eig_corr:          
+      load_ephmat:          False
+      lwannier:          True 
+      nk1:                   4
+      nk2:                   4
+      nk3:                   4
+      num_wann:                   8
+      outdir:          ./tmp/
+      phdir:          ../phonon/save/
+      polar_alpha:           1.0000000000000000E+00
+      prefix:          si
+      spin_component:          none
+      system_2d:          False
+      tdep:          False
+      thickness_2d:          -6.0000000000000000E+00
+      yaml_fname:          qe2pert_output.yml
+
+timings:
+
+   time units: s
+
+   QE2PERT:
+      cpu:        36.54284500
+      wall:       11.14077687
+      calls:         2
+...
