@@ -568,7 +568,7 @@ open it with preview or open the finder (Mac):
 #or 
 >> open -a Finder .
 ```
-![](./pic/gaaas_defpot.png)
+![](./pic/gaas_defpot.png)
 
 
 * visualize the phonon dispersion  (using perturbopy)
