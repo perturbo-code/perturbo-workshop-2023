@@ -21,7 +21,7 @@ ax.plot(temperatures, mobilities_rta,marker='o',label='RTA')
 ax.set_xlabel(f"Temperature ({gaas_trans_ita.temper.units})")
 ax.set_ylabel(f"Mobility ({gaas_trans_ita.mob.units})")
 
+plt.legend()
 plt.title('Mobility vs Temperature - GaAs')
 plt.show()
-plt.legend()
 plt.savefig('gaas-trans.png')
