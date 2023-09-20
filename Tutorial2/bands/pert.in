@@ -1,5 +1,0 @@
-&perturbo 
- prefix = 'si'
- calc_mode = 'bands'
- fklist = 'si_band.kpt'
-/
