@@ -1,0 +1,43 @@
+
+   Program PERTURBO starts on 13Sep2023 at 21:32:50 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'imsigma'
+     --------------------------------------------------
+     The gaas_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     band_min:    5  band_max:    5
+     Reading list from file: gaas_tet.kpt
+     Total weight of the Cauchy sampling:  0.105074E+01
+     total number of k-points:         69
+     total number of q-points:     120000
+    |--------------------------------------------------|
+     Im[Sigma]:                          
+           5.00%
+          10.00%
+          15.00%
+          20.00%
+          25.00%
+          30.00%
+          35.00%
+          40.00%
+          45.00%
+          50.00%
+          55.00%
+          60.00%
+          65.00%
+          70.00%
+          75.00%
+          80.00%
+          85.00%
+          90.00%
+          95.00%
+         100.00%
+     >Im[Sigma] done.
+ 
+     PERTURBO     :   9m17.99s CPU   2m34.02s WALL
+
+     init_eph_wan :      1.25s CPU      9.79s WALL (       1 calls)
+     calc_selfel  :    555.75s CPU    142.83s WALL (       1 calls)
+
+   Program was terminated on:  21:35:24  13Sep2023             
