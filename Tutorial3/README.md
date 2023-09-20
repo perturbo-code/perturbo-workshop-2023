@@ -7,8 +7,7 @@ GaAs is a polar semiconductor with a gap of ~1.42eV. The challenge with this mat
 
 Below is the zoomed in energy window which will be taken into account for transport: a small region near the CBM @ ~6.025 eV.
 
-![image](https://github.com/perturbo-code/perturbo-workshop-2023/assets/85775106/ee10006c-3e63-4a39-9290-485c03a77f82)
-
+![image](https://github.com/perturbo-code/perturbo-workshop-2023/assets/85775106/4366daf9-2de6-41ff-ace0-c642f536770a)
 
 More details can be found at:
 
