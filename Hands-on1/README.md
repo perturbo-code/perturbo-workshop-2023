@@ -394,7 +394,7 @@ For our case, we can define the *config_machine.yml* in the following way:
 To enable the tests of `qe2pert.x`, activate the `--run_qe2pert` option. Also we'll take only one `epr`-file out of six because of the time complexity (even in this case it would take ~20 minutes):
 
 ```bash
-   ./run_tests.py --run_qe2pert --epr epr4
+   ./run_tests.py --run_qe2pert --epr epr4 -s
 ```
 
 When the tests are successful, you'll be confident that your perturbo is working well and you can move on to the next hands-on sessions.
