@@ -1,7 +1,30 @@
 # Tutorial 3: From prefix_epr.h5 to BTE transport (GaAs)
 
+## Galium Arsenide
+GaAs is a polar semiconductor with a gap of ~1.42eV. The challenge with this material is the long-range coupling between electron and the LO phonon, which makes it difficult for converging transport calculation. In addition, in GaAs, electron-2-phonon scattering proccesses is also an important factors, as we shall see in this tutorial.
+
+![image](https://github.com/perturbo-code/perturbo-workshop-2023/assets/85775106/a3e40d0c-e054-4d7f-85f9-5d0e08448106)
+
+Below is the zoomed in energy window which will be taken into account for transport: a small region near the CBM @ ~6.025 eV.
+
+![image](https://github.com/perturbo-code/perturbo-workshop-2023/assets/85775106/ee10006c-3e63-4a39-9290-485c03a77f82)
+
+
+More details can be found at:
+
+[1] J.-J. Zhou, M. Bernardi
+
+Ab initio Electron Mobility and Polar Phonon Scattering in GaAs.
+[Physical Review B (Rapid Communication) 2016 94, 201201](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.94.201201)
+
+[2] N.-E. Lee, J.-J. Zhou, H.-Y. Chen, M. Bernardi 
+
+Ab Initio Electron-Two-Phonon Scattering in GaAs from Next-to-Leading Order Perturbation Theory.
+[Nature Communications 2020 11, 1607](https://www.nature.com/articles/s41467-020-15339-0)
+
 ## 1 - Transport prerequisite
 ### 1.1 Setup
+Before doing any transport calculation, we need to set up our energy window seperately.
 ```
 calc_mode = 'setup'
 ```
@@ -12,7 +35,7 @@ In a new working folder (`/perturbo/setup/`):
 * Run Perturbo:
 
 ```
-# Bc my cpu has quad-core
+# Launch the job on 4 OMP threads
 export OMP_NUM_THREAD=4 
 perturbo.x < pert.in > pert.out
 ```
