@@ -9,15 +9,9 @@ plt.rcParams.update(ppy.plot_tools.plotparams)
 gaas_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
 
 fig1, ax1  = plt.subplots()
-gaas_ephmat.plot_ephmat(ax1)
+gaas_ephmat.plot_ephmat(ax1,log=True)
 #plt.show()
 plt.savefig('gaas_ephmat.png')
-
-
-fig2, ax2  = plt.subplots()
-gaas_ephmat.plot_defpot(ax2)
-plt.savefig('gaas_defpot.png')
-#plt.show()
 
 fig3, ax3  = plt.subplots()
 gaas_ephmat.plot_phdisp(ax3)

@@ -533,7 +533,7 @@ plt.rcParams.update(ppy.plot_tools.plotparams)
 gaas_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
 
 fig, ax  = plt.subplots()
-gaas_ephmat.plot_ephmat(ax)
+gaas_ephmat.plot_ephmat(ax,log=True)
 #plt.show()
 plt.savefig('gaas_ephmat.png')
 ```
@@ -544,31 +544,6 @@ open it with preview or open the finder (Mac):
 >> open -a Finder .
 ```
 ![](./pic/gaas_ephmat.png)
-
-
-* visualize deformation potential (using perturbopy)
-
-```python=
-import perturbopy.postproc as ppy
-import matplotlib.pyplot as plt
-
-gaas_ephmat = ppy.Ephmat.from_yaml('gaas_ephmat.yml')
-
-plt.rcParams.update(ppy.plot_tools.plotparams)
-gaas_ephmat.qpt.add_labels(ppy.lattice.points_fcc)
-
-fig, ax  = plt.subplots()
-gaas_ephmat.plot_defpot(ax)
-#plt.show()
-plt.savefig('gaas_defpot.png')
-```
-open it with preview or open the finder (Mac):
-```bash
->> open gaas_defpot.png 
-#or 
->> open -a Finder .
-```
-![](./pic/gaas_defpot.png)
 
 
 * visualize the phonon dispersion  (using perturbopy)
