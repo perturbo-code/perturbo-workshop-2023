@@ -38,7 +38,7 @@ In a new working folder (`/perturbo/setup/`):
 ```
 # Launch the job on 4 OMP threads
 export OMP_NUM_THREAD=4 
-perturbo.x < pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 
 Output:
@@ -65,7 +65,7 @@ In a new working directory (`/perturbo/imsigma/`):
 * Run Perturbo:
 ```
 export OMP_NUM_THREAD=4
-perturbo.x < pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 Output:
 * `'prefix'.imsigma`: computed $Im[\Sigma]$
@@ -92,7 +92,7 @@ In a new working folder (`/perturbo/trans-rta-electron`):
 * Run Perturbo:
 ```
 export OMP_NUM_THREAD=4
-perturbo.x < pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 Output:
 * `'prefix'.cond`: the conductivity and mobility tensors for each configuration
@@ -113,7 +113,7 @@ In a new working folder (`/perturbo/trans-rta-electron`):
 * Run Perturbo:
 ```
 export OMP_NUM_THREAD=4
-perturbo.x < pert.in > pert.out
+perturbo.x -i pert.in > pert.out
 ```
 The output files are similar to `RTA` calculations, as explained in previous section.
 
