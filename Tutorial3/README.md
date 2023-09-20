@@ -1,7 +1,7 @@
 # Tutorial 3: From prefix_epr.h5 to BTE transport (GaAs)
 
 ## Galium Arsenide
-GaAs is a polar semiconductor with a gap of ~1.42eV. The challenge with this material is the long-range coupling between electron and the LO phonon, which makes it difficult for converging transport calculation. In addition, in GaAs, electron-2-phonon scattering proccesses is also an important factors, as we shall see in this tutorial.
+GaAs is a polar semiconductor with a direct gap of ~1.42eV at the $\Gamma$ valley. The challenge with this material is the long-range coupling between electron and the LO phonons, which makes it difficult for converging transport calculation. In addition, in GaAs, electron-2-phonon scattering proccesses is also an important factor, as we shall see in this tutorial.
 
 ![image](https://github.com/perturbo-code/perturbo-workshop-2023/assets/85775106/a3e40d0c-e054-4d7f-85f9-5d0e08448106)
 
@@ -21,9 +21,11 @@ Ab initio Electron Mobility and Polar Phonon Scattering in GaAs.
 Ab Initio Electron-Two-Phonon Scattering in GaAs from Next-to-Leading Order Perturbation Theory.
 [Nature Communications 2020 11, 1607](https://www.nature.com/articles/s41467-020-15339-0)
 
+---
+
 ## 1 - Transport prerequisite
 ### 1.1 Setup
-Before doing any transport calculation, we need to set up our energy window seperately.
+Before doing any transport calculation, we need to set up our energy window in a seperate calculation.
 ```
 calc_mode = 'setup'
 ```
@@ -48,6 +50,8 @@ Output:
 
 
 ### 1.2 Imaginary part of the self-energy ($Im[\Sigma]$)
+One can learn some useful physical insights from the imaginary part of the self-energy. For our transport, this step is optional, but it will speed things up.
+The result is used for computing the scattering rates / relaxation times in the subsequent steps.
 ```
 calc_mode = 'imsigma'
 ```
@@ -66,7 +70,6 @@ perturbo.x < pert.in > pert.out
 Output:
 * `'prefix'.imsigma`: computed $Im[\Sigma]$
 * `'prefix'.imsigma_mode`: similar but with phonon mode indices
-
 
 Now we are ready for transport.
 
@@ -112,7 +115,7 @@ In a new working folder (`/perturbo/trans-rta-electron`):
 export OMP_NUM_THREAD=4
 perturbo.x < pert.in > pert.out
 ```
-The output files are similar to `RTA` calculations.
+The output files are similar to `RTA` calculations, as explained in previous section.
 
 
 
