@@ -24,6 +24,10 @@ Ab Initio Electron-Two-Phonon Scattering in GaAs from Next-to-Leading Order Pert
 ---
 
 ## 1 - Transport prerequisite
+Below is the general PERTURBO workflow. You can find the interactive version [here](https://perturbo-code.github.io/mydoc_interactive_workflow.html).
+
+![Screenshot 2023-09-20 at 1 21 43 PM](https://github.com/perturbo-code/perturbo-workshop-2023/assets/85775106/4cab6e8b-444a-4eca-9e6b-933c66753ae5)
+
 ### 1.1 Setup
 Before doing any transport calculation, we need to set up our energy window in a seperate calculation.
 ```
