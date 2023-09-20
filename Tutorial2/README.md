@@ -10,8 +10,7 @@ Example : Silicon
 Check `https://perturbo-code.github.io/mydoc_docker.html` to setup docker of perturbo. 
 For gcc version
 ```
-docker run -v /Users/yaoluo/workshop:/run/epr_gen --user 500 -it --rm --name 
-perturbo perturbo/perturbo:gcc_openmp
+docker run -v /Users/yaoluo/workshop/perturbo-workshop-2023-main/Tutorial2:/home/user/run/epr_gen --user 500 -it --rm --name perturbo perturbo/perturbo:gcc_openmp
 ```
 ## 1. DFT & DFPT 
 Download the tutorial file, go to the directory `silicon/`.  
