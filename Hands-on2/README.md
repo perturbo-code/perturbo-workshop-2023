@@ -37,7 +37,7 @@ pip3 install perturbopy
 ```
 
 #### folder hierarchy
-- :open_file_folder: silicon
+- :open_file_folder: gallium_arsenide
     - :open_file_folder: **pw-ph-wan**
       - :file_folder: scf: self-consistent calculations using QE
       - :file_folder: nscf: non-self-consistent calculations using QE
@@ -45,9 +45,9 @@ pip3 install perturbopy
       - :file_folder: wann: maximally localized Wannier functions obtained using W90
     - :file_folder: **qe2pert**: electron-phonon matrix elements in Wannier basis
     - :open_file_folder: **perturbo**
-      - :file_folder: pert-band: interpolated band structures using perturbo.x
-      - :file_folder: pert-trans: transport calculations using perturbo.x 
-      - :file_folder: pert-ephmat: e-ph matrix using perturbo.x 
+      - :file_folder: pert-band: interpolated band structures using Perturbo
+      - :file_folder: pert-trans: transport calculations using Perturbo
+      - :file_folder: pert-ephmat: e-ph matrix using Perturbo
 
 
 ### scf
@@ -260,9 +260,7 @@ After finishing nscf, phonon and mlwf, we can perform qe2pert to integrate them 
 >>  qe2pert.x -i qe2pert.in | tee qe2pert.out
 ```
 * job check: "Program was terminated on:" in `qe2pert.out`
-* output: **gaas_epr.h5**
-
-
+* output: `gaas_epr.h5`
 
 ```
 #qe2pert.in
@@ -279,7 +277,7 @@ qe2pert
 /
 ```
 
-**Now we finished the task 1 if you has already obtained epr.h5.**
+**Now we finished the task 1 if you has already obtained `gaas_epr.h5`.**
 
 ## Task 2 --- access epr.h5
 
@@ -391,7 +389,7 @@ f.close()
 
 
 ## Task 3 --- perturbo
-Here we will use perturbo.x to performs electronic structure interpolation and phonon dispersion calculation as well as the e-ph coupling matrix. Other advanced functionalities will be shown in hands-on 3&4.
+Here we will use `perturbo.x` to performs electronic structure interpolation and phonon dispersion calculation as well as the e-ph coupling matrix. Other advanced functionalities will be shown in hands-on 3&4.
 
 ### electronic structure interpolation
 
@@ -539,7 +537,7 @@ plt.savefig('gaas_ephmat.png')
 ```
 open it with preview or open the finder (Mac):
 ```bash
->> open si_ephmat.png 
+>> open gaas_ephmat.png 
 #or 
 >> open -a Finder .
 ```
