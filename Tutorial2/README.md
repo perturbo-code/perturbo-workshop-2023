@@ -1,6 +1,8 @@
 #Generation of epr file 
 This tutorial shows how to generate epr file, the core database of perturbo. We use Silicon with a very coarse grid as a minimal example. 
+
 Download tutorial and lectture file from `https://github.com/perturbo-code/perturbo-workshop-2023/tree/main/Tutorial2` 
+
 ![work flow](workflow.png)
 
 ![work flow](workflow-detail.png)
@@ -11,7 +13,8 @@ Example : Silicon
 Check `https://perturbo-code.github.io/mydoc_docker.html` to setup docker of perturbo. 
 For gcc version
 ```
-docker run -v /Users/yaoluo/workshop/perturbo-workshop-2023-main/Tutorial2:/home/user/run/epr_gen --user 500 -it --rm --name perturbo perturbo/perturbo:gcc_openmp
+docker run -v /Users/yaoluo/workshop/perturbo-workshop-2023-main/Tutorial2:/home/user/run/epr_gen 
+--user 500 -it --rm --name perturbo perturbo/perturbo:gcc_openmp
 ```
 ## 1. DFT & DFPT 
 Download the tutorial file, go to the directory `silicon/`.  
