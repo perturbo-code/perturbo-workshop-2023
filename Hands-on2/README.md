@@ -58,6 +58,7 @@ First of all, we need to perform the self-consistent calculation of electron den
 * execute command 
 ```bash=
 >> cd workshop_perturbo_2023
+>> cd Hands-on2
 >> cd gallium_arsenide
 >> cd pw_ph_wan
 >> cd scf
