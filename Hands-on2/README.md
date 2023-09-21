@@ -53,8 +53,8 @@ pip3 install perturbopy
 ### scf
 First of all, we need to perform the self-consistent calculation of electron density charge, which is the basis of all other calculations.
 
-* executable: pw.x
-* input file: scf.in
+* executable: `pw.x`
+* input file: `scf.in`
 * execute command 
 ```bash=
 >> cd workshop_perturbo_2023
@@ -64,8 +64,8 @@ First of all, we need to perform the self-consistent calculation of electron den
 >> export OMP_NUM_THREADS=6 # customize it with your PC
 >> pw.x -i scf.in | tee scf.out
 ```
-* job check: "JOB DONE" in the end of scf.out
-* output: the charge density and wavefunction of the ground state is stored in /tmp/gaas.save by hdf5 format if you compiled Q-E with hdf5.
+* job check: "JOB DONE" in the end of `scf.out`
+* output: the charge density and wavefunction of the ground state is stored in `./tmp/gaas.save` by hdf5 format if you compiled Q-E with hdf5.
 
 ```
 #scf.in
@@ -104,17 +104,17 @@ K_POINTS {automatic}
 ### phonon
 Based on the convergent charge density, we can perform phonon and nscf calculations. The phonon calculation is based on the linear reponse perturbation theory (harmonic phonons).
 
-* executable: ph.x
-* input file: ph.in, scf/tmp
+* executable: `ph.x`
+* input file: `ph.in`, `scf/tmp`
 * execute command 
 ```bash=
 >> cd phonon
 >> cp -r ../scf/tmp ./
 >> ph.x -i ph.in | tee ph.out
 ```
-* job check: "JOB DONE" in the end of ph.out
-* output: most information such as dynamical matrix, phonon perturbation potentials, is stored in tmp/_ph0/.
-* one more operation: collect phonon data to 'save' folder for qe2pert
+* job check: "JOB DONE" in the end of `ph.out`
+* output: most information such as dynamical matrix, phonon perturbation potentials, is stored in `tmp/_ph0/`.
+* one more operation: collect phonon data to `save` folder for qe2pert
 ```bash=
 >> ./ph-collect.sh
 ```
@@ -138,18 +138,18 @@ Phonons on a uniform grid
 ### nscf
 For constructing good maximum localized wannier functions, it needs a ground state information on a whole K grid not reduced Brillouin zone. Besides, we also need this in qe2pert to produce e-ph matrix for a coarse grid.
 
-* executable: pw.x
-* input file: nscf.in, scf/tmp
+* executable: `pw.x`
+* input file: `nscf.in`, `scf/tmp`
 * execute command 
 ```bash=
 >> cd nscf
 >> cp -r ../scf/tmp ./
 >> pw.x -i nscf.in | tee nscf.out
 ```
-* job check: "JOB DONE" in the end of nscf.out
-* output: the charge density and wavefunction of the ground state is stored in /tmp/gaas.save by hdf5 format if you compiled Q-E with hdf5.
+* job check: "JOB DONE" in the end of `nscf.out`
+* output: the charge density and wavefunction of the ground state is stored in `./tmp/gaas.save` by hdf5 format if you compiled Q-E with hdf5.
 
-truncated nscf.in is attached
+A truncated `nscf.in` is attached
 ```
 #truncated nscf.in
 &CONTROL
@@ -161,8 +161,8 @@ K_POINTS crystal
 
 ### MLWF
 Maximum localized wannier function is constructed to represent e-ph matrix in real space, which is crucial for interpolating ultra-fine (**k**,**q**) grid using perturbo later.
-* executable: pw2wannier.x, wannier90.x
-* input file: pw2wan.in, gaas.win, nscf/tmp/gaas.save
+* executable: `pw2wannier.x`, `wannier90.x`
+* input file: `pw2wan.in`, `gaas.win`, `nscf/tmp/gaas.save`
 * execute command 
 ```bash=
 >> cd wannier
@@ -174,10 +174,10 @@ Maximum localized wannier function is constructed to represent e-ph matrix in re
 >> pw2wannier90.x -i pw2wan.in | tee pw2wan.out
 >> wannier90.x gaas
 ```
-* job check: "JOB DONE" in the end of pw2wan.out for pw2wannier90.x; and "All done: wannier90 exiting" in si.wout
-* output: gaas_u.mat, gaas_u_dis.mat, and gaas_centres.xyz for qe2pert
+* job check: "JOB DONE" in the end of `pw2wan.out` for `pw2wannier90.x`; and "All done: wannier90 exiting" in `gaas.wout`
+* output: `gaas_u.mat`, `gaas_u_dis.mat`, and `gaas_centres.xyz` for qe2pert
 
-pw2wan.in and truncated si.win is attached
+`pw2wan.in` and truncated `gaas.win` is attached
 ```
 #pw2wan.in 
 &inputpp
@@ -243,10 +243,10 @@ end kpoints
 ```
 
 ### qe2pert
-After finishing nscf, phonon and mlwf, we can perform qe2pert to integrate them to produce epr.h5 which will be input to perturbo.x.
+After finishing nscf, phonon and mlwf, we can perform qe2pert to integrate them to produce `{prefix}_epr.h5` which will be input to `perturbo.x`.
 
-* executable: qe2pert.in
-* input file: qe2pert.in, phonon/save, nscf/tmp/gaas.save, gaas_centres.xyz, gaas_u_dis.mat, gaas_u.mat
+* executable: `qe2pert.in`
+* input file: `qe2pert.in`, `phonon/save`, `nscf/tmp/gaas.save`, `gaas_centres.xyz`, `gaas_u_dis.mat`, `gaas_u.mat`
 * execute command 
 ```bash=
 >> cd qe2pert
@@ -259,7 +259,7 @@ After finishing nscf, phonon and mlwf, we can perform qe2pert to integrate them 
 >> ln -sf ../pw-ph-wann/wann/gaas_centres.xyz
 >>  qe2pert.x -i qe2pert.in | tee qe2pert.out
 ```
-* job check: "Program was terminated on:" in qe2pert.out
+* job check: "Program was terminated on:" in `qe2pert.out`
 * output: **gaas_epr.h5**
 
 
@@ -395,17 +395,17 @@ Here we will use perturbo.x to performs electronic structure interpolation and p
 
 ### electronic structure interpolation
 
-* executable: perturbo.x
-* input file: pert.in, gaas_epr.h5, gaas_band.kpt
+* executable: `perturbo.x`
+* input file: `pert.in`, `gaas_epr.h5`, `gaas_band.kpt`
 * execute command 
 ```bash=
 >> cd pert-bands
 >> ln -sf ../../qe2pert/gaas_epr.h5
 >> perturbo.x -i pert.in | tee pert.out
 ```
-* job check: "Program was terminated on:" in pert.out
-* output: gaas.bands, gaas_bands.yml
-* the pert.in is attached
+* job check: "Program was terminated on:" in `pert.out`
+* output: `gaas.bands`, `gaas_bands.yml`
+* the `pert.in` is attached
 ```
 &perturbo
  prefix = 'gaas'
@@ -444,8 +444,8 @@ open it with preview or open the finder (Mac):
 
 ### phonon dispersion
 
-* executable: perturbo.x
-* input file: pert.in, gaas_epr.h5, gaas_phdisp.qpt
+* executable: `perturbo.x`
+* input file: `pert.in`, `gaas_epr.h5`, `gaas_phdisp.qpt`
 * execute command 
 ```bash=
 >> cd pert-phdisp
@@ -454,7 +454,7 @@ open it with preview or open the finder (Mac):
 ```
 * job check: "Program was terminated on:" in `pert.out`
 * output: `gaas.phdisp`, `gaas_phdisp.yml`
-* the pert.in is attached
+* The `pert.in` is attached
 ```
 &perturbo
  prefix = 'gaas'
@@ -497,16 +497,16 @@ open it with preview or open the finder (Mac):
 
 
 ### e-ph matrix 
-* executable: perturbo.x
-* input file: pert.in, eph.kpt, eph.qpt, gaas_epr.h5
+* executable: `perturbo.x`
+* input file: `pert.in`, `eph.kpt`, `eph.qpt`, `gaas_epr.h5`
 * execute command 
 ```bash=
 >> cd pert-ephmat
 >> perturbo.x -i pert.in | tee pert.out
 ```
-* job check: "Program was terminated on:" in pert.out
-* output: gaas.ephmat, gaas_ephmat.yml 
-* the pert.in is attached
+* job check: "Program was terminated on:" in `pert.out`
+* output: `gaas.ephmat`, `gaas_ephmat.yml` 
+* the `pert.in` is attached
 ```
 &perturbo
  prefix = 'gaas'
