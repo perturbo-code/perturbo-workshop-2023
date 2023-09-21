@@ -1,5 +1,6 @@
 #Generation of epr file 
 This tutorial shows how to generate epr file, the core database of perturbo. We use Silicon with a very coarse grid as a minimal example. 
+Download tutorial and lectture file from `https://github.com/perturbo-code/perturbo-workshop-2023/tree/main/Tutorial2` 
 ![work flow](workflow.png)
 
 ![work flow](workflow-detail.png)
