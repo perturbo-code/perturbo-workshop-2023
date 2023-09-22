@@ -303,7 +303,7 @@ We will use containers without MPI, so our final *config_machine_perturbo.yml* f
 Once, the `config_machine.yml` is set up, navigate back to the `tests` folder and run:
 
 ```bash
-   ./run_tests.py -s
+   ./run_tests.py -s --disable-warnings
 ```
 This script will automatically load and run all the tests from the `perturbopy` package and show you all intermediate steps.
 
@@ -394,7 +394,7 @@ For our case, we can define the *config_machine.yml* in the following way:
 To enable the tests of `qe2pert.x`, activate the `--run_qe2pert` option. Also we'll take only one `epr`-file out of six because of the time complexity (even in this case it would take ~20 minutes):
 
 ```bash
-   ./run_tests.py --run_qe2pert --epr epr4 -s
+   ./run_tests.py --run_qe2pert --epr epr4 -s --disable-warnings
 ```
 
 When the tests are successful, you'll be confident that your perturbo is working well and you can move on to the next hands-on sessions.
