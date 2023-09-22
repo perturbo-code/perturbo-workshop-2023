@@ -224,7 +224,7 @@ Hands-on1  Hands-on2  Hands-on3  Hands-on4  README.md  Tutorial2  Tutorial3  Tut
 ```
 We see the created file. Now let's rename it in the container:
 ```bash
-mv test_volume test_volume_2
+mv test_volumes test_volumes_2
 ```
 
 We can check that in our Host OS the file has also been renamed. That is, we can change files inside the container and inside the Host OS at the same time.
@@ -244,7 +244,7 @@ As you discissed yesterday, Perturbo package provides two executables:
 
 2. `perturbo.x` - the core executable of Perturbo package performing transport calculations, ultrafast dynamics, etc. 
 
-For more details, please read this [Perturbo page](https://perturbo-code.github.io/mydoc_features.html>).
+For more details, please read this [Perturbo page](https://perturbo-code.github.io/mydoc_features.html).
 
 To test this executables, we provide a testsuite within the `Perturbopy` package. We recommend to run the testsuite:
 
