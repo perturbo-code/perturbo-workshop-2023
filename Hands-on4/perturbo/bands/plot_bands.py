@@ -16,7 +16,7 @@ plt.savefig('gaas_bands.png')
 # Plot zoomed in band diagram
 fig, ax2 = plt.subplots()
 
-gaas_bands.plot_bands(ax2, energy_window=[5, 7])
+gaas_bands.plot_bands(ax2, energy_window=[5, 7.5])
 
 plt.savefig('gaas_bands_zoom.png')
 # plt.show()

@@ -3,8 +3,9 @@
 PREFIX='gaas'
 
 # List of electric field strengths
-# EFIELDS=(0)
-EFIELDS=($(seq 200 200 1600))
+EFIELDS=(0)
+# EFIELDS=($(seq 200 200 1600))
+# EFIELDS=($(seq 0 200 1600))
 
 # OpenMP variable
 OMP_THREADS=4

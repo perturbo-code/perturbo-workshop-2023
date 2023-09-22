@@ -203,7 +203,26 @@ gaas.temper:
 
 In the case of ultrafast dynamics calculations, the only number that is used here is the temperature since this will give the distribution of the phonons. The distribution of carriers is set in the dynamics-run input file.
 
-Note, with more time, it would be useful to increase the *boltz_kdim* and *boltz_emax* parameters.
+Note, with more time, it would be useful to increase the *boltz_kdim* and *boltz_emax* parameters. *pert\_accurate.in* has been included which has a much larger energy window. As this will include many more kpoints in the calculation it is not feasible to run it in real-time. However, if you would like a more accurate version of the velocity-field curve you can try to run the calculations with the *pert\_accurate.in* input files instead.
+
+```
+&perturbo
+  prefix      = 'gaas'
+  calc_mode   = 'setup'
+  
+  boltz_kdim(1)       = 60 
+  boltz_kdim(2)       = 60 
+  boltz_kdim(3)       = 60 
+  boltz_emin          = 5.665  !CBM=6.065
+  boltz_emax          = 6.865
+  band_min            = 5
+  band_max            = 5
+  ftemper             = 'gaas.temper'
+  hole                = .false.
+ /
+```
+
+For even higher accuracy, one could increase the *kdim* parameter to 160 which is the value used in the paper.
 
 ### Running perturbo.x
 
@@ -231,18 +250,30 @@ The next step is to run the time stepping of the Boltzmann transport equation (B
 
 This is done by starting with zero applied field and letting the calculation run to convergence. We then need to increase the electric field strength in steps, each time restarting the calculation from the previous, converged distribution and letting it run to convergence. This procedure is shown in the schematic below
 
-![Schematic showing how the distribution is extracted at each electric field strength](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/computation_schematic.png)
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/computation_schematic.png" alt="computation_schematic" width="600"/>
 
 The distribution used for calculating the drift velocity is the final value of f<sub>nk</sub> (t) upon convergence. 
 
 We will now go about performing the calculation of f<sub>nk<\sub> by running *calc_mode=dynamics-run*. First we must change to the dynamics-run directory
+
 ```
 cd ../dynamics-run
 ```
 
+### Running perturbo.x
+
+For time purposes we will go ahead and run the shell script, *run.sh*, before explaining what it does. This is because the first iteration will have to calculate the electron-phonon matrix elements which is the most time consuming step.
+
+To run the shell script perform the following commands
+
+```
+chmod +x run.sh
+./run.sh
+```
+
 ### Input
 
-Since we are running the calculation for multiple electric field strengths, we have the following script 
+Whilst it is running we can now inspect the input files. Since we are running the calculation for multiple electric field strengths, we have to use a script, namely *run.sh*. 
 
 run.sh
 
@@ -251,56 +282,48 @@ run.sh
 
 PREFIX='gaas'
 
-# Test with two values first, then run full selection
-# EFIELDS=($(seq 200 200 400))
-# EFIELDS=($(seq 200 200 3000))
-# EFIELDS=(0)
-EFIELDS=($(seq 0 200 3000))
+# List of electric field strengths
+EFIELDS=(0)
+# EFIELDS=($(seq 200 200 1600))
+# EFIELDS=($(seq 0 200 1600))
 
-# OpenMP variables
+# OpenMP variable
 OMP_THREADS=4
-
-# Commands change slightly based on OS
-# OS='MACOS'
-OS='LINUX'
 
 for efield in ${EFIELDS[@]}
 do
    echo dynamics-run for Efield= $efield
 
+   # Create directory efield-${field strength number}
    DIR=efield-$efield
    mkdir -p $DIR
 
+   # Move into directory
    cd $DIR
 
-   #change pert.in
+   # Copy pert-ref.in into directory as pert.in
    cp ../pert-ref.in  ./pert.in
-   if [ "$OS" == "MACOS" ]; then
-      sed -i '' "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
-      if [ $efield != 0 ]; then
-         sed -i '' "s|.*boltz_init_dist.*| boltz_init_dist      = 'restart'|g"   pert.in
-         sed -i '' "s|.*load_scatter_eph.*| load_scatter_eph      = .true.|g"   pert.in
-      fi
-   elif [ "$OS" == "LINUX" ]; then
-      sed -i "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
 
-      if [ $efield != 0 ]; then
-         sed -i "s|.*boltz_init_dist.*| boltz_init_dist      = 'restart'|g"   pert.in
-         sed -i "s|.*load_scatter_eph.*| load_scatter_eph      = .true.|g"   pert.in
-      fi
-   else
-      echo OS not supported
+   # Change pert.in file
+   # Change efield(1) parameter
+   sed -i "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
+
+   # If E != 0, set calculation to restart
+   # and read e-ph matrix elements from file
+   if [ $efield != 0 ]; then
+      sed -i "s|.*boltz_init_dist.*| boltz_init_dist      = 'restart'|g"   pert.in
+      sed -i "s|.*load_scatter_eph.*| load_scatter_eph      = .true.|g"   pert.in
    fi
 
    # link prefix_epr.h5 and prefix_tet.h5
-      ln -sf ../../../qe2pert/${PREFIX}_epr.h5
-      ln -sf ../../setup/${PREFIX}_tet.h5
+   ln -sf ../../../qe2pert/${PREFIX}_epr.h5
+   ln -sf ../../setup/${PREFIX}_tet.h5
 
    # copy prefix.temper
    cp ../../setup/${PREFIX}.temper .
 
-   # If restarting, need to link cdyna file
-   # and tmp directory
+   # If E != 0, link cdyna file for restart
+   # and tmp file for e-ph matrix elements
    if [ $efield != 0 ]; then
       echo Linking cdyna and tmp
       ln -sf ../efield-0/${PREFIX}_cdyna.h5
@@ -313,10 +336,10 @@ do
 
    echo Done $efield
 
-   # wait for a short period of time.  
-   #done, return to upper directory.   
+   # Return to upper directory
    cd ..
-
+   
+   # Wait for a short amount of time 
    sleep 1
 done
 ```
@@ -324,6 +347,7 @@ done
 This will create a efield-{efield value} folder for each electric field strength. 
 
 We also have the pert-ref.in file which will become the pert.in file for each electric field strength.  
+
 pert-ref.in
 
 ```
@@ -359,16 +383,60 @@ pert-ref.in
 /
 ```
 
-The parameters that are commented out lets the calculation come to an end when it is converged. However, these are not yet in the public version of Perturbo
+The parameter that is commented out lets the calculation come to an end when it is converged.This is a very useful parameter, however, running to convergence would take too long for a hands-on session so we will not be using it now.
+
+Again, we have included a *pert-ref\_accurate.in* input file which would give a more accurate calculation when used.  
+
+pert-ref\_accurate.in
+
+```
+&perturbo
+ prefix               = 'gaas'
+ calc_mode            = 'dynamics-run'
+ boltz_kdim(1)        = 60
+ boltz_kdim(2)        = 60
+ boltz_kdim(3)        = 60
+ boltz_qdim(1)        = 10
+ boltz_qdim(2)        = 10
+ boltz_qdim(3)        = 10
+ boltz_efield(1)      = 0.0
+ boltz_efield(2)      = 0.0
+ boltz_efield(3)      = 0.0
+ boltz_emin           = 5.665
+ boltz_emax           = 6.865
+ band_min             = 5
+ band_max             = 5
+ hole                 = .false.
+ ftemper              = 'gaas.temper'
+ time_step            = 2.0
+ boltz_nstep          = 1000
+ output_nstep         = 5
+ boltz_init_dist      = 'fermi'
+ boltz_init_smear     = 25.865213999999998
+ boltz_init_e0        = 6.0344
+ load_scatter_eph     = .false.
+ tmp_dir              = './tmp'
+ boltz_norm_dist      = .true.
+ ! boltz_acc_thr        = 1.0
+ solver               = 'euler'
+/
+```
 
 ### Running perturbo.x
 
-We run the bash script which also takes care of linking the epr and tet files, as well as copying the temper file
+Once the job has finished we will change the electric field range in the *run.sh* scritp
 
 ```
-chmod +x run.sh
+vim run.sh
+```
+
+Once the range from 200 to 1600 is set as EFIELDS we will run the script again
+
+```
 ./run.sh
 ```
+
+For all the other field strengths, the tmp folder containing the electron-phonon matrix elements will be used. This greatly speeds up the calculation.
 
 ### Output
 
@@ -406,6 +474,8 @@ pert.in
 /
 ```
 
+Note that *boltz_efield(1)* is set to 200.0. This is necessary to output the drift velocities. However, the actual electric field used in the *dynamics-run* calculation will be used for each of the runs, not E = 200.0V/cm
+
 ### Run perturbo.x
 
 First we must link the epr.h5 file, the tet.h5 file and the cdyna.h5 file
@@ -414,6 +484,12 @@ First we must link the epr.h5 file, the tet.h5 file and the cdyna.h5 file
 ln -sf ../../qe2pert/gaas_epr.h5
 ln -sf ../setup/gaas_tet.h5
 ln -sf ../dynamics-run/efield-0/gaas_cdyna.h5
+```
+
+We must also copy across gaas.temper
+
+```
+cp ../setup/gaas.temper .
 ```
 
 We can then run perturbo.x
@@ -496,6 +572,26 @@ python plot_velocity_field_curve.py
 
 This should give the following curve
 
-![drift_velocity_curve](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/output_velocity_field_curve.png)
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/output_velocity_field_curve.png" alt="output_velocity_field_curve" width="600"/>
+
+In this plot we can see a slight dip in the drift velocity at E=1400V/cm indicating the onset of the Gunn effect. 
+
+However, as has been mentioned multiple times, what we have just done is a very simplified calculation. The above result is therefore not particularly accurate. This can be seen by plotting the average occupation against energy as shown below
+
+
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/output_velocity_field_curve.png" alt="occupation_curve_simple" width="600"/>
+
+This shows the average occupation at each of the field strengths for the final time step of each run. The key points are that for many field strengths the occupation is being cut off by the energy maximum and the strange divergences at higher energies. 
+
+If we instead were to run the calculations with the *pert\_accurate.in* files we would obtain the following plot
+
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/output_velocity_field_curve.png" alt="occupation_curve_accurate" width="600"/>
+
+Here all the occupations behave as expected and are fully contained within the energy window.
+
+This also results in a much more accurate velocity-field curve with a clear indication of the Gunn effect.
+
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/output_velocity_field_curve.png" alt="velocity_field_curve_accurate" width="600"/>
+
 
 

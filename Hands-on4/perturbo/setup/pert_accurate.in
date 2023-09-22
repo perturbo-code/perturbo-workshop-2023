@@ -1,0 +1,14 @@
+&perturbo
+  prefix      = 'gaas'
+  calc_mode   = 'setup'
+  
+  boltz_kdim(1)       = 60 
+  boltz_kdim(2)       = 60 
+  boltz_kdim(3)       = 60 
+  boltz_emin          = 5.665  !CBM=6.065
+  boltz_emax          = 6.865
+  band_min            = 5
+  band_max            = 5
+  ftemper             = 'gaas.temper'
+  hole                = .false.
+ /
