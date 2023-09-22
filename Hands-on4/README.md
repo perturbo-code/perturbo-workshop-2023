@@ -54,7 +54,7 @@ docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/pe
 
 for gcc version:
 ```
-docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 --user 500 -it --rm --name perturbo-workshop perturbo/perturbo:gcc
+docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 --user 500 -it --rm --name perturbo-workshop perturbo/perturbo:gcc_openmp
 ```
 
 ## 1. Bands
@@ -150,7 +150,7 @@ plt.savefig('gaas_bands_zoom.png')
 This simple script uses perturbopy. It is run by the simple command below
 
 ```
-python plot_bands.py
+python3 plot_bands.py
 ```
 
 This will create two files:
@@ -254,7 +254,7 @@ This is done by starting with zero applied field and letting the calculation run
 
 The distribution used for calculating the drift velocity is the final value of f<sub>nk</sub> (t) upon convergence. 
 
-We will now go about performing the calculation of f<sub>nk<\sub> by running *calc_mode=dynamics-run*. First we must change to the dynamics-run directory
+We will now go about performing the calculation of f<sub>nk</sub> by running *calc_mode=dynamics-run*. First we must change to the dynamics-run directory
 
 ```
 cd ../dynamics-run
@@ -339,8 +339,6 @@ do
    # Return to upper directory
    cd ..
    
-   # Wait for a short amount of time 
-   sleep 1
 done
 ```
 
@@ -567,7 +565,7 @@ plt.savefig('velocity-field_curve.png')
 Again we run this with the simple python command
 
 ```
-python plot_velocity_field_curve.py
+python3 plot_velocity_field_curve.py
 ```
 
 This should give the following curve

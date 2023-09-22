@@ -58,7 +58,4 @@ do
 
    # Return to upper directory
    cd ..
-   
-   # Wait for a short amount of time 
-   sleep 1
 done
