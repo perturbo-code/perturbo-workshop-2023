@@ -13,6 +13,14 @@ This handout mainly aims at showing how to generate epr.h5 file (**in the most r
 
 ### tips before calculation
 
+#### Download the workshop materials
+```bash
+cd ~
+mkdir work
+cd work
+git clone git@github.com:perturbo-code/perturbo-workshop-2023.git
+```
+
 #### docker
 To avoid wasting too much time in the installation of various softwares and dependent libraries in laptop due to unexpected technical problems, we adopt docker for the hands-on this time.
 * ls current image
@@ -112,12 +120,15 @@ Based on the convergent charge density, we can perform phonon and nscf calculati
 >> cd phonon
 >> cp -r ../scf/tmp ./
 >> ph.x -i ph.in | tee ph.out
+>> ctrl+c
+>> rm -rf tmp
+>> tar -xvzf tmp.tar.gz
 ```
 * job check: "JOB DONE" in the end of `ph.out`
 * output: most information such as dynamical matrix, phonon perturbation potentials, is stored in `tmp/_ph0/`.
 * one more operation: collect phonon data to `save` folder for qe2pert
 ```bash=
->> ./ph-collect.sh
+>> ./ph-collect-serial.sh
 ```
 The input file is attached. For fast running, you can use q grid by 2*2*2 in personal laptop.
 ```
