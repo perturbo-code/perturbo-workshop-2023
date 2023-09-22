@@ -273,78 +273,7 @@ chmod +x run.sh
 
 ### Input
 
-Whilst it is running we can now inspect the input files. Since we are running the calculation for multiple electric field strengths, we have to use a script, namely *run.sh*. 
-
-run.sh
-
-```
-#!/bin/bash
-
-PREFIX='gaas'
-
-# List of electric field strengths
-EFIELDS=(0)
-# EFIELDS=($(seq 200 200 1600))
-# EFIELDS=($(seq 0 200 1600))
-
-# OpenMP variable
-OMP_THREADS=4
-
-for efield in ${EFIELDS[@]}
-do
-   echo dynamics-run for Efield= $efield
-
-   # Create directory efield-${field strength number}
-   DIR=efield-$efield
-   mkdir -p $DIR
-
-   # Move into directory
-   cd $DIR
-
-   # Copy pert-ref.in into directory as pert.in
-   cp ../pert-ref.in  ./pert.in
-
-   # Change pert.in file
-   # Change efield(1) parameter
-   sed -i "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
-
-   # If E != 0, set calculation to restart
-   # and read e-ph matrix elements from file
-   if [ $efield != 0 ]; then
-      sed -i "s|.*boltz_init_dist.*| boltz_init_dist      = 'restart'|g"   pert.in
-      sed -i "s|.*load_scatter_eph.*| load_scatter_eph      = .true.|g"   pert.in
-   fi
-
-   # link prefix_epr.h5 and prefix_tet.h5
-   ln -sf ../../../qe2pert/${PREFIX}_epr.h5
-   ln -sf ../../setup/${PREFIX}_tet.h5
-
-   # copy prefix.temper
-   cp ../../setup/${PREFIX}.temper .
-
-   # If E != 0, link cdyna file for restart
-   # and tmp file for e-ph matrix elements
-   if [ $efield != 0 ]; then
-      echo Linking cdyna and tmp
-      ln -sf ../efield-0/${PREFIX}_cdyna.h5
-      ln -sf ../efield-0/tmp
-   fi
-
-   # run pertubo.x
-   export OMP_NUM_THREADS=${OMP_THREADS}
-   perturbo.x -i pert.in > pert.out
-
-   echo Done $efield
-
-   # Return to upper directory
-   cd ..
-   
-done
-```
-
-This will create a efield-{efield value} folder for each electric field strength. 
-
-We also have the pert-ref.in file which will become the pert.in file for each electric field strength.  
+Whilst it is running we can now inspect the input files. Since we are running the calculation for multiple electric field strengths, we have to use a script, namely *run.sh*. We also have the pert-ref.in file which will become the pert.in file for each electric field strength.  
 
 pert-ref.in
 
@@ -420,13 +349,98 @@ pert-ref\_accurate.in
 /
 ```
 
+The changes we have made is to increase the *emax* parameter and greatly reduce the *time_step* parameter. 
+
+The *run.sh* script creates a folder for each electric field strength and runs a dynamics-run calculaton for each of them.
+
+run.sh
+
+```
+#!/bin/bash
+
+PREFIX='gaas'
+
+# List of electric field strengths
+EFIELDS=(0)
+# EFIELDS=($(seq 200 200 1600))
+# EFIELDS=($(seq 0 200 1600))
+
+# OpenMP variable
+OMP_THREADS=4
+
+for efield in ${EFIELDS[@]}
+do
+   echo dynamics-run for Efield= $efield
+
+   # Create directory efield-${field strength number}
+   DIR=efield-$efield
+   mkdir -p $DIR
+
+   # Move into directory
+   cd $DIR
+
+   # Copy pert-ref.in into directory as pert.in
+   cp ../pert-ref.in  ./pert.in
+
+   # Change pert.in file
+   # Change efield(1) parameter
+   sed -i "s|.*boltz_efield(1).*| boltz_efield(1)      = $efield.0|g"   pert.in
+
+   # If E != 0, set calculation to restart
+   # and read e-ph matrix elements from file
+   if [ $efield != 0 ]; then
+      sed -i "s|.*boltz_init_dist.*| boltz_init_dist      = 'restart'|g"   pert.in
+      sed -i "s|.*load_scatter_eph.*| load_scatter_eph      = .true.|g"   pert.in
+   fi
+
+   # link prefix_epr.h5 and prefix_tet.h5
+   ln -sf ../../../qe2pert/${PREFIX}_epr.h5
+   ln -sf ../../setup/${PREFIX}_tet.h5
+
+   # copy prefix.temper
+   cp ../../setup/${PREFIX}.temper .
+
+   # If E != 0, link cdyna file for restart
+   # and tmp file for e-ph matrix elements
+   if [ $efield != 0 ]; then
+      echo Linking cdyna and tmp
+      ln -sf ../efield-0/${PREFIX}_cdyna.h5
+      ln -sf ../efield-0/tmp
+   fi
+
+   # run pertubo.x
+   export OMP_NUM_THREADS=${OMP_THREADS}
+   perturbo.x -i pert.in > pert.out
+
+   echo Done $efield
+
+   # Return to upper directory
+   cd ..
+   
+done
+```
+
+
 ### Running perturbo.x
 
-Once the job has finished we will change the electric field range in the *run.sh* scritp
+Once the E=0 job has finished we will change the electric field range in the *run.sh* script. Open *run.sh*
 
 ```
 vim run.sh
 ```
+
+Uncomment the line
+
+```
+# EFIELDS=($(seq 200 200 1600))
+```
+
+and comment out the line
+
+```
+EFIELDS=(0)
+```
+
 
 Once the range from 200 to 1600 is set as EFIELDS we will run the script again
 
@@ -434,7 +448,7 @@ Once the range from 200 to 1600 is set as EFIELDS we will run the script again
 ./run.sh
 ```
 
-For all the other field strengths, the tmp folder containing the electron-phonon matrix elements will be used. This greatly speeds up the calculation.
+For all the other field strengths, the tmp folder inside efield-0, which contains the electron-phonon matrix elements, will be used. This greatly speeds up the calculation.
 
 ### Output
 
@@ -572,9 +586,9 @@ This should give the following curve
 
 <img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/output_velocity_field_curve.png" alt="output_velocity_field_curve" width="600"/>
 
-In this plot we can see a slight dip in the drift velocity at E=1400V/cm indicating the onset of the Gunn effect. 
+In this plot we can see a slight dip in the drift velocity at E=1400V/cm indicating the onset of the Gunn effect. However, we also see a negative velocity at E=1600V/cm. 
 
-However, as has been mentioned multiple times, what we have just done is a very simplified calculation. The above result is therefore not particularly accurate. This can be seen by plotting the average occupation against energy as shown below
+As has been mentioned multiple times, what we have just done is a very simplified calculation. The above result is therefore not particularly accurate. This can be seen even more clearly by plotting the average occupation against energy as shown below
 
 
 <img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/occupations.png" alt="occupation_curve_simple" width="600"/>
