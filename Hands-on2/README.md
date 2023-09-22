@@ -512,6 +512,7 @@ open it with preview or open the finder (Mac):
 * execute command 
 ```bash=
 >> cd pert-ephmat
+>> ln -sf ../../qe2pert/gaas_epr.h5
 >> perturbo.x -i pert.in | tee pert.out
 ```
 * job check: "Program was terminated on:" in `pert.out`
