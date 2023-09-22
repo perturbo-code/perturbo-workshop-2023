@@ -8,11 +8,10 @@ The equation for the drift velocity is
 
 <img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/drift_velocity_eq.png" alt="drift_velocity_eq" width="600"/>
 
-![Equation for drift velocity](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/drift_velocity_eq.png)
 
 In a recent paper[1](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.104.L100303), the velocity-field curve was calculated for Si, GaAs and graphene both in low and high fields. In this tutorial we will attempt to replicate the curve for GaAs with smaller sampling and less convergence due to time constraints. 
 
-![Drift velocity curves from paper](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/velocity_field_curve.png)
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/velocity_field_curve.png" alt="vel_field_curve_from_paper" width="600">
 
 ## 0. Setup
 
@@ -32,11 +31,13 @@ git clone https://github.com/perturbo-code/perturbopy.git
 pip install .
 ```
 
-For more information about perturbopy, click here [perturbopy](https://perturbopy.readthedocs.io/en/latest/index.html)
+For more information about perturbopy, see the [perturbopy](https://perturbopy.readthedocs.io/en/latest/index.html) documentation
 
 ### Get epr file
 
-NB!!!!!! GET gaas\_epr.h5 FILE
+The gaas\_epr.h5 file can be downloaded from this [link](https://caltech.app.box.com/s/rwqsofq10mzm9vz5avm2tcka3lg1vnai/folder/101215212117)
+
+It should then be stored in the qe2pert folder inside Hands-on4
 
 
 ### Create docker
@@ -48,7 +49,7 @@ Run the docker by using one of the following commands
 for ifort version:
 
 ```
-docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 --user 500 -it --rm --name perturbo-workshop perturbo/perturbo:ifort
+docker run -v <location of github repo>/perturbo-workshop-2023:/home/user/run/perturbo-workshop-2023 --user 500 -it --rm --name perturbo-workshop perturbo/perturbo:ifort_openmp
 ```
 
 for gcc version:
@@ -109,6 +110,8 @@ export OMP_NUM_THREADS=4
 perturbo.x -i pert.in > pert.out
 ```
 
+It is useful to set the number of OpenMP threads even though this is a relatively quick calculation. This is because certain systems will choose random numbers for the OpenMP threads if not specified. 
+
 ### Output
 
 *calc_mode=bands* gives the following output files
@@ -154,9 +157,9 @@ This will create two files:
 - gaas_bands.png: Displays band structure of GaAs
 - gaas_bands_zoom.png: Displays zoomed in version of band structure of GaAs
 
-![gaas_band](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/gaas_bands.png)
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/gaas_bands.png" alt="gaas_band" width="600"/>
 
-![gaas_band_zoomed](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/gaas_bands_zoom.png)
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/gaas_bands_zoom.png" alt="gaas_band_zoomed" width="600"/>
 
 ## 2. Setup Calculation
 
@@ -181,7 +184,7 @@ pert.in:
   boltz_kdim(2)       = 60
   boltz_kdim(3)       = 60
   boltz_emin          = 5.665  !CBM=6.065
-  boltz_emax          = 6.365  
+  boltz_emax          = 6.465  
   band_min            = 5
   band_max            = 5
   ftemper             = 'gaas.temper'
@@ -189,13 +192,13 @@ pert.in:
  /
 ``` 
 
-*boltz_kdim* gives the sampling of k points in each of the 3 directions. *boltz_emin* and *boltz_emax* give the minimum and maximum of the energy window. This is important as it reduced the number of scattering channels we need to calculate for. Here, it is set to be around the conduction band minima????? Similarly, *band_min* and *band_max* refers to the band numbers included in the calculation. *hole* is set to *.true.* if we are calculating for holes as opposed to electrons. Finally, *ftemper* is the temperature file. 
+*boltz_kdim* gives the sampling of k points in each of the 3 directions. *boltz_emin* and *boltz_emax* give the minimum and maximum of the energy window. This is important as it reduces the number of scattering channels we need to calculate for. Here, it is set to be around the conduction band minima. Similarly, *band_min* and *band_max* refers to the band numbers included in the calculation. *hole* is set to *.true.* if we are calculating for holes as opposed to electrons. Finally, *ftemper* is the temperature file. 
 
 gaas.temper:
 
 ```
-    1     F
-  300.00          6.0425595703           0.9855601E+17
+    1    
+  300.00          1.0           1.0E+17
 ```
 
 In the case of ultrafast dynamics calculations, the only number that is used here is the temperature since this will give the distribution of the phonons. The distribution of carriers is set in the dynamics-run input file.
