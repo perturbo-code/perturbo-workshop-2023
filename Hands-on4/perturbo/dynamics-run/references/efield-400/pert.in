@@ -1,0 +1,36 @@
+&perturbo
+ prefix               = 'gaas'
+ calc_mode            = 'dynamics-run'
+ boltz_kdim(1)        = 60
+ boltz_kdim(2)        = 60
+ boltz_kdim(3)        = 60
+ boltz_qdim(1)        = 10
+ boltz_qdim(2)        = 10
+ boltz_qdim(3)        = 10
+ boltz_efield(1)      = 400.0
+ boltz_efield(2)      = 0.0
+ boltz_efield(3)      = 0.0
+ boltz_emin           = 5.665
+ boltz_emax           = 6.465
+ band_min             = 5
+ band_max             = 5
+ hole                 = .false.
+ ftemper              = 'gaas.temper'
+ time_step            = 20.0
+ boltz_nstep          = 100
+ output_nstep         = 5
+ boltz_init_dist      = 'restart'
+ boltz_init_smear     = 25.865213999999998
+ boltz_init_e0        = 6.0344
+ load_scatter_eph      = .true.
+ tmp_dir              = './tmp'
+ boltz_norm_dist      = .true.
+ ! boltz_acc_thr        = 1.0
+ solver               = 'euler'
+/
+
+
+
+
+
+

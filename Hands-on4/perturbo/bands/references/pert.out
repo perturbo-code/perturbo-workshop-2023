@@ -1,0 +1,15 @@
+
+   Program PERTURBO starts on 22Sep2023 at  1:38:24 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'bands'
+     --------------------------------------------------
+     The gaas_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     band_min:    1  band_max:    8
+     Reading list from file: gaas_band.kpt
+ 
+     PERTURBO     :      0.27s CPU      1.13s WALL
+
+
+   Program was terminated on:   1:38:25  22Sep2023             

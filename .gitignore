@@ -161,10 +161,10 @@ cython_debug/
 
 # For Hands-on4
 Hands-on4/qe2pert/gaas_epr.h5
-Hands-on4/perturbo/bands/references/*
-Hands-on4/perturbo/setup/references/*
-Hands-on4/perturbo/dynamics-run/references/*
-Hands-on4/perturbo/dynamics-pp/references/*
+#Hands-on4/perturbo/bands/references/*
+#Hands-on4/perturbo/setup/references/*
+#Hands-on4/perturbo/dynamics-run/references/*
+#Hands-on4/perturbo/dynamics-pp/references/*
 .DS_Store
 Hands-on4/.DS_Store
 Hands-on4/*/.DS_Store

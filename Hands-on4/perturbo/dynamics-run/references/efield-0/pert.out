@@ -1,0 +1,62 @@
+
+   Program PERTURBO starts on 22Sep2023 at  1:49:54 
+
+     Serial multi-threaded version, running on    4 processor cores
+     calc_mode = 'dynamics-run'
+     --------------------------------------------------
+     The gaas_epr.h5 HDF5 file was found and will be used in the calculation.
+
+     band_min:    5  band_max:    5
+     >loading kpt, tetra from gaas_tet.h5
+
+     number of  tetrahedra selected:       8232
+     number of   reducible k-points:       2103
+     number of irreducible k-points:        154
+
+     >start scatter_setup
+     No. of q-points and (k,q) pairs on each processor:
+     Proc.   1:  #.q        73 |  #.(k,q)        4729
+    |--------------------------------------------------|
+     Computing EPhMatrix:                
+           2.04%
+           6.04%
+          10.03%
+          14.03%
+          18.02%
+          22.02%
+          26.01%
+          30.00%
+          34.05%
+          38.04%
+          42.04%
+          46.03%
+          50.02%
+          54.02%
+          70.04%
+          74.04%
+          78.03%
+          94.01%
+          98.00%
+     >scatter_setup done.
+    |--------------------------------------------------|
+     Carrier Dynamics:                   
+          10.00%
+          30.00%
+          50.00%
+          70.00%
+          90.00%
+         100.00%
+    |--------------------------------------------------|
+ 
+     PERTURBO     :   6m56.17s CPU   3m50.10s WALL
+
+     scat_setup   :    411.28s CPU    227.38s WALL (       1 calls)
+     set_kq_pair  :      0.30s CPU      0.18s WALL (       1 calls)
+     init_eph_wan :      1.40s CPU     16.07s WALL (       1 calls)
+     compute_g2   :    409.38s CPU    210.82s WALL (       1 calls)
+     load_eph_g2  :      0.14s CPU      0.17s WALL (       1 calls)
+     dynamics_tot :      4.45s CPU      2.38s WALL (       1 calls)
+     dynamics_col :      0.29s CPU      0.20s WALL (     100 calls)
+     norm_dist    :      4.13s CPU      2.16s WALL (     100 calls)
+
+   Program was terminated on:   1:53:44  22Sep2023             

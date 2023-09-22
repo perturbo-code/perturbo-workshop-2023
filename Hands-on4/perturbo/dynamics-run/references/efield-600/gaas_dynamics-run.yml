@@ -1,0 +1,323 @@
+---
+program: perturbo
+
+start date and time:
+   date: 22 September 2023
+   time: " 2: 2:22"
+
+parallelization:
+   type: OpenMP
+   number of OpenMP threads:   4
+
+input parameters:
+   # (before reading from epr file)
+   before conversion:
+      band_max:                   5
+      band_min:                   5
+      boltz_acc_thr:           0.0000000000000000E+00
+      boltz_de:           1.0000000000000000E+00
+      boltz_efield:          [ 6.0000000000000000E+02,   0.0000000000000000E+00,   0.0000000000000000E+00,  ]
+      boltz_emax:           6.4649999999999999E+00
+      boltz_emin:           5.6650000000000000E+00
+      boltz_init_dist:          restart
+      boltz_init_e0:           6.0343999999999998E+00
+      boltz_init_smear:           2.5865213999999998E+01
+      boltz_kdim:          [        60,          60,          60,  ]
+      boltz_norm_dist:          True 
+      boltz_nstep:                 100
+      boltz_nstep_min:                   1
+      boltz_qdim:          [        10,          10,          10,  ]
+      calc_mode:          dynamics-run
+      cauchy_scale:           5.0000000000000003E-02
+      debug:          False
+      delta_smear:           1.0000000000000000E+01
+      find_efermi:          False
+      fklist:          
+      fqlist:          
+      ftemper:          gaas.temper
+      full_ite:          True 
+      hole:          False
+      load_scatter_eph:          True 
+      nsamples:              100000
+      output_nstep:                   5
+      phfreq_cutoff:           1.0000000000000000E+00
+      polar_split:          
+      prefix:          gaas
+      sampling:          uniform
+      solver:          euler
+      time_step:           2.0000000000000000E+01
+      tmp_dir:          ./tmp/
+      trans_thr:           2.0000000000000000E-03
+      use_mem:          True 
+      yaml_fname:          .yml
+   after conversion:
+      band_max:                   5
+      band_min:                   5
+      boltz_acc_thr:           0.0000000000000000E+00
+      boltz_de:           7.3498617648950546E-05
+      boltz_efield:          [ 2.3336276096368283E-07,   0.0000000000000000E+00,   0.0000000000000000E+00,  ]
+      boltz_emax:           4.7516856310046529E-01
+      boltz_emin:           4.1636966898130490E-01
+      boltz_init_dist:          restart
+      boltz_init_e0:           4.4352005834082719E-01
+      boltz_init_smear:           1.9010574741942826E-03
+      boltz_kdim:          [        60,          60,          60,  ]
+      boltz_norm_dist:          True 
+      boltz_nstep:                 100
+      boltz_nstep_min:                   1
+      boltz_qdim:          [        10,          10,          10,  ]
+      calc_mode:          dynamics-run
+      cauchy_scale:           5.0000000000000003E-02
+      debug:          False
+      delta_smear:           7.3498617648950549E-04
+      find_efermi:          False
+      fklist:          
+      fqlist:          
+      ftemper:          gaas.temper
+      full_ite:          True 
+      hole:          False
+      load_scatter_eph:          True 
+      nsamples:              100000
+      output_nstep:                   5
+      phfreq_cutoff:           7.3498617648950546E-05
+      polar_split:          
+      prefix:          gaas
+      sampling:          uniform
+      solver:          euler
+      time_step:           4.1341372935006171E+02
+      tmp_dir:          ./tmp/
+      trans_thr:           2.0000000000000000E-03
+      use_mem:          True 
+      yaml_fname:          gaas_dynamics-run.yml
+
+
+basic data:
+   alat:          10.5000000000
+   alat units:       bohr
+   # a vector is a row
+   lattice vectors:
+         - [  -0.50000,     0.00000,     0.50000,  ]
+         - [   0.00000,     0.50000,     0.50000,  ]
+         - [  -0.50000,     0.50000,     0.00000,  ]
+   lattice vectors units:       alat
+   reciprocal lattice vectors:
+   # a vector is a row
+         - [  -1.00000,    -1.00000,     1.00000,  ]
+         - [   1.00000,     1.00000,     1.00000,  ]
+         - [  -1.00000,     1.00000,    -1.00000,  ]
+   reciprocal lattice vectors units:       2pi/alat
+   number of atoms in unit cell:                2
+   atomic positions:
+   # a vector is a row
+         - [   0.00000,     0.00000,     0.00000,  ]
+         - [   0.25000,     0.25000,     0.25000,  ]
+   atomic positions units:       alat
+   volume:         289.4062500000
+   volume units:       bohr^3
+   number of symmetry operations:               24
+   symop:
+      1:
+         - [    1,      0,      0,  ]
+         - [    0,      1,      0,  ]
+         - [    0,      0,      1,  ]
+      2:
+         - [    0,      1,      0,  ]
+         - [    1,      0,      0,  ]
+         - [   -1,     -1,     -1,  ]
+      3:
+         - [   -1,     -1,     -1,  ]
+         - [    0,      0,      1,  ]
+         - [    0,      1,      0,  ]
+      4:
+         - [    0,      0,      1,  ]
+         - [   -1,     -1,     -1,  ]
+         - [    1,      0,      0,  ]
+      5:
+         - [   -1,     -1,     -1,  ]
+         - [    0,      1,      0,  ]
+         - [    1,      0,      0,  ]
+      6:
+         - [    0,      0,      1,  ]
+         - [    1,      0,      0,  ]
+         - [    0,      1,      0,  ]
+      7:
+         - [    1,      0,      0,  ]
+         - [    0,      0,      1,  ]
+         - [   -1,     -1,     -1,  ]
+      8:
+         - [    0,      1,      0,  ]
+         - [   -1,     -1,     -1,  ]
+         - [    0,      0,      1,  ]
+      9:
+         - [    0,      0,      1,  ]
+         - [    0,      1,      0,  ]
+         - [   -1,     -1,     -1,  ]
+      10:
+         - [   -1,     -1,     -1,  ]
+         - [    1,      0,      0,  ]
+         - [    0,      0,      1,  ]
+      11:
+         - [    0,      1,      0,  ]
+         - [    0,      0,      1,  ]
+         - [    1,      0,      0,  ]
+      12:
+         - [    1,      0,      0,  ]
+         - [   -1,     -1,     -1,  ]
+         - [    0,      1,      0,  ]
+      13:
+         - [    0,      1,      0,  ]
+         - [    1,      0,      0,  ]
+         - [    0,      0,      1,  ]
+      14:
+         - [    1,      0,      0,  ]
+         - [    0,      1,      0,  ]
+         - [   -1,     -1,     -1,  ]
+      15:
+         - [    0,      0,      1,  ]
+         - [   -1,     -1,     -1,  ]
+         - [    0,      1,      0,  ]
+      16:
+         - [   -1,     -1,     -1,  ]
+         - [    0,      0,      1,  ]
+         - [    1,      0,      0,  ]
+      17:
+         - [    1,      0,      0,  ]
+         - [    0,      0,      1,  ]
+         - [    0,      1,      0,  ]
+      18:
+         - [   -1,     -1,     -1,  ]
+         - [    0,      1,      0,  ]
+         - [    0,      0,      1,  ]
+      19:
+         - [    0,      1,      0,  ]
+         - [   -1,     -1,     -1,  ]
+         - [    1,      0,      0,  ]
+      20:
+         - [    0,      0,      1,  ]
+         - [    1,      0,      0,  ]
+         - [   -1,     -1,     -1,  ]
+      21:
+         - [    1,      0,      0,  ]
+         - [   -1,     -1,     -1,  ]
+         - [    0,      0,      1,  ]
+      22:
+         - [    0,      0,      1,  ]
+         - [    0,      1,      0,  ]
+         - [    1,      0,      0,  ]
+      23:
+         - [    0,      1,      0,  ]
+         - [    0,      0,      1,  ]
+         - [   -1,     -1,     -1,  ]
+      24:
+         - [   -1,     -1,     -1,  ]
+         - [    1,      0,      0,  ]
+         - [    0,      1,      0,  ]
+   kc dimensions:
+         - [      8,        8,        8,  ]
+   spinor:       False
+   polar_alpha:           1.0000000000
+   epsil:
+   # a vector is a row
+         - [     12.70934246,        0.00000000,       -0.00000000,  ]
+         - [     -0.00000000,       12.70934246,       -0.00000000,  ]
+         - [     -0.00000000,        0.00000000,       12.70934246,  ]
+   qc dimensions:
+         - [      8,        8,        8,  ]
+   mass:
+      -       63545.89256146
+      -       68287.22550903
+   mass units:       atomic
+   zstar:
+      1:
+         - [   2.03077,     0.00000,    -0.00000,  ]
+         - [   0.00000,     2.03077,     0.00000,  ]
+         - [   0.00000,     0.00000,     2.03077,  ]
+      2:
+         - [  -2.03077,    -0.00000,     0.00000,  ]
+         - [  -0.00000,    -2.03077,    -0.00000,  ]
+         - [  -0.00000,    -0.00000,    -2.03077,  ]
+   system_2d:       False
+   number of Wannier functions:                8
+   wannier_center:
+   # a vector is a row
+         - [   0.03850,     0.03850,     0.03850,  ]
+         - [   0.03850,    -0.03850,    -0.03850,  ]
+         - [  -0.03850,     0.03850,    -0.03850,  ]
+         - [  -0.03850,    -0.03850,     0.03850,  ]
+         - [   0.31834,     0.31834,     0.31834,  ]
+         - [   0.31834,     0.18166,     0.18166,  ]
+         - [   0.18166,     0.31834,     0.18166,  ]
+         - [   0.18166,     0.18166,     0.31834,  ]
+   wannier_center units: cartesian
+   wannier_center_cryst:
+   # a vector is a row
+         - [  -0.03850,     0.11551,    -0.03850,  ]
+         - [  -0.03850,    -0.03850,    -0.03850,  ]
+         - [  -0.03850,    -0.03850,     0.11551,  ]
+         - [   0.11551,    -0.03850,    -0.03850,  ]
+         - [  -0.31834,     0.95502,    -0.31834,  ]
+         - [  -0.31834,     0.68166,    -0.31834,  ]
+         - [  -0.31834,     0.68166,    -0.04498,  ]
+         - [  -0.04498,     0.68166,    -0.31834,  ]
+   wannier_center_cryst units: crystal
+
+grid:
+   number of  tetrahedra selected:       8232
+   number of reducible k-points:       2103
+   number of irreducible k-points:        154
+
+
+scatter parallelization:
+
+   MPI task index:
+
+      1:
+         number of q-points:              73
+         number of (k,q) pairs:            4729
+
+dynamics-run:
+
+timings:
+
+   time units: s
+
+   PERTURBO:
+      cpu:         5.73561800
+      wall:        3.30880094
+      calls:         1
+
+   scat_setup:
+      cpu:         0.62277000
+      wall:        0.48928285
+      calls:         1
+
+   set_kq_pair:
+      cpu:         0.32105000
+      wall:        0.19226599
+      calls:         1
+
+   load_eph_g2:
+      cpu:         0.29784900
+      wall:        0.29171515
+      calls:         1
+
+   dynamics_tot:
+      cpu:         4.67753400
+      wall:        2.49137306
+      calls:         1
+
+   dynamics_col:
+      cpu:         0.28477200
+      wall:        0.19303465
+      calls:       100
+
+   dynamics_adv:
+      cpu:         0.03923700
+      wall:        0.02853513
+      calls:       100
+
+   norm_dist:
+      cpu:         4.33162800
+      wall:        2.24222088
+      calls:       100
+...
