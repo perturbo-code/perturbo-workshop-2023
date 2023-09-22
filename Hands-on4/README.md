@@ -6,6 +6,8 @@ Velocity-field curves describe the mean drift velocity of the charge carriers in
 
 The equation for the drift velocity is 
 
+<img src="Hands-on4/images/drift_velocity_eq.png" alt="drift_velocity_eq" width="200"/>
+
 ![Equation for drift velocity](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/drift_velocity_eq.png)
 
 In a recent paper[1](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.104.L100303), the velocity-field curve was calculated for Si, GaAs and graphene both in low and high fields. In this tutorial we will attempt to replicate the curve for GaAs with smaller sampling and less convergence due to time constraints. 
