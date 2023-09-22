@@ -117,7 +117,7 @@ Based on the convergent charge density, we can perform phonon and nscf calculati
 * input file: `ph.in`, `scf/tmp`
 * execute command 
 ```bash=
->> cd phonon
+>> cd ../phonon
 >> cp -r ../scf/tmp ./
 >> ph.x -i ph.in | tee ph.out
 >> ctrl+c
@@ -152,7 +152,7 @@ For constructing good maximum localized wannier functions, it needs a ground sta
 * input file: `nscf.in`, `scf/tmp`
 * execute command 
 ```bash=
->> cd nscf
+>> cd ../nscf
 >> cp -r ../scf/tmp ./
 >> pw.x -i nscf.in | tee nscf.out
 ```
@@ -175,7 +175,7 @@ Maximum localized wannier function is constructed to represent e-ph matrix in re
 * input file: `pw2wan.in`, `gaas.win`, `nscf/tmp/gaas.save`
 * execute command 
 ```bash=
->> cd wannier
+>> cd ../wannier
 >> mkdir tmp
 >> cd tmp
 >> ln -sf ../../nscf/tmp/gaas.save  # just read it not write it, os a soft link is better
@@ -259,7 +259,7 @@ After finishing nscf, phonon and mlwf, we can perform qe2pert to integrate them 
 * input file: `qe2pert.in`, `phonon/save`, `nscf/tmp/gaas.save`, `gaas_centres.xyz`, `gaas_u_dis.mat`, `gaas_u.mat`
 * execute command 
 ```bash=
->> cd qe2pert
+>> cd ../../qe2pert
 >> mkdir tmp
 >> cd tmp
 >> ln -sf ../../pw-ph-wann/nscf/tmp/gaas.save
@@ -407,6 +407,7 @@ Here we will use `perturbo.x` to performs electronic structure interpolation and
 * input file: `pert.in`, `gaas_epr.h5`, `gaas_band.kpt`
 * execute command 
 ```bash=
+>> cd perturbo
 >> cd pert-bands
 >> ln -sf ../../qe2pert/gaas_epr.h5
 >> perturbo.x -i pert.in | tee pert.out
@@ -456,7 +457,7 @@ open it with preview or open the finder (Mac):
 * input file: `pert.in`, `gaas_epr.h5`, `gaas_phdisp.qpt`
 * execute command 
 ```bash=
->> cd pert-phdisp
+>> cd ../pert-phdisp
 >> ln -sf ../../qe2pert/gaas_epr.h5
 >> perturbo.x -i pert.in | tee pert.out
 ```
@@ -509,7 +510,7 @@ open it with preview or open the finder (Mac):
 * input file: `pert.in`, `eph.kpt`, `eph.qpt`, `gaas_epr.h5`
 * execute command 
 ```bash=
->> cd pert-ephmat
+>> cd ../pert-ephmat
 >> ln -sf ../../qe2pert/gaas_epr.h5
 >> perturbo.x -i pert.in | tee pert.out
 ```
