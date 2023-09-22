@@ -121,15 +121,13 @@ Based on the convergent charge density, we can perform phonon and nscf calculati
 >> cp -r ../scf/tmp ./
 >> ph.x -i ph.in | tee ph.out
 >> ctrl+c
->> rm -rf tmp
->> tar -xvzf tmp.tar.gz
+>> ./ph-collect-serial.sh
+>> rm -rf save tmp
+>> cp -r ./References/save ./
 ```
 * job check: "JOB DONE" in the end of `ph.out`
 * output: most information such as dynamical matrix, phonon perturbation potentials, is stored in `tmp/_ph0/`.
-* one more operation: collect phonon data to `save` folder for qe2pert
-```bash=
->> ./ph-collect-serial.sh
-```
+
 The input file is attached. For fast running, you can use q grid by 2*2*2 in personal laptop.
 ```
 #ph.in
