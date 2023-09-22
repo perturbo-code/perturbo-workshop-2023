@@ -44,7 +44,7 @@ It should then be stored in the qe2pert folder inside Hands-on4
 
 Click here, [docker for Perturbo](https://perturbo-code.github.io/mydoc_docker.html) for more information on how to download and install docker, and how to pull the docker image you require
 
-Run the docker by using one of the following commands
+Run the docker by using one of the following commands. Be sure to change the directory to the local directory on your own computer where the perturbo-workshop-2023 repo is placed.
 
 for ifort version:
 
@@ -577,19 +577,23 @@ In this plot we can see a slight dip in the drift velocity at E=1400V/cm indicat
 However, as has been mentioned multiple times, what we have just done is a very simplified calculation. The above result is therefore not particularly accurate. This can be seen by plotting the average occupation against energy as shown below
 
 
-<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/output_velocity_field_curve.png" alt="occupation_curve_simple" width="600"/>
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/occupations.png" alt="occupation_curve_simple" width="600"/>
 
-This shows the average occupation at each of the field strengths for the final time step of each run. The key points are that for many field strengths the occupation is being cut off by the energy maximum and the strange divergences at higher energies. 
+This shows the average occupation at each of the field strengths for the final time step of each run. It is clear that the high field occupations are cut off due to our small energy window. Hence it is reasonable that the drift velocity should decrease at higher fields because there are fewer carriers altogether. From this plot, it is therefore unclear whether we are in fact seeing the Gunn effect in our velocity-field curve. 
 
-If we instead were to run the calculations with the *pert\_accurate.in* files we would obtain the following plot
+To attempt to remedy this, we could increase the *emax* parameter to something like 6.865eV. However, we would find that we get some strange behaviour of the occupation curves at higher energies. This is due to our large time step. So the *\_accurate.in* files have a much smaller time step of 2fs.
 
-<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/output_velocity_field_curve.png" alt="occupation_curve_accurate" width="600"/>
+If we were to run the calculations with the *\_accurate.in* files we would obtain the following plot
 
-Here all the occupations behave as expected and are fully contained within the energy window.
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/occupations_accurate.png" alt="occupation_curve_accurate" width="600"/>
 
-This also results in a much more accurate velocity-field curve with a clear indication of the Gunn effect.
+Here all the occupations are fully contained within the energy window and there is no strange behaviour.
 
-<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/output_velocity_field_curve.png" alt="velocity_field_curve_accurate" width="600"/>
+This results in a much more accurate velocity-field curve with a clear indication of the Gunn effect.
+
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/velocity-field_curve_accurate.png" alt="velocity_field_curve_accurate" width="600"/>
+
+For an even more accurate curve, one would need to also increase the k and q dimensions. 
 
 
 
