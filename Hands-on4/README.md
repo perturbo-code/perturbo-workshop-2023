@@ -6,7 +6,7 @@ Velocity-field curves describe the mean drift velocity of the charge carriers in
 
 The equation for the drift velocity is 
 
-<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/drift_velocity_eq.png" alt="drift_velocity_eq" width="200"/>
+<img src="https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/drift_velocity_eq.png" alt="drift_velocity_eq" width="600"/>
 
 ![Equation for drift velocity](https://github.com/perturbo-code/perturbo-workshop-2023/blob/main/Hands-on4/images/drift_velocity_eq.png)
 
